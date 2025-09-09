@@ -167,17 +167,22 @@ jobs:
           while IFS= read -r tag; do
             [ -z "$tag" ] && continue
             echo "Creating manifest for $tag"
+            src_tag="$tag"
+            if [[ "$tag" == *:latest && "${GITHUB_REF}" == refs/tags/* ]]; then
+              ref="${GITHUB_REF#refs/tags/}"
+              src_tag="${tag%:latest}:$ref"
+            fi
             if [ -n "${IMAGE_DESCRIPTION:-}" ]; then
               docker buildx imagetools create \
                 --tag "$tag" \
                 --annotation "index:org.opencontainers.image.description=${IMAGE_DESCRIPTION}" \
-                "${tag}-amd64" \
-                "${tag}-arm64"
+                "${src_tag}-amd64" \
+                "${src_tag}-arm64"
             else
               docker buildx imagetools create \
                 --tag "$tag" \
-                "${tag}-amd64" \
-                "${tag}-arm64"
+                "${src_tag}-amd64" \
+                "${src_tag}-arm64"
             fi
           done <<< "$tags"
 
