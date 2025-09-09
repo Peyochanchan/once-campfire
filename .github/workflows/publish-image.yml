@@ -99,8 +99,8 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha,scope=${{ matrix.platform }}
           cache-to: type=gha,scope=${{ matrix.platform }},mode=max
-          sbom: true
-          provenance: true
+          sbom: false
+          provenance: false
 
       - name: Attest image provenance (per-arch)
         if: github.event_name != 'pull_request'
@@ -108,7 +108,7 @@ jobs:
         with:
           subject-name: ${{ steps.vars.outputs.canonical }}
           subject-digest: ${{ steps.build.outputs.digest }}
-          push-to-registry: true
+          push-to-registry: false
 
   manifest:
     name: Create multi-arch manifest and sign
