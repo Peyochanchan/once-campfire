@@ -49,5 +49,5 @@ For example:
       --env SECRET_KEY_BASE=$YOUR_SECRET_KEY_BASE \
       --env VAPID_PUBLIC_KEY=$YOUR_PUBLIC_KEY \
       --env VAPID_PRIVATE_KEY=$YOUR_PRIVATE_KEY \
-      --env SSL_DOMAIN=chat.example.com \
+      --env TLS_DOMAIN=chat.example.com \
       campfire
