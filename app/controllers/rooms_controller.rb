@@ -32,7 +32,11 @@ class RoomsController < ApplicationController
     end
 
     def find_messages
-      messages = @room.messages.with_creator
+      messages = @room.messages.with_rich_text_body_and_embeds
+                               .with_attached_attachment
+                               .preload(creator: :avatar_attachment)
+                               .includes(attachment_blob: :variant_records)
+                               .includes(boosts: :booster)
 
       if show_first_message = messages.find_by(id: params[:message_id])
         @messages = messages.page_around(show_first_message)
