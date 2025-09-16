@@ -32,14 +32,22 @@ end
 
 FileUtils.chdir APP_ROOT do
   puts "== Installing dependencies =="
-  system "mise install"
 
   if installed?("brew")
-    system "brew install sqlite ffmpeg"
+    system "brew install sqlite ffmpeg mise"
   elsif installed?("pacman")
-    system "sudo pacman -S --noconfirm --needed sqlite ffmpeg"
+    system "sudo pacman -S --noconfirm --needed sqlite ffmpeg mise"
   elsif installed?("apt")
     system "sudo apt-get install --no-install-recommends -y libsqlite3-0 ffmpeg"
+  end
+
+  if installed?("mise")
+    system "mise install"
+  else
+    puts "Couldn't install mise"
+    puts "Install mise using your package manager or via:"
+    puts "https://mise.jdx.dev/installing-mise.html"
+    exit 1
   end
 
   system("bundle check") || system!("bundle install")
