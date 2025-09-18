@@ -1,6 +1,6 @@
 # Campfire
 
-Campfire is web-based chat application. It supports many of the features you'd
+Campfire is a web-based chat application. It supports many of the features you'd
 expect, including:
 
 - Multiple rooms, with access controls
