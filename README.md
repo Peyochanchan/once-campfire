@@ -11,15 +11,6 @@ expect, including:
 - @mentions
 - API, with support for bot integrations
 
-Campfire is single-tenant: any rooms designated "public" will be accessible by
-all users in the system. To support entirely distinct groups of customers, you
-would deploy multiple instances of the application.
-
-## Running in development
-
-    bin/setup
-    bin/rails server
-
 ## Deploying with Docker
 
 Campfire's Docker image contains everything needed for a fully-functional,
@@ -51,3 +42,20 @@ For example:
       --env VAPID_PRIVATE_KEY=$YOUR_PRIVATE_KEY \
       --env TLS_DOMAIN=chat.example.com \
       campfire
+
+## Running in development
+
+    bin/setup
+    bin/rails server
+
+## Worth Noting
+
+When you start Campfire for the first time, you’ll be guided through
+creating an admin account.
+The email address of this admin account will be shown on the login page
+so that people who forget their password know who to contact for help.
+(You can change this email later in the settings)
+
+Campfire is single-tenant: any rooms designated "public" will be accessible by
+all users in the system. To support entirely distinct groups of customers, you
+would deploy multiple instances of the application.
