@@ -2,6 +2,6 @@ module CableHelper
   def script_aware_action_cable_meta_tag
     tag.meta \
       name: "action-cable-url",
-      content: "#{request.script_name}#{ActionCable.server.config.mount_path}"
+      content: Pathname(request.script_name) + Pathname(ActionCable.server.config.mount_path)
   end
 end
