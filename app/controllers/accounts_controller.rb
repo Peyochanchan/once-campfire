@@ -3,7 +3,7 @@ class AccountsController < ApplicationController
   before_action :set_account
 
   def edit
-    set_page_and_extract_portion_from User.active.ordered, per_page: 500
+    set_page_and_extract_portion_from account_users.ordered, per_page: 500
   end
 
   def update
@@ -18,5 +18,13 @@ class AccountsController < ApplicationController
 
     def account_params
       params.require(:account).permit(:name, :logo)
+    end
+
+    def account_users
+      if Current.user.can_administer?
+        User.where(status: [ :active, :banned ])
+      else
+        User.active
+      end
     end
 end
