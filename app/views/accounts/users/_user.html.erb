@@ -1,4 +1,4 @@
-<li class="flex align-center gap margin-none <%= "translucent" if user.banned? %>">
+<li class="flex align-center gap margin-none <%= "banned" if user.banned? %>">
   <figure class="avatar flex-item-no-shrink" style="--avatar-size: 3.75ch;">
     <%= avatar_tag user, loading: :lazy %>
   </figure>
