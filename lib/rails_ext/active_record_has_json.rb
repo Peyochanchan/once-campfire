@@ -21,7 +21,7 @@ module ActiveRecord
             value = args.first
             @data[key] = ActiveModel::Type.lookup(key_type).cast(value)
           else
-            @data.fetch(key)
+            @data[key]
           end
         else
           super
