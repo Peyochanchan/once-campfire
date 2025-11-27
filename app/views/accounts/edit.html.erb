@@ -64,6 +64,12 @@
         <% end %>
       </div>
     <% end %>
+
+    <% if Current.account.restrict_room_creation_to_administrators? %>
+      <%= button_to_toggle_setting "Allow everyone to create new rooms", :restrict_room_creation_to_administrators %>
+    <% else %>
+      <%= button_to_toggle_setting "Only allow admins to create new rooms", :restrict_room_creation_to_administrators %>
+    <% end %>
   <% else %>
     <%= account_logo_tag style: "txt-xx-large center" %>
     <h1 class="flex-item-grow txt-x-large"><%= @account.name %></h1>
