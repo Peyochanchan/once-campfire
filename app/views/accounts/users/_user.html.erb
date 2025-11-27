@@ -1,4 +1,4 @@
-<li class="flex align-center gap margin-none">
+<li class="flex align-center gap margin-none <%= "banned" if user.banned? %>">
   <figure class="avatar flex-item-no-shrink" style="--avatar-size: 3.75ch;">
     <%= avatar_tag user, loading: :lazy %>
   </figure>
@@ -9,7 +9,7 @@
 
   <hr class="separator" aria-hidden="true">
 
-  <% if Current.user.can_administer? && user != Current.user %>
+  <% if Current.user.can_administer? && user != Current.user && user.active? %>
     <% unless user.bot? %>
       <%= form_with model: user, url: account_user_path(user), data: { controller: "form" }, method: :patch do | form | %>
         <label class="btn txt-small flex-item-no-shrink" for="<%= dom_id(user, :role) %>">
