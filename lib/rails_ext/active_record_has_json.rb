@@ -5,7 +5,7 @@ module ActiveRecord
     end
 
     def assign_data_with_type_casting(new_data)
-      new_data.each { |key, value| self.send("#{key}=", value) }
+      new_data.each { |key, value| send("#{key}=", value) }
     end
 
     private
