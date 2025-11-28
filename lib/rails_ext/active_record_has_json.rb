@@ -45,6 +45,10 @@ module ActiveRecord
           end if delegate
         end
       end
+
+      def has_settings(schema)
+        has_json settings: schema, delegate: true
+      end
     end
   end
 end
