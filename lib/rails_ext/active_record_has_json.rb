@@ -5,9 +5,7 @@ module ActiveRecord
     end
 
     def assign_data_with_type_casting(new_data)
-      new_data.each do |key, value|
-        @data[key] = ActiveModel::Type.lookup(@schema[key.to_sym]).cast(value)
-      end
+      new_data.each { |key, value| self.send("#{key}=", value) }
     end
 
     private
