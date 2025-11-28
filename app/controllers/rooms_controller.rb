@@ -31,7 +31,7 @@ class RoomsController < ApplicationController
       head :forbidden unless Current.user.can_administer?(@room)
     end
 
-    def ensure_eligible_to_create_rooms
+    def ensure_permission_to_create_rooms
       if Current.account.restrict_room_creation_to_administrators? && !Current.user.administrator?
         head :forbidden
       end
