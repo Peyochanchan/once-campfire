@@ -3,7 +3,7 @@ source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 # Rails
-gem "rails", github: "rails/rails", branch: "main"
+gem "rails", github: "rails/rails", ref: "7727f43d38bf1783550e7a47207a9548e34a2c25" # branch: "main"
 gem "ostruct"
 gem "benchmark"
 
