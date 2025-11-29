@@ -15,4 +15,9 @@ class AccountTest < ActiveSupport::TestCase
     accounts(:signal).update!(settings: { "restrict_room_creation_to_administrators" => "false" })
     assert_not accounts(:signal).reload.restrict_room_creation_to_administrators?
   end
+
+  test "default settings" do
+    a = Account.create! name: "New account"
+    assert_equal({ "restrict_room_creation_to_administrators" => false }, a[:settings])
+  end
 end
