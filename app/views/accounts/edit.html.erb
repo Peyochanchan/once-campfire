@@ -65,7 +65,7 @@
       </div>
     <% end %>
 
-    <% if Current.account.restrict_room_creation_to_administrators? %>
+    <% if Current.account.settings.restrict_room_creation_to_administrators? %>
       <%= button_to_toggle_setting "Allow everyone to create new rooms", :restrict_room_creation_to_administrators %>
     <% else %>
       <%= button_to_toggle_setting "Only allow admins to create new rooms", :restrict_room_creation_to_administrators %>
