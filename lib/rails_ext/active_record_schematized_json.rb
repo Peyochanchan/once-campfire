@@ -6,7 +6,7 @@ module ActiveRecord
     end
 
     def assign_data_with_type_casting(new_data)
-      new_data.each { |k, v| send "#{k}=", v }
+      new_data.each { |k, v| public_send "#{k}=", v }
     end
 
     private
@@ -58,12 +58,12 @@ module ActiveRecord
       def has_json(delegate: false, **schemas)
         schemas.each do |name, schema|
           define_method(name)       { ActiveRecord::SchematizedJson.new(schema, data: self[name]) }
-          define_method("#{name}=") { |data| send(name).assign_data_with_type_casting(data) }
+          define_method("#{name}=") { |data| public_send(name).assign_data_with_type_casting(data) }
 
           schema.keys.each do |schema_key|
-            define_method(schema_key)       { send(name).send(schema_key) }
-            define_method("#{schema_key}?") { send(name).send("#{schema_key}?") }
-            define_method("#{schema_key}=") { |value| send(name).send("#{schema_key}=", value) }
+            define_method(schema_key)       { public_send(name).public_send(schema_key) }
+            define_method("#{schema_key}?") { public_send(name).public_send("#{schema_key}?") }
+            define_method("#{schema_key}=") { |value| send(name).public_send("#{schema_key}=", value) }
           end if delegate
 
           # Ensures default values are set before saving
