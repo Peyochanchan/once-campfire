@@ -4,10 +4,12 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 # Rails
 gem "rails", github: "rails/rails", branch: "main"
+gem "ostruct"
+gem "benchmark"
 
 # Drivers
-gem "sqlite3", "~> 2.7"
-gem "redis", "~> 5.4"
+gem "sqlite3"
+gem "redis", "~> 4.0"
 
 # Deployment
 gem "puma", "~> 6.6"
