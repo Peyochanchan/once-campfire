@@ -30,7 +30,7 @@ class Rooms::ClosedsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "create forbidden by non-admin when account restricts creation to admins" do
-    accounts(:signal).restrict_room_creation_to_administrators = true
+    accounts(:signal).settings.restrict_room_creation_to_administrators = true
     accounts(:signal).save!
 
     sign_in :jz

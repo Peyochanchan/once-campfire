@@ -32,7 +32,7 @@ class RoomsController < ApplicationController
     end
 
     def ensure_permission_to_create_rooms
-      if Current.account.restrict_room_creation_to_administrators? && !Current.user.administrator?
+      if Current.account.settings.restrict_room_creation_to_administrators? && !Current.user.administrator?
         head :forbidden
       end
     end
