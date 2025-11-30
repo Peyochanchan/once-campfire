@@ -26,8 +26,8 @@ GIT
 
 GIT
   remote: https://github.com/rails/rails.git
-  revision: 478abdb62b4ff769ae2d9cf2e34be8335d9b6f7e
-  ref: 478abdb62b4ff769ae2d9cf2e34be8335d9b6f7e
+  revision: 83b33ca4809bf570d9a15c12f626eae2181583be
+  branch: main
   specs:
     actioncable (8.2.0.alpha)
       actionpack (= 8.2.0.alpha)
@@ -441,4 +441,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   2.5.9
+   2.7.2
