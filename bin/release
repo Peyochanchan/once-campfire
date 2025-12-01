@@ -59,6 +59,12 @@ announcing "Tagging as #{VERSION}" do
   end
 end
 
+announcing "Creating GitHub release..." do
+  on(:local) do
+    execute :gh, :release, :create, "v#{VERSION}", "--notes-from-tag"
+  end
+end
+
 announcing "Building and pushing image..." do
   versioning = "--build-arg APP_VERSION=#{VERSION} --build-arg GIT_REVISION=#{GIT_SHA}"
 
