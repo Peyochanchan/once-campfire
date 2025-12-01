@@ -45,23 +45,20 @@ on(:local) do
   end
 end
 
-announcing "Tagging as #{VERSION}" do
-  on(:local) do
-    execute :git, :fetch, :origin, "--tags"
+announcing "Creating GitHub release v#{VERSION}..." do
+  notes_file = "tmp/release_notes.md"
 
-    unless system "git tag -a v#{VERSION} -m 'Version #{VERSION}\n\n- list important changes here' -e"
-      abort "Failed to create tag; check that the version doesn't already exist"
+  on(:local) do
+    execute :mkdir, "-p", "tmp"
+
+    File.write(notes_file, "# What's Changed\n\n- \n")
+    system ENV["EDITOR"] || "vim", notes_file
+
+    unless system "gh", "release", "create", "v#{VERSION}", "--notes-file", notes_file
+      abort "Failed to create release; check that the version doesn't already exist"
     end
 
-    unless test :git, :push, "--tags"
-      abort "Failed to push tag; check that the version doesn't already exist"
-    end
-  end
-end
-
-announcing "Creating GitHub release..." do
-  on(:local) do
-    execute :gh, :release, :create, "v#{VERSION}", "--notes-from-tag"
+    execute :rm, notes_file
   end
 end
 
