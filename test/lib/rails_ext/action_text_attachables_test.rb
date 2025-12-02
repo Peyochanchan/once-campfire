@@ -15,7 +15,7 @@ class ActionText::AttachmentTest < ActiveSupport::TestCase
 
   test "from_node with a Rails 7 SGID" do
     gid = @user.to_gid.to_s
-    marshaled_gid = Base64.strict_encode64(Marshal.dump(gid))
+    marshaled_gid = Base64.urlsafe_encode64(Marshal.dump(gid))
     rails7_payload = { "_rails" => { "message" => marshaled_gid, "exp" => nil, "pur" => "attachable" } }
     rails7_message = Base64.strict_encode64(JSON.generate(rails7_payload))
     rails7_sgid = "#{rails7_message}--invalidsignature"
