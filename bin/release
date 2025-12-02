@@ -54,7 +54,7 @@ announcing "Creating GitHub release v#{VERSION}..." do
     File.write(notes_file, "# What's Changed\n\n- \n")
     system ENV["EDITOR"] || "vim", notes_file
 
-    unless system "gh", "release", "create", "v#{VERSION}", "--notes-file", notes_file
+    unless system "gh", "release", "create", "v#{VERSION}", "--title", "v#{VERSION}", "--notes-file", notes_file
       abort "Failed to create release; check that the version doesn't already exist"
     end
 
