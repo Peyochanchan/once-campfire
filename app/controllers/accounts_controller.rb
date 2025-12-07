@@ -3,7 +3,9 @@ class AccountsController < ApplicationController
   before_action :set_account
 
   def edit
-    set_page_and_extract_portion_from account_users.ordered, per_page: 500
+    users = account_users.ordered.without_bots
+    @administrators, @members = users.partition(&:administrator?)
+    set_page_and_extract_portion_from users, per_page: 500
   end
 
   def update
