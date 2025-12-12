@@ -10,14 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2025_11_26_130131) do
+ActiveRecord::Schema[8.2].define(version: 2025_12_12_154340) do
   create_table "accounts", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "custom_styles"
     t.string "join_code", null: false
     t.string "name", null: false
     t.json "settings"
+    t.integer "singleton_guard", default: 0, null: false
     t.datetime "updated_at", null: false
+    t.index ["singleton_guard"], name: "index_accounts_on_singleton_guard", unique: true
   end
 
   create_table "action_text_rich_texts", force: :cascade do |t|
