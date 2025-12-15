@@ -12,7 +12,7 @@ ActiveSupport.on_load(:action_text_content) do
 
         def attachable_from_possibly_expired_sgid(sgid)
           if message = sgid&.split("--")&.first
-            encoded_message = JSON.parse Base64.strict_decode64(message)
+            encoded_message = JSON.parse(decode_base64(message))
 
             decoded_gid = if data = encoded_message.dig("_rails", "data")
               data
@@ -20,7 +20,7 @@ ActiveSupport.on_load(:action_text_content) do
               # Rails 7 used an older format of GID that serialized the payload using Marshall
               # Since we intentionally skip signature verification, we can't safely unmarshal the data
               # To work around this, we manually extract the GID from the marshaled data
-              Base64.urlsafe_decode64(data).match(%r{(gid://campfire/[^/]+/\d+)})&.to_s
+              decode_base64(data).match(%r{(gid://campfire/[^/]+/\d+)})&.to_s
             else
               nil
             end
@@ -31,6 +31,12 @@ ActiveSupport.on_load(:action_text_content) do
           end
         rescue ActiveRecord::RecordNotFound
           nil
+        end
+
+        def decode_base64(message)
+          Base64.strict_decode64(message)
+        rescue => _e
+          Base64.urlsafe_decode64(message)
         end
     end
   end
