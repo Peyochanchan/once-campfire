@@ -1,4 +1,4 @@
-import { memoize } from "lib/autocomplete/utils"
+import { memoize } from "./utils"
 
 export default class Selection {
   #elements = []

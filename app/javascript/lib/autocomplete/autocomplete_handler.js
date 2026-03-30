@@ -1,5 +1,5 @@
-import BaseAutocompleteHandler from "lib/autocomplete/base_autocomplete_handler"
-import Selection from "lib/autocomplete/selection"
+import BaseAutocompleteHandler from "./base_autocomplete_handler"
+import Selection from "./selection"
 
 export default class extends BaseAutocompleteHandler {
   #selection

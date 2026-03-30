@@ -1,0 +1,17 @@
+{
+  "name": "app",
+  "private": true,
+  "scripts": {
+    "build": "bun bun.config.js"
+  },
+  "dependencies": {
+    "@hotwired/stimulus": "^3.2.2",
+    "@hotwired/turbo-rails": "https://github.com/hotwired/turbo-rails",
+    "@livekit/track-processors": "^0.7.2",
+    "@rails/actiontext": "^8.1.300",
+    "@rails/request.js": "^0.0.13",
+    "highlight.js": "^11.11.1",
+    "livekit-client": "^2.18.0",
+    "trix": "^2.1.18"
+  }
+}

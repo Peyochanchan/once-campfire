@@ -1,5 +1,5 @@
-import OpengraphEmbedOperation from "lib/rich_text/unfurl/lib/opengraph_embed_operation"
-import Paste from "lib/rich_text/unfurl/lib/paste"
+import OpengraphEmbedOperation from "./lib/opengraph_embed_operation"
+import Paste from "./lib/paste"
 
 const performOperation = (function() {
   let operation = null

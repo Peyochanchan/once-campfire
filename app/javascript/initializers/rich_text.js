@@ -1,4 +1,4 @@
-import Unfurler from "lib/rich_text/unfurl/unfurler"
+import Unfurler from "../lib/rich_text/unfurl/unfurler"
 
 // Support a `cite` block for attribution links
 Trix.config.blockAttributes.cite = {

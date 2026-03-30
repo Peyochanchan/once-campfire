@@ -1,4 +1,4 @@
-import { getAbsolutePositionForOffsets, getElementMargin, getViewportRect, synchronize, transitionElementWithClass } from "lib/autocomplete/helpers"
+import { getAbsolutePositionForOffsets, getElementMargin, getViewportRect, synchronize, transitionElementWithClass } from "./helpers"
 
 export default class SuggestionResultsController {
   constructor(options = {}) {

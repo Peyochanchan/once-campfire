@@ -17,8 +17,13 @@
     </button>
 
     <button class="btn" data-action="video-call#toggleMic" data-video-call-target="micBtn" title="Toggle microphone">
-      <%= image_tag "phone.svg", size: 20, aria: { hidden: "true" } %>
+      <%= image_tag "microphone.svg", size: 20, aria: { hidden: "true" } %>
       <span class="for-screen-reader">Toggle microphone</span>
+    </button>
+
+    <button class="btn" data-action="video-call#toggleBlur" data-video-call-target="blurBtn" title="Background blur">
+      <%= image_tag "person.svg", size: 20, aria: { hidden: "true" } %>
+      <span class="for-screen-reader">Background blur</span>
     </button>
 
     <button class="btn" data-action="video-call#toggleScreenShare" data-video-call-target="screenBtn" title="Share screen">

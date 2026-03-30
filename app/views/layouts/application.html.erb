@@ -24,8 +24,7 @@
     <%= stylesheet_link_tag :all, "data-turbo-track": Rails.env.production? ? "reload" : "" %>
     <%= custom_styles_tag %>
 
-    <script src="https://cdn.jsdelivr.net/npm/livekit-client@2/dist/livekit-client.umd.min.js"></script>
-    <%= javascript_importmap_tags %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
 
     <%= yield :head %>
   </head>

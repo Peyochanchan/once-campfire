@@ -5,14 +5,21 @@ class CallParticipant < ApplicationRecord
   belongs_to :room
   belongs_to :user
 
-  after_create_commit  :broadcast_call_state
-  after_destroy_commit :broadcast_call_state
+  after_create_commit  :broadcast_participant_joined
+  after_destroy_commit :broadcast_participant_left
 
   private
-    def broadcast_call_state
+    def broadcast_participant_joined
       broadcast_replace_to [ room, :call ],
         target: dom_id(room, :call_banner),
         partial: "rooms/calls/banner",
-        locals: { room: room, user: Current.user }
+        locals: { room: room, notify: true }
+    end
+
+    def broadcast_participant_left
+      broadcast_replace_to [ room, :call ],
+        target: dom_id(room, :call_banner),
+        partial: "rooms/calls/banner",
+        locals: { room: room, notify: false }
     end
 end

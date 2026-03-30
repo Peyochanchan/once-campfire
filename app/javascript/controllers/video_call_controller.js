@@ -1,7 +1,9 @@
 import { Controller } from "@hotwired/stimulus"
+import { Room, RoomEvent } from "livekit-client"
+import { BackgroundProcessor } from "@livekit/track-processors"
 
 export default class extends Controller {
-  static targets = ["grid", "cameraBtn", "micBtn", "screenBtn"]
+  static targets = ["grid", "cameraBtn", "micBtn", "screenBtn", "blurBtn"]
   static values = {
     token: String,
     url: String,
@@ -63,6 +65,47 @@ export default class extends Controller {
     this.micBtnTarget.classList.toggle("btn--active", !enabled)
   }
 
+  async toggleBlur() {
+    if (!this.room) return
+    const cameraPub = this.room.localParticipant.getTrackPublication("camera")
+    if (!cameraPub || !cameraPub.track) return
+
+    try {
+      if (this._blurEnabled) {
+        await cameraPub.track.stopProcessor()
+        this._blurEnabled = false
+      } else {
+        if (!this._blurProcessor) {
+          this._blurProcessor = BackgroundProcessor({
+            mode: "background-blur",
+            blurRadius: 18,
+            segmenterOptions: {
+              modelType: "landscape",
+              smoothingFactor: 0.8
+            }
+          })
+        }
+        await cameraPub.track.setProcessor(this._blurProcessor, true)
+        this._blurEnabled = true
+      }
+      // Re-attach to show processed stream locally
+      this._reattachLocalVideo()
+
+      if (this.hasBlurBtnTarget) {
+        this.blurBtnTarget.classList.toggle("btn--active", this._blurEnabled)
+      }
+    } catch (error) {
+      console.warn("[VideoCall] Background blur not available:", error.message)
+    }
+  }
+
+  _reattachLocalVideo() {
+    const tile = this._findTile(this.room.localParticipant)
+    if (!tile) return
+    tile.querySelectorAll("video").forEach(v => v.remove())
+    this._attachLocalTracks()
+  }
+
   async toggleScreenShare() {
     if (!this.room) return
     try {
@@ -82,14 +125,25 @@ export default class extends Controller {
       method: "DELETE",
       headers: { "X-CSRF-Token": token }
     })
+
+    // Try to close the tab, fallback to "call ended" screen
     window.close()
+    setTimeout(() => {
+      // If window.close() was blocked, show end screen
+      if (!window.closed) {
+        this.element.innerHTML = `
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:white;gap:1rem">
+            <p style="font-size:1.4rem">Call ended</p>
+            <a href="/rooms/${this.roomIdValue}" style="color:white;text-decoration:underline;font-size:1rem">Back to room</a>
+          </div>
+        `
+      }
+    }, 300)
   }
 
   // Private
 
   async _joinRoom() {
-    const { Room, RoomEvent } = window.LivekitClient
-
     this.room = new Room({ adaptiveStream: true, dynacast: true })
 
     this.room.on(RoomEvent.TrackSubscribed, (track, _publication, participant) => {
@@ -118,6 +172,12 @@ export default class extends Controller {
       }
     })
 
+    this.room.on(RoomEvent.ParticipantConnected, (participant) => {
+      this._getOrCreateTile(participant)
+      // Show avatar if participant has no camera
+      this._checkParticipantCamera(participant)
+    })
+
     this.room.on(RoomEvent.ParticipantDisconnected, (participant) => {
       this._removeParticipantTile(participant)
     })
@@ -131,6 +191,17 @@ export default class extends Controller {
 
       // Always create local tile upfront
       this._getOrCreateTile(this.room.localParticipant)
+
+      // Attach tracks from participants already in the room
+      this.room.remoteParticipants.forEach((participant) => {
+        this._getOrCreateTile(participant)
+        participant.trackPublications.forEach((pub) => {
+          if (pub.track && pub.isSubscribed) {
+            this._attachTrack(pub.track, participant)
+          }
+        })
+        this._checkParticipantCamera(participant)
+      })
 
       if (this.startWithVideoValue) {
         await this.room.localParticipant.enableCameraAndMicrophone()
@@ -180,8 +251,20 @@ export default class extends Controller {
     let tile = this._findTile(participant)
     if (!tile) {
       tile = document.createElement("div")
-      tile.className = "call-tile"
+      const isLocal = this.room && participant === this.room.localParticipant
+      tile.className = isLocal ? "call-tile call-tile--local" : "call-tile"
       tile.dataset.participantIdentity = participant.identity
+
+      if (isLocal) {
+        tile.style.width = "20rem"
+        tile.style.maxWidth = "25vw"
+        tile.style.position = "absolute"
+        tile.style.bottom = "1.5rem"
+        tile.style.right = "1.5rem"
+        tile.style.zIndex = "2"
+        tile.style.border = "2px solid rgba(255,255,255,0.2)"
+        tile.style.boxShadow = "0 2px 12px rgba(0,0,0,0.5)"
+      }
 
       // Avatar placeholder (shown when camera is off)
       const avatar = document.createElement("div")
@@ -191,21 +274,28 @@ export default class extends Controller {
       avatar.style.justifyContent = "center"
       avatar.style.width = "100%"
       avatar.style.height = "100%"
+      const avatarSize = isLocal ? 80 : 224
       const avatarImg = document.createElement("img")
       avatarImg.src = this._avatarUrlFor(participant)
       avatarImg.alt = participant.name || participant.identity
-      avatarImg.style.width = "100%"
-      avatarImg.style.height = "100%"
+      avatarImg.width = avatarSize
+      avatarImg.height = avatarSize
+      avatarImg.style.width = `${avatarSize}px`
+      avatarImg.style.height = `${avatarSize}px`
+      avatarImg.style.minWidth = `${avatarSize}px`
+      avatarImg.style.minHeight = `${avatarSize}px`
+      avatarImg.style.borderRadius = "50%"
       avatarImg.style.objectFit = "cover"
       avatar.appendChild(avatarImg)
       tile.appendChild(avatar)
 
       const nameTag = document.createElement("span")
-      nameTag.className = "call-tile__name txt-small"
+      nameTag.className = "call-tile__name"
       nameTag.textContent = participant.name || participant.identity
       tile.appendChild(nameTag)
 
       this.gridTarget.appendChild(tile)
+      this._updateGridLayout()
     }
     return tile
   }
@@ -215,8 +305,19 @@ export default class extends Controller {
     if (isLocal && this.hasAvatarUrlValue) {
       return this.avatarUrlValue
     }
-    // For remote participants, use a generated avatar based on identity
-    return `/users/${participant.identity}/avatar`
+    // Read avatar from participant metadata (set server-side in JWT)
+    try {
+      const meta = JSON.parse(participant.metadata || "{}")
+      if (meta.avatar_url) return meta.avatar_url
+    } catch (_) {}
+    return this.avatarUrlValue
+  }
+
+  _checkParticipantCamera(participant) {
+    const hasCameraOn = participant.isCameraEnabled
+    if (!hasCameraOn) {
+      this._toggleAvatar(participant, true)
+    }
   }
 
   _toggleAvatar(participant, showAvatar) {
@@ -237,6 +338,27 @@ export default class extends Controller {
 
   _removeParticipantTile(participant) {
     this._findTile(participant)?.remove()
+    this._updateGridLayout()
+  }
+
+  _updateGridLayout() {
+    const remoteTiles = this.gridTarget.querySelectorAll(".call-tile:not(.call-tile--local)")
+    const count = remoteTiles.length
+    if (count <= 1) {
+      this.gridTarget.style.gridTemplateColumns = "1fr"
+    } else if (count <= 4) {
+      this.gridTarget.style.gridTemplateColumns = "repeat(2, 1fr)"
+    } else {
+      this.gridTarget.style.gridTemplateColumns = "repeat(3, 1fr)"
+    }
+    // Center last odd tile
+    remoteTiles.forEach(tile => tile.style.gridColumn = "")
+    if (count > 1 && count % 2 === 1) {
+      const lastTile = remoteTiles[remoteTiles.length - 1]
+      lastTile.style.gridColumn = "1 / -1"
+      lastTile.style.maxWidth = "50%"
+      lastTile.style.justifySelf = "center"
+    }
   }
 
   _cleanup() {

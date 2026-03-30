@@ -1,4 +1,4 @@
-import { generateUUID, synchronize } from "lib/autocomplete/helpers"
+import { generateUUID, synchronize } from "../helpers"
 
 export default class extends HTMLElement {
   constructor() {

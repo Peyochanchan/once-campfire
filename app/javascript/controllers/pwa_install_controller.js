@@ -1,5 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
-import { getCookie, setCookie } from "lib/cookie"
+import { getCookie, setCookie } from "../lib/cookie"
 
 export default class extends Controller {
   static classes = [ "prompting" ]

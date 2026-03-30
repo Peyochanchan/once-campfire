@@ -1,5 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
-import { throttle } from "helpers/timing_helpers"
+import { throttle } from "../helpers/timing_helpers"
 
 export default class extends Controller {
   static targets = [ "item" ]

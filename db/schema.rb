@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_03_30_073348) do
+ActiveRecord::Schema[8.2].define(version: 2026_03_30_095404) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -113,9 +113,11 @@ ActiveRecord::Schema[8.2].define(version: 2026_03_30_073348) do
     t.datetime "created_at", null: false
     t.integer "creator_id", null: false
     t.integer "room_id", null: false
+    t.tsvector "searchable"
     t.datetime "updated_at", null: false
     t.index ["creator_id"], name: "index_messages_on_creator_id"
     t.index ["room_id"], name: "index_messages_on_room_id"
+    t.index ["searchable"], name: "index_messages_on_searchable", using: :gin
   end
 
   create_table "push_subscriptions", force: :cascade do |t|

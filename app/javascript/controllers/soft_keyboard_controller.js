@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
-import { nextEventNamed } from "helpers/timing_helpers"
-import { isTouchDevice } from "helpers/navigator_helpers"
+import { nextEventNamed } from "../helpers/timing_helpers"
+import { isTouchDevice } from "../helpers/navigator_helpers"
 
 export default class extends Controller {
   static get shouldLoad() {

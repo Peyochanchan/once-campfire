@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 import { cable } from "@hotwired/turbo-rails"
-import { ignoringBriefDisconnects } from "helpers/dom_helpers"
+import { ignoringBriefDisconnects } from "../helpers/dom_helpers"
 
 export default class extends Controller {
   static targets = [ "room" ]

@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
-import MentionsAutocompleteHandler from "lib/autocomplete/mentions_autocomplete_handler"
-import { debounce } from "helpers/timing_helpers"
+import MentionsAutocompleteHandler from "../lib/autocomplete/mentions_autocomplete_handler"
+import { debounce } from "../helpers/timing_helpers"
 
 export default class extends Controller {
   static values = { url: String }

@@ -1,8 +1,8 @@
 import { Controller } from "@hotwired/stimulus"
 import { post } from "@rails/request.js"
-import { pageIsTurboPreview } from "helpers/turbo_helpers"
-import { onNextEventLoopTick } from "helpers/timing_helpers"
-import { getCookie, setCookie } from "lib/cookie"
+import { pageIsTurboPreview } from "../helpers/turbo_helpers"
+import { onNextEventLoopTick } from "../helpers/timing_helpers"
+import { getCookie, setCookie } from "../lib/cookie"
 
 export default class extends Controller {
   static values = { subscriptionsUrl: String }

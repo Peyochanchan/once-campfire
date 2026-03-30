@@ -1,4 +1,4 @@
-import { camelize, normalize, regexpForQuery, uniqueValues } from "lib/autocomplete/utils"
+import { camelize, normalize, regexpForQuery, uniqueValues } from "./utils"
 
 export default class AutocompletableCollection {
   #autocompletables

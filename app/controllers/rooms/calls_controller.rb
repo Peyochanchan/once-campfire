@@ -5,7 +5,7 @@ class Rooms::CallsController < ApplicationController
     @room.call_participants.find_or_create_by!(user: Current.user) do |cp|
       cp.joined_at = Time.current
     end
-    @token = CallParticipant.generate_token(room: @room, user: Current.user)
+    @token = CallParticipant.generate_token(room: @room, user: Current.user, avatar_url: fresh_user_avatar_path(Current.user))
     @video = params[:video].present?
   end
 
@@ -13,7 +13,7 @@ class Rooms::CallsController < ApplicationController
     @room.call_participants.find_or_create_by!(user: Current.user) do |cp|
       cp.joined_at = Time.current
     end
-    @token = CallParticipant.generate_token(room: @room, user: Current.user)
+    @token = CallParticipant.generate_token(room: @room, user: Current.user, avatar_url: fresh_user_avatar_path(Current.user))
 
     respond_to do |format|
       format.turbo_stream

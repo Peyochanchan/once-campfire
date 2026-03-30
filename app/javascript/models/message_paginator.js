@@ -4,8 +4,8 @@ import {
   parseHTMLFragment,
   keepScroll,
   trimChildren,
-} from "helpers/dom_helpers"
-import { ThreadStyle } from "models/message_formatter"
+} from "../helpers/dom_helpers"
+import { ThreadStyle } from "./message_formatter"
 
 const MAX_MESSAGES = 300
 const MAX_MESSAGES_LEEWAY = 20

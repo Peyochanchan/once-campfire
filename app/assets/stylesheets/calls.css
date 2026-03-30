@@ -2,8 +2,12 @@
   background: var(--color-surface, oklch(0.97 0 0));
   border: 1px solid var(--color-border);
   border-radius: 0.5rem;
-  margin-inline: var(--inline-space);
+  box-shadow: 0 2px 8px oklch(0 0 0 / 0.15);
+  inset-block-start: var(--block-space);
+  inset-inline-end: calc(var(--sidebar-width) + var(--inline-space));
   padding: 0.5em 1em;
+  position: fixed;
+  z-index: 3;
 }
 
 .call-banner__indicator {
@@ -31,41 +35,30 @@
   z-index: 10;
 }
 
+/* Grid: remote participants fill the space */
 .call-grid {
-  align-content: center;
-  align-items: center;
   display: grid;
   flex: 1 1 0;
   gap: 0.5rem;
   grid-template-columns: 1fr;
-  justify-items: center;
+  grid-auto-rows: 1fr;
   min-block-size: 0;
   overflow: hidden;
-  padding: 1rem;
+  padding: 0.5rem;
+  position: relative;
 }
 
-/* Adapt grid columns to participant count */
-.call-grid:has(.call-tile:nth-child(2)) {
-  grid-template-columns: repeat(2, 1fr);
-}
+/* Grid columns managed by JS via _updateGridLayout() */
 
-.call-grid:has(.call-tile:nth-child(3)) {
-  grid-template-columns: repeat(2, 1fr);
-}
-
-.call-grid:has(.call-tile:nth-child(5)) {
-  grid-template-columns: repeat(3, 1fr);
-}
-
+/* Remote tiles: fill the grid */
 .call-tile {
-  aspect-ratio: 16 / 9;
   background: oklch(0.18 0 0);
   border-radius: 0.5rem;
-  max-block-size: 100%;
-  max-inline-size: 100%;
   min-block-size: 0;
   overflow: hidden;
   position: relative;
+  width: 100%;
+  height: 100%;
 
   video {
     block-size: 100%;
@@ -78,16 +71,40 @@
   }
 }
 
-/* Avatar visibility is controlled entirely via inline JS styles */
+/* Local tile: small picture-in-picture in bottom right */
+.call-tile--local {
+  aspect-ratio: 16 / 9;
+  border: 2px solid oklch(1 0 0 / 0.2);
+  border-radius: 0.5rem;
+  block-size: auto;
+  box-shadow: 0 2px 12px oklch(0 0 0 / 0.5);
+  inset-block-end: 5rem;
+  inset-inline-end: 1.5rem;
+  inline-size: 20rem;
+  max-inline-size: 25vw;
+  position: absolute;
+  width: auto;
+  z-index: 2;
+}
+
+/* Avatar visibility and styles controlled via inline JS */
 
 .call-tile__name {
   background: oklch(0 0 0 / 0.6);
   border-radius: 0.25rem;
   color: white;
-  inset-block-end: 0.75rem;
-  inset-inline-start: 0.75rem;
-  padding: 0.2em 0.6em;
+  font-size: 1.2rem;
+  inset-block-end: 1.5rem;
+  inset-inline-start: 1.5rem;
+  padding: 0.4em 1em;
   position: absolute;
+}
+
+.call-tile--local .call-tile__name {
+  font-size: 1rem;
+  inset-block-end: 0.5rem;
+  inset-inline-start: 0.5rem;
+  padding: 0.25em 0.6em;
 }
 
 .call-controls {
@@ -105,7 +122,7 @@
   position: absolute;
   transform: translateX(-50%);
   transition: opacity 0.3s ease;
-  z-index: 1;
+  z-index: 3;
 }
 
 .call-container:hover .call-controls,

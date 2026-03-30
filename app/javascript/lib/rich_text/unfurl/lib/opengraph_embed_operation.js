@@ -1,5 +1,5 @@
 import { post } from "@rails/request.js"
-import { truncateString } from "helpers/string_helpers"
+import { truncateString } from "../../../../helpers/string_helpers"
 
 const UNFURLED_TWITTER_AVATAR_CSS_CLASS = "cf-twitter-avatar"
 const TWITTER_AVATAR_URL_PREFIX = "https://pbs.twimg.com/profile_images"

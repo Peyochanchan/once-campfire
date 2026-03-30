@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
-import AutocompleteHandler from "lib/autocomplete/autocomplete_handler"
-import { debounce } from "helpers/timing_helpers"
+import AutocompleteHandler from "../lib/autocomplete/autocomplete_handler"
+import { debounce } from "../helpers/timing_helpers"
 
 export default class extends Controller {
   static targets = [ "select", "input" ]

@@ -1,5 +1,5 @@
-import SuggestionResultsController from "lib/autocomplete/suggestion_results_controller"
-import SuggestionContext from "lib/autocomplete/suggestion_context"
+import SuggestionResultsController from "./suggestion_results_controller"
+import SuggestionContext from "./suggestion_context"
 
 export default class SuggestionController {
   #active     = false

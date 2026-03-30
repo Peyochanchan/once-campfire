@@ -1,5 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
-import ScrollManager from "models/scroll_manager"
+import ScrollManager from "../models/scroll_manager"
 
 export default class extends Controller {
   #scrollManager

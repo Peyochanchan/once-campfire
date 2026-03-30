@@ -1,5 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
-import { onNextEventLoopTick } from "helpers/timing_helpers"
+import { onNextEventLoopTick } from "../helpers/timing_helpers"
 
 export default class extends Controller {
   static targets = [ "unread" ]

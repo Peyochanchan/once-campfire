@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 import { get } from "@rails/request.js"
 import { cable } from "@hotwired/turbo-rails"
-import { pageIsTurboPreview } from "helpers/turbo_helpers"
+import { pageIsTurboPreview } from "../helpers/turbo_helpers"
 
 const OFFLINE_AFTER_DISCONNECTED_TIMEOUT = 5_000
 const REFRESH_AFTER_HIDDEN_TIMEOUT = 60_000

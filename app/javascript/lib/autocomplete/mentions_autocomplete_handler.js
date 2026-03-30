@@ -1,5 +1,5 @@
-import BaseAutocompleteHandler from "lib/autocomplete/base_autocomplete_handler"
-import { PUNCTUATION_PATTERN } from "lib/autocomplete/constants"
+import BaseAutocompleteHandler from "./base_autocomplete_handler"
+import { PUNCTUATION_PATTERN } from "./constants"
 
 export default class extends BaseAutocompleteHandler {
   get pattern() {

@@ -20,7 +20,7 @@ gem "resque-pool", "~> 0.7.1"
 
 # Assets
 gem "propshaft", github: "rails/propshaft"
-gem "importmap-rails", github: "rails/importmap-rails"
+gem "jsbundling-rails"
 
 # Hotwire
 gem "turbo-rails", github: "hotwired/turbo-rails"

@@ -1,7 +1,7 @@
-import Collection from "lib/autocomplete/collection"
-import SuggestionController from "lib/autocomplete/suggestion_controller"
-import { generateUUID } from "lib/autocomplete/helpers"
-import { Renderer } from "lib/autocomplete/renderer"
+import Collection from "./collection"
+import SuggestionController from "./suggestion_controller"
+import { generateUUID } from "./helpers"
+import { Renderer } from "./renderer"
 
 export default class BaseAutocompleteHandler {
   #autocompletables

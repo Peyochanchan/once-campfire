@@ -1,5 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
-import MessageFormatter, { ThreadStyle } from "models/message_formatter"
+import MessageFormatter, { ThreadStyle } from "../models/message_formatter"
 
 export default class extends Controller {
   static targets = [ "message" ]

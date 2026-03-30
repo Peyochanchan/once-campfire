@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 import { cable } from "@hotwired/turbo-rails"
-import { delay, nextFrame } from "helpers/timing_helpers"
+import { delay, nextFrame } from "../helpers/timing_helpers"
 
 const REFRESH_INTERVAL = 50 * 1000 // 50 seconds
 

@@ -1,4 +1,4 @@
-import { onNextEventLoopTick } from "helpers/timing_helpers"
+import { onNextEventLoopTick } from "../helpers/timing_helpers"
 
 const THREADING_TIME_WINDOW_MILLISECONDS = 5 * 60 * 1000 // 5 minutes
 

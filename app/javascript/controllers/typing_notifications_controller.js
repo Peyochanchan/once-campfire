@@ -1,8 +1,8 @@
 import { Controller } from "@hotwired/stimulus"
 import { cable } from "@hotwired/turbo-rails"
-import { throttle } from "helpers/timing_helpers"
-import { pageIsTurboPreview } from "helpers/turbo_helpers"
-import TypingTracker from "models/typing_tracker"
+import { throttle } from "../helpers/timing_helpers"
+import { pageIsTurboPreview } from "../helpers/turbo_helpers"
+import TypingTracker from "../models/typing_tracker"
 
 export default class extends Controller {
   static targets = [ "author", "indicator" ]

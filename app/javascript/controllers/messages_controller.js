@@ -1,9 +1,9 @@
 import { Controller } from "@hotwired/stimulus"
-import { nextEventLoopTick } from "helpers/timing_helpers"
-import ClientMessage from "models/client_message"
-import MessageFormatter, { ThreadStyle } from "models/message_formatter"
-import MessagePaginator from "models/message_paginator"
-import ScrollManager from "models/scroll_manager"
+import { nextEventLoopTick } from "../helpers/timing_helpers"
+import ClientMessage from "../models/client_message"
+import MessageFormatter, { ThreadStyle } from "../models/message_formatter"
+import MessagePaginator from "../models/message_paginator"
+import ScrollManager from "../models/scroll_manager"
 
 export default class extends Controller {
   static targets = [ "latest", "message", "body", "messages", "template" ]
