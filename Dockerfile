@@ -9,9 +9,9 @@ WORKDIR /rails
 
 # Install base packages
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl libsqlite3-0 libvips libjemalloc2 ffmpeg redis && \
+    apt-get install --no-install-recommends -y curl libpq5 libvips libjemalloc2 ffmpeg && \
     ln -s /usr/lib/$(uname -m)-linux-gnu/libjemalloc.so.2 /usr/local/lib/libjemalloc.so && \
-    rm -rf /var/lib/apt/lists /var/cache/apt/archive
+    rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Set production environment
 ENV RAILS_ENV="production" \
@@ -26,8 +26,12 @@ FROM base AS build
 
 # Install packages need to build gems
 RUN apt-get update -qq && \
-    apt-get install -y build-essential git pkg-config libyaml-dev  && \
+    apt-get install -y build-essential git pkg-config libyaml-dev libpq-dev unzip && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
+
+# Install Bun for JS bundling
+RUN curl -fsSL https://bun.sh/install | bash
+ENV PATH="/root/.bun/bin:${PATH}"
 
 # Install application gems
 COPY Gemfile Gemfile.lock vendor ./
@@ -35,11 +39,16 @@ COPY Gemfile Gemfile.lock vendor ./
 RUN bundle install && \
     rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git
 
+# Install JS dependencies
+COPY package.json bun.lock bun.config.js ./
+RUN bun install --frozen-lockfile
+
 # Copy application code
 COPY . .
 
-# Precompiling assets for production without requiring secret RAILS_MASTER_KEY
-RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
+# Build JS bundle and precompile assets
+RUN bun run build && \
+    SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
 
 
 # Final stage for app image
