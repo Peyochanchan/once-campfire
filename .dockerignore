@@ -27,8 +27,7 @@
 !/storage/
 !/storage/.keep
 
-# Ignore development credentials
-/config/credentials.yml.enc
+# Include credentials (encrypted, needs RAILS_MASTER_KEY to decrypt)
 
 # Ignore deployment files
 /config/deploy*.yml
