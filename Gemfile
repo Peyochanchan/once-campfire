@@ -8,7 +8,7 @@ gem "ostruct"
 gem "benchmark"
 
 # Drivers
-gem "sqlite3"
+gem "pg"
 gem "redis", "~> 5.4"
 
 # Deployment
