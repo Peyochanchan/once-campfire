@@ -1,0 +1,2 @@
+class CallChannel < RoomChannel
+end

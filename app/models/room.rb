@@ -19,6 +19,7 @@ class Room < ApplicationRecord
 
   has_many :users, through: :memberships
   has_many :messages, dependent: :destroy
+  has_many :call_participants, dependent: :delete_all
 
   belongs_to :creator, class_name: "User", default: -> { Current.user }
 
@@ -58,6 +59,10 @@ class Room < ApplicationRecord
 
   def direct?
     is_a?(Rooms::Direct)
+  end
+
+  def active_call?
+    call_participants.exists?
   end
 
   def default_involvement

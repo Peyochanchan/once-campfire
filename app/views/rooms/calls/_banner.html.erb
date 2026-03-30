@@ -1,0 +1,16 @@
+<%= turbo_frame_tag dom_id(room, :call_banner) do %>
+  <% if room.active_call? %>
+    <div class="call-banner flex align-center gap">
+      <div class="call-banner__indicator"></div>
+      <span class="txt-small">
+        <%= room.call_participants.includes(:user).map { |cp| cp.user.name }.to_sentence %>
+        on a call
+      </span>
+      <% if room.call_participants.exists?(user: Current.user) %>
+        <%= button_to "Leave", room_call_path(room), method: :delete, class: "btn btn--small btn--negative" %>
+      <% else %>
+        <%= button_to "Join", room_call_path(room), method: :post, class: "btn btn--small btn--reversed" %>
+      <% end %>
+    </div>
+  <% end %>
+<% end %>

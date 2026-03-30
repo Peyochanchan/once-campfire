@@ -1,0 +1,34 @@
+<div class="call-container"
+     data-controller="video-call"
+     data-video-call-token-value="<%= token %>"
+     data-video-call-url-value="<%= Rails.configuration.x.livekit.url %>"
+     data-video-call-room-id-value="<%= room.id %>"
+     data-video-call-leave-url-value="<%= room_call_path(room) %>"
+     data-video-call-avatar-url-value="<%= fresh_user_avatar_path(Current.user) %>"
+     data-video-call-start-with-video-value="<%= video %>">
+
+  <div class="call-grid" data-video-call-target="grid">
+  </div>
+
+  <div class="call-controls flex align-center gap center">
+    <button class="btn" data-action="video-call#toggleCamera" data-video-call-target="cameraBtn" title="Toggle camera">
+      <%= image_tag "camera.svg", size: 20, aria: { hidden: "true" } %>
+      <span class="for-screen-reader">Toggle camera</span>
+    </button>
+
+    <button class="btn" data-action="video-call#toggleMic" data-video-call-target="micBtn" title="Toggle microphone">
+      <%= image_tag "phone.svg", size: 20, aria: { hidden: "true" } %>
+      <span class="for-screen-reader">Toggle microphone</span>
+    </button>
+
+    <button class="btn" data-action="video-call#toggleScreenShare" data-video-call-target="screenBtn" title="Share screen">
+      <%= image_tag "laptop.svg", size: 20, aria: { hidden: "true" } %>
+      <span class="for-screen-reader">Share screen</span>
+    </button>
+
+    <button class="btn btn--negative" data-action="video-call#leave" title="Leave call">
+      <%= image_tag "remove.svg", size: 20, aria: { hidden: "true" } %>
+      <span class="for-screen-reader">Leave call</span>
+    </button>
+  </div>
+</div>

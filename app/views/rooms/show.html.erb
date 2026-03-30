@@ -9,6 +9,10 @@
 
 <% content_for :sidebar, sidebar_turbo_frame_tag(src: user_sidebar_path) %>
 
+<%= render "rooms/calls/banner", room: @room %>
+<%= turbo_stream_from @room, :call %>
+<div id="<%= dom_id(@room, :call_container) %>"></div>
+
 <%= message_area_tag(@room) do %>
   <%= render "messages/template" %>
 

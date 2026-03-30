@@ -16,5 +16,15 @@
     <span class="for-screen-reader">Settings for this <%= room.direct? ? "Ping" : "room" %></span>
   <% end %>
 
+  <%= link_to room_call_path(room, video: true), class: "btn", target: "_blank", title: "Video call" do %>
+    <%= image_tag "camera.svg", size: 20, aria: { hidden: "true" } %>
+    <span class="for-screen-reader">Start a video call</span>
+  <% end %>
+
+  <%= link_to room_call_path(room), class: "btn", target: "_blank", title: "Audio call" do %>
+    <%= image_tag "phone.svg", size: 20, aria: { hidden: "true" } %>
+    <span class="for-screen-reader">Start an audio call</span>
+  <% end %>
+
   <%= render "rooms/involvements/bell", room: room %>
 <% end %>

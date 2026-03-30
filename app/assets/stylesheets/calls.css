@@ -1,0 +1,142 @@
+.call-banner {
+  background: var(--color-surface, oklch(0.97 0 0));
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  margin-inline: var(--inline-space);
+  padding: 0.5em 1em;
+}
+
+.call-banner__indicator {
+  background: oklch(0.65 0.2 145);
+  block-size: 0.5em;
+  border-radius: 50%;
+  inline-size: 0.5em;
+  animation: call-pulse 2s ease-in-out infinite;
+}
+
+@keyframes call-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* Fullscreen overlay like Teams */
+.call-container {
+  background: oklch(0.12 0 0);
+  display: flex;
+  flex-direction: column;
+  block-size: 100dvh;
+  inset: 0;
+  overflow: hidden;
+  position: fixed;
+  z-index: 10;
+}
+
+.call-grid {
+  align-content: center;
+  align-items: center;
+  display: grid;
+  flex: 1 1 0;
+  gap: 0.5rem;
+  grid-template-columns: 1fr;
+  justify-items: center;
+  min-block-size: 0;
+  overflow: hidden;
+  padding: 1rem;
+}
+
+/* Adapt grid columns to participant count */
+.call-grid:has(.call-tile:nth-child(2)) {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.call-grid:has(.call-tile:nth-child(3)) {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.call-grid:has(.call-tile:nth-child(5)) {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.call-tile {
+  aspect-ratio: 16 / 9;
+  background: oklch(0.18 0 0);
+  border-radius: 0.5rem;
+  max-block-size: 100%;
+  max-inline-size: 100%;
+  min-block-size: 0;
+  overflow: hidden;
+  position: relative;
+
+  video {
+    block-size: 100%;
+    inline-size: 100%;
+    object-fit: cover;
+  }
+
+  audio {
+    display: none;
+  }
+}
+
+/* Avatar visibility is controlled entirely via inline JS styles */
+
+.call-tile__name {
+  background: oklch(0 0 0 / 0.6);
+  border-radius: 0.25rem;
+  color: white;
+  inset-block-end: 0.75rem;
+  inset-inline-start: 0.75rem;
+  padding: 0.2em 0.6em;
+  position: absolute;
+}
+
+.call-controls {
+  align-items: center;
+  background: oklch(0.18 0 0 / 0.85);
+  backdrop-filter: blur(10px);
+  border-radius: 1rem;
+  display: flex;
+  gap: 0.75rem;
+  inset-block-end: 1.5rem;
+  inset-inline-start: 50%;
+  justify-content: center;
+  opacity: 0;
+  padding: 0.75em 1.5em;
+  position: absolute;
+  transform: translateX(-50%);
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.call-container:hover .call-controls,
+.call-container--controls-visible .call-controls {
+  opacity: 1;
+}
+
+.call-controls .btn {
+  --btn-background: oklch(0.3 0 0);
+  --btn-border-color: oklch(0.35 0 0);
+  --btn-size: 3.2em;
+
+  img {
+    filter: invert(100%);
+  }
+}
+
+.call-controls .btn--active {
+  --btn-background: white;
+  --btn-border-color: white;
+
+  img {
+    filter: invert(0%);
+  }
+}
+
+.call-controls .btn--negative {
+  --btn-background: oklch(0.55 0.25 25);
+  --btn-border-color: oklch(0.55 0.25 25);
+
+  img {
+    filter: invert(100%);
+  }
+}

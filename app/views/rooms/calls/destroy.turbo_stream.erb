@@ -1,0 +1,7 @@
+<%= turbo_stream.replace dom_id(@room, :call_banner) do %>
+  <%= render "rooms/calls/banner", room: @room %>
+<% end %>
+
+<%= turbo_stream.replace dom_id(@room, :call_container) do %>
+  <div id="<%= dom_id(@room, :call_container) %>"></div>
+<% end %>

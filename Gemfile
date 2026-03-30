@@ -33,6 +33,9 @@ gem "image_processing", ">= 1.2"
 gem "sentry-ruby"
 gem "sentry-rails"
 
+# Video
+gem "livekit-server-sdk"
+
 # Other
 gem "bcrypt"
 gem "web-push"
@@ -44,6 +47,10 @@ gem "net-http-persistent"
 gem "kredis"
 gem "platform_agent"
 gem "thruster"
+
+group :development do
+  gem "hotwire-spark"
+end
 
 group :development, :test do
   gem "debug"
