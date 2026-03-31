@@ -28,14 +28,13 @@ body {
   @media (min-width: 100ch) {
     block-size: var(--footer-height);
     display: grid;
-    filter: saturate(0);
     inline-size: 5vw;
     inset: auto auto 0 0;
-    opacity: 0.5;
+    opacity: 0.6;
     padding-inline: 1vw;
     place-items: center;
     position: absolute;
-    transition: opacity 500ms ease-in-out, filter 500ms ease-in-out;
+    transition: opacity 500ms ease-in-out;
 
     & img {
       block-size: auto;
@@ -44,7 +43,6 @@ body {
     }
 
     &:hover {
-      filter: none;
       opacity: 1;
     }
   }
