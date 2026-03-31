@@ -109,10 +109,20 @@ export default class extends Controller {
 
   async toggleScreenShare() {
     if (!this.room) return
+
+    // If sharing and bar is hidden, show it instead of toggling
+    const bar = document.getElementById("screen-share-bar")
+    if (this.room.localParticipant.isScreenShareEnabled && bar && bar.style.display === "none") {
+      bar.style.display = "flex"
+      this.screenBtnTarget.classList.remove("call-btn--recording")
+      return
+    }
+
     try {
       const enabled = this.room.localParticipant.isScreenShareEnabled
       await this.room.localParticipant.setScreenShareEnabled(!enabled)
       this.screenBtnTarget.classList.toggle("btn--active", !enabled)
+      this.screenBtnTarget.classList.remove("call-btn--recording")
       this._toggleIconState(this.screenBtnTarget, !enabled)
     } catch (error) {
       console.warn("[VideoCall] Screen share not available:", error.message)
@@ -263,13 +273,55 @@ export default class extends Controller {
     const isLocal = participant === this.room.localParticipant
     if (isLocal && track.kind === "audio") return
 
+    if (track.source === "screen_share") {
+      this._attachScreenShare(track, participant)
+      return
+    }
+
     const tile = this._getOrCreateTile(participant)
     const element = track.attach()
     element.dataset.trackSid = track.sid
-    if (track.source === "screen_share") {
-      element.classList.add("call-tile__screen")
-    }
     tile.appendChild(element)
+  }
+
+  _attachScreenShare(track, participant) {
+    // Remove existing screen share
+    this.gridTarget.querySelector(".call-screen-share")?.remove()
+
+    const container = document.createElement("div")
+    container.className = "call-screen-share"
+    container.dataset.participantIdentity = participant.identity
+
+    const element = track.attach()
+    element.dataset.trackSid = track.sid
+    container.appendChild(element)
+
+    const isLocal = participant === this.room.localParticipant
+
+    // Only show bar for remote screen shares
+    if (!isLocal) {
+      const bar = document.createElement("div")
+      bar.className = "call-screen-share__bar"
+      bar.id = "screen-share-bar"
+      bar.innerHTML = `
+        <span class="call-screen-share__dot"></span>
+        ${participant.name || participant.identity} is sharing their screen
+        <button class="call-screen-share__minimize" id="minimize-bar">&times;</button>
+      `
+      bar.querySelector("#minimize-bar").addEventListener("click", () => bar.remove())
+      container.appendChild(bar)
+    }
+
+    this.gridTarget.prepend(container)
+    this.gridTarget.classList.add("call-grid--screen-share")
+  }
+
+  _detachScreenShare(track) {
+    const el = this.gridTarget.querySelector(`[data-track-sid="${track.sid}"]`)
+    if (el) {
+      el.closest(".call-screen-share")?.remove()
+      this.gridTarget.classList.remove("call-grid--screen-share")
+    }
   }
 
   _attachLocalTracks() {
@@ -284,6 +336,13 @@ export default class extends Controller {
   }
 
   _detachTrack(track) {
+    // Check if it's a screen share
+    const screenEl = this.gridTarget.querySelector(`.call-screen-share [data-track-sid="${track.sid}"]`)
+    if (screenEl) {
+      screenEl.closest(".call-screen-share")?.remove()
+      this.gridTarget.classList.remove("call-grid--screen-share")
+      return
+    }
     track.detach().forEach(el => el.remove())
   }
 
