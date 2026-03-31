@@ -37,7 +37,7 @@
         <span class="txt-small">or</span>
       </div>
 
-      <%= button_to "/auth/keycloak", method: :post, class: "btn btn--reversed center txt-large", style: "width: 100%" do %>
+      <%= button_to "/auth/keycloak", method: :post, class: "btn btn--reversed center txt-large", style: "width: 100%", data: { turbo: false } do %>
         Sign in with SSO
       <% end %>
     <% end %>
