@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_03_31_102807) do
+ActiveRecord::Schema[8.2].define(version: 2026_03_31_220723) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -172,6 +172,7 @@ ActiveRecord::Schema[8.2].define(version: 2026_03_31_102807) do
     t.string "oidc_provider"
     t.string "oidc_sub"
     t.string "password_digest"
+    t.string "ringtone", default: "roli"
     t.integer "role", default: 0, null: false
     t.integer "status", default: 0, null: false
     t.datetime "updated_at", null: false

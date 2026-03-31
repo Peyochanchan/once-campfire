@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["joinBtn", "leaveBtn"]
-  static values = { participantIds: Array, notify: { type: Boolean, default: false }, soundUrl: String }
+  static values = { participantIds: Array, notify: { type: Boolean, default: false } }
 
   connect() {
     const currentUserId = parseInt(document.head.querySelector('meta[name="current-user-id"]')?.content)
@@ -15,9 +15,9 @@ export default class extends Controller {
       this.joinBtnTarget.style.display = ""
       this.leaveBtnTarget.style.display = "none"
 
-      if (this.notifyValue && this.hasSoundUrlValue) {
-        const sound = new Audio(this.soundUrlValue)
-        sound.play().catch(() => {})
+      if (this.notifyValue) {
+        const soundUrl = document.head.querySelector('meta[name="current-user-ringtone"]')?.content
+        if (soundUrl) new Audio(soundUrl).play().catch(() => {})
       }
     }
   }

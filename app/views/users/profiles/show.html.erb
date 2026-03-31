@@ -89,6 +89,32 @@
         </label>
       </div>
 
+      <div class="flex align-center gap">
+        <label class="flex align-center gap flex-item-grow input input--actor">
+          <%= form.select :ringtone, User::RINGTONES.map { |r| [r.titleize, r] },
+                { selected: @user.ringtone || "roli" },
+                class: "input txt-large",
+                id: "ringtone-select",
+                style: "cursor: pointer" %>
+          <%= lucide_icon "bell", size: 24 %>
+        </label>
+        <button type="button" class="btn" id="ringtone-preview" title="Preview ringtone">
+          ▶
+        </button>
+      </div>
+
+      <script>
+        var ringtonePaths = <%= User::RINGTONES.map { |r| [r, asset_path("#{r}.mp3")] }.to_h.to_json.html_safe %>;
+        document.getElementById("ringtone-preview")?.addEventListener("click", function() {
+          var url = ringtonePaths[document.getElementById("ringtone-select").value];
+          if (url) new Audio(url).play();
+        });
+        document.getElementById("ringtone-select")?.addEventListener("change", function() {
+          var url = ringtonePaths[this.value];
+          if (url) new Audio(url).play();
+        });
+      </script>
+
       <%= profile_form_submit_button %>
     </div>
   <% end %>

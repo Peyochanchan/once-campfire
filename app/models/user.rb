@@ -1,6 +1,8 @@
 class User < ApplicationRecord
   include Avatar, Bannable, Bot, Mentionable, Role, Transferable
 
+  RINGTONES = %w[roli bell tada incoming mario_coin sax rimshot horn drama dangerzone secret].freeze
+
   has_many :memberships, dependent: :delete_all
   has_many :rooms, through: :memberships
 
