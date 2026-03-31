@@ -12,6 +12,7 @@
     "@rails/request.js": "^0.0.13",
     "highlight.js": "^11.11.1",
     "livekit-client": "^2.18.0",
+    "lucide": "^1.7.0",
     "trix": "^2.1.18"
   }
 }

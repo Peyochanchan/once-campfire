@@ -10,30 +10,28 @@
   <div class="call-grid" data-video-call-target="grid">
   </div>
 
-  <div class="call-controls flex align-center gap center">
-    <button class="btn" data-action="video-call#toggleCamera" data-video-call-target="cameraBtn" title="Toggle camera">
-      <%= image_tag "camera.svg", size: 20, aria: { hidden: "true" } %>
-      <span class="for-screen-reader">Toggle camera</span>
+  <div class="call-controls">
+    <button class="btn call-btn" data-action="video-call#toggleCamera" data-video-call-target="cameraBtn" title="Toggle camera">
+      <span class="icon-on"><%= lucide_icon "camera", size: 22 %></span>
+      <span class="icon-off" style="display:none"><%= lucide_icon "camera-off", size: 22 %></span>
     </button>
 
-    <button class="btn" data-action="video-call#toggleMic" data-video-call-target="micBtn" title="Toggle microphone">
-      <%= image_tag "microphone.svg", size: 20, aria: { hidden: "true" } %>
-      <span class="for-screen-reader">Toggle microphone</span>
+    <button class="btn call-btn" data-action="video-call#toggleMic" data-video-call-target="micBtn" title="Toggle microphone">
+      <span class="icon-on"><%= lucide_icon "mic", size: 22 %></span>
+      <span class="icon-off" style="display:none"><%= lucide_icon "mic-off", size: 22 %></span>
     </button>
 
-    <button class="btn" data-action="video-call#toggleBlur" data-video-call-target="blurBtn" title="Background blur">
-      <%= image_tag "person.svg", size: 20, aria: { hidden: "true" } %>
-      <span class="for-screen-reader">Background blur</span>
+    <button class="btn call-btn" data-action="video-call#toggleBlur" data-video-call-target="blurBtn" title="Background blur">
+      <%= lucide_icon "user-round", size: 22 %>
     </button>
 
-    <button class="btn" data-action="video-call#toggleScreenShare" data-video-call-target="screenBtn" title="Share screen">
-      <%= image_tag "laptop.svg", size: 20, aria: { hidden: "true" } %>
-      <span class="for-screen-reader">Share screen</span>
+    <button class="btn call-btn" data-action="video-call#toggleScreenShare" data-video-call-target="screenBtn" title="Share screen">
+      <span class="icon-on"><%= lucide_icon "screen-share", size: 22 %></span>
+      <span class="icon-off" style="display:none"><%= lucide_icon "screen-share-off", size: 22 %></span>
     </button>
 
-    <button class="btn btn--negative" data-action="video-call#leave" title="Leave call">
-      <%= image_tag "remove.svg", size: 20, aria: { hidden: "true" } %>
-      <span class="for-screen-reader">Leave call</span>
+    <button class="btn call-btn call-btn--leave" data-action="video-call#leave" title="Leave call">
+      <%= lucide_icon "phone", size: 22 %>
     </button>
   </div>
 </div>

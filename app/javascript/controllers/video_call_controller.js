@@ -47,12 +47,11 @@ export default class extends Controller {
     const wasEnabled = this.room.localParticipant.isCameraEnabled
     await this.room.localParticipant.setCameraEnabled(!wasEnabled)
     this.cameraBtnTarget.classList.toggle("btn--active", !wasEnabled)
+    this._toggleIconState(this.cameraBtnTarget, !wasEnabled)
 
     if (wasEnabled) {
-      // Camera off: show avatar, remove videos
       this._toggleAvatar(this.room.localParticipant, true)
     } else {
-      // Camera on: hide avatar, re-attach video
       this._toggleAvatar(this.room.localParticipant, false)
       this._attachLocalTracks()
     }
@@ -63,6 +62,7 @@ export default class extends Controller {
     const enabled = this.room.localParticipant.isMicrophoneEnabled
     await this.room.localParticipant.setMicrophoneEnabled(!enabled)
     this.micBtnTarget.classList.toggle("btn--active", !enabled)
+    this._toggleIconState(this.micBtnTarget, !enabled)
   }
 
   async toggleBlur() {
@@ -112,6 +112,7 @@ export default class extends Controller {
       const enabled = this.room.localParticipant.isScreenShareEnabled
       await this.room.localParticipant.setScreenShareEnabled(!enabled)
       this.screenBtnTarget.classList.toggle("btn--active", !enabled)
+      this._toggleIconState(this.screenBtnTarget, !enabled)
     } catch (error) {
       console.warn("[VideoCall] Screen share not available:", error.message)
     }
@@ -207,11 +208,14 @@ export default class extends Controller {
         await this.room.localParticipant.enableCameraAndMicrophone()
         this._attachLocalTracks()
         this.cameraBtnTarget.classList.add("btn--active")
+        this._toggleIconState(this.cameraBtnTarget, true)
       } else {
         await this.room.localParticipant.setMicrophoneEnabled(true)
         this._toggleAvatar(this.room.localParticipant, true)
+        this._toggleIconState(this.cameraBtnTarget, false)
       }
       this.micBtnTarget.classList.add("btn--active")
+      this._toggleIconState(this.micBtnTarget, true)
     } catch (error) {
       console.error("[VideoCall] Failed to connect:", error)
     }
@@ -334,6 +338,15 @@ export default class extends Controller {
 
   _findTile(participant) {
     return this.gridTarget.querySelector(`[data-participant-identity="${participant.identity}"]`)
+  }
+
+  _toggleIconState(btn, isOn) {
+    const iconOn = btn.querySelector(".icon-on")
+    const iconOff = btn.querySelector(".icon-off")
+    if (iconOn && iconOff) {
+      iconOn.style.display = isOn ? "inline-flex" : "none"
+      iconOff.style.display = isOn ? "none" : "inline-flex"
+    }
   }
 
   _removeParticipantTile(participant) {
