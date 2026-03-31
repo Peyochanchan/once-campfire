@@ -36,8 +36,11 @@ gem "sentry-rails"
 # Video
 gem "livekit-server-sdk"
 
-# Other
+# Authentication
 gem "bcrypt"
+gem "omniauth"
+gem "omniauth_openid_connect"
+gem "omniauth-rails_csrf_protection"
 gem "web-push"
 gem "rqrcode"
 gem "rails_autolink"

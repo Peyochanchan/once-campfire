@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_03_30_095404) do
+ActiveRecord::Schema[8.2].define(version: 2026_03_31_073559) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -166,12 +166,15 @@ ActiveRecord::Schema[8.2].define(version: 2026_03_30_095404) do
     t.datetime "created_at", null: false
     t.string "email_address"
     t.string "name", null: false
+    t.string "oidc_provider"
+    t.string "oidc_sub"
     t.string "password_digest"
     t.integer "role", default: 0, null: false
     t.integer "status", default: 0, null: false
     t.datetime "updated_at", null: false
     t.index ["bot_token"], name: "index_users_on_bot_token", unique: true
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
+    t.index ["oidc_sub", "oidc_provider"], name: "index_users_on_oidc_sub_and_oidc_provider", unique: true, where: "(oidc_sub IS NOT NULL)"
   end
 
   create_table "webhooks", force: :cascade do |t|

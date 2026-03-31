@@ -31,6 +31,16 @@
         <% end %>
       </fieldset>
     <% end %>
+
+    <% if ENV["OIDC_CLIENT_ID"].present? %>
+      <div class="separator margin-block">
+        <span class="txt-small">or</span>
+      </div>
+
+      <%= button_to "/auth/keycloak", method: :post, class: "btn btn--reversed center txt-large", style: "width: 100%" do %>
+        Sign in with SSO
+      <% end %>
+    <% end %>
   </div>
 
   <%= render "accounts/help_contact" %>
