@@ -47,6 +47,7 @@ gem "rails_autolink"
 gem "geared_pagination"
 gem "jbuilder"
 gem "net-http-persistent"
+gem "aws-sdk-s3", require: false
 gem "kredis"
 gem "platform_agent"
 gem "thruster"
