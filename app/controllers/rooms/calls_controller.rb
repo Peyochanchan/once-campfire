@@ -21,6 +21,11 @@ class Rooms::CallsController < ApplicationController
     end
   end
 
+  def status
+    in_call = @room.call_participants.exists?(user: Current.user)
+    render json: { in_call: in_call }
+  end
+
   def destroy
     @room.call_participants.find_by(user: Current.user)&.destroy
 

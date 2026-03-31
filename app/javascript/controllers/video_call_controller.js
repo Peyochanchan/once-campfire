@@ -21,11 +21,13 @@ export default class extends Controller {
     this._boundBeforeUnload = this._beforeUnload.bind(this)
     window.addEventListener("beforeunload", this._boundBeforeUnload)
     this._setupControlsAutoHide()
+    this._startCallStatusPoll()
   }
 
   disconnect() {
     window.removeEventListener("beforeunload", this._boundBeforeUnload)
     clearTimeout(this._controlsTimer)
+    clearInterval(this._statusPollTimer)
     this._cleanup()
   }
 
@@ -173,19 +175,7 @@ export default class extends Controller {
       headers: { "X-CSRF-Token": token }
     })
 
-    // Try to close the tab, fallback to "call ended" screen
-    window.close()
-    setTimeout(() => {
-      // If window.close() was blocked, show end screen
-      if (!window.closed) {
-        this.element.innerHTML = `
-          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:white;gap:1rem">
-            <p style="font-size:1.4rem">Call ended</p>
-            <a href="/rooms/${this.roomIdValue}" style="color:white;text-decoration:underline;font-size:1rem">Back to room</a>
-          </div>
-        `
-      }
-    }, 300)
+    this._showCallEndedScreen()
   }
 
   // Private
@@ -435,6 +425,24 @@ export default class extends Controller {
     return this.gridTarget.querySelector(`[data-participant-identity="${participant.identity}"]`)
   }
 
+  _startCallStatusPoll() {
+    this._statusPollTimer = setInterval(async () => {
+      try {
+        const response = await fetch(`/rooms/${this.roomIdValue}/call/status`, {
+          headers: { "Accept": "application/json" }
+        })
+        if (response.ok) {
+          const data = await response.json()
+          if (!data.in_call) {
+            clearInterval(this._statusPollTimer)
+            this._cleanup()
+            this._showCallEndedScreen()
+          }
+        }
+      } catch (_) {}
+    }, 10000)
+  }
+
   _toggleIconState(btn, isOn) {
     const iconOn = btn.querySelector(".icon-on")
     const iconOff = btn.querySelector(".icon-off")
@@ -498,9 +506,28 @@ export default class extends Controller {
     }
   }
 
+  _showCallEndedScreen() {
+    this.element.innerHTML = `
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:white;gap:1.5rem;background:oklch(0.12 0 0)">
+        <p style="font-size:1.4rem">Call ended</p>
+        <div style="display:flex;gap:1rem">
+          <a href="/rooms/${this.roomIdValue}" style="background:white;color:#333;border-radius:2rem;padding:0.6rem 1.5rem;text-decoration:none;font-weight:600;font-size:0.95rem">Back to room</a>
+          <button onclick="window.close()" style="background:transparent;border:1px solid white;color:white;border-radius:2rem;padding:0.6rem 1.5rem;cursor:pointer;font-weight:600;font-size:0.95rem">Close tab</button>
+        </div>
+      </div>
+    `
+  }
+
   _cleanup() {
     if (this.room) {
-      this.room.disconnect()
+      // Stop all local media tracks to release mic/camera
+      this.room.localParticipant.trackPublications.forEach(pub => {
+        if (pub.track) {
+          pub.track.stop()
+          pub.track.detach()
+        }
+      })
+      this.room.disconnect(true)
       this.room = null
     }
   }
