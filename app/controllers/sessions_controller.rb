@@ -39,7 +39,7 @@ class SessionsController < ApplicationController
     if @pending_session.verify_otp(params[:otp_code])
       session.delete(:pending_session_id)
       authenticated_as @pending_session
-      redirect_to post_authenticating_url
+      redirect_to post_authenticating_url, notice: "Signed in successfully"
     else
       flash.now[:alert] = "Invalid code. Please try again."
       render :verify, status: :unprocessable_entity
