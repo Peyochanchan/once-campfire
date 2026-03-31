@@ -9,7 +9,8 @@ class FirstRunsController < ApplicationController
 
   def create
     user = FirstRun.create!(user_params)
-    start_new_session_for user
+    session_record = start_new_session_for user
+    session_record.update!(verified: true)
 
     redirect_to root_url
   rescue ActiveRecord::RecordNotUnique

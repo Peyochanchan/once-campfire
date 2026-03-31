@@ -10,7 +10,8 @@ class UsersController < ApplicationController
 
   def create
     @user = User.create!(user_params)
-    start_new_session_for @user
+    session_record = start_new_session_for @user
+    session_record.update!(verified: true)
     redirect_to root_url
   rescue ActiveRecord::RecordNotUnique
     redirect_to new_session_url(email_address: user_params[:email_address])
