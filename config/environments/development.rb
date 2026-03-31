@@ -81,4 +81,8 @@ Rails.application.configure do
 
   # Visit /rails/locks to see the locks
   config.middleware.use ActionDispatch::DebugLocks
+
+  # Open emails in browser instead of sending
+  config.action_mailer.delivery_method = :letter_opener
+  config.action_mailer.perform_deliveries = true
 end

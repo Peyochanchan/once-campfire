@@ -10,6 +10,23 @@
   <div class="call-grid" data-video-call-target="grid">
   </div>
 
+  <div class="call-settings" data-video-call-target="settingsPanel" style="display:none">
+    <div class="call-settings__inner">
+      <div class="call-settings__header">
+        <strong>Settings</strong>
+        <button class="call-settings__close" data-action="video-call#toggleSettings">&times;</button>
+      </div>
+      <label class="call-settings__label">Camera</label>
+      <select data-video-call-target="cameraSelect" data-action="change->video-call#switchCamera" class="call-settings__select"></select>
+
+      <label class="call-settings__label">Microphone</label>
+      <select data-video-call-target="micSelect" data-action="change->video-call#switchMic" class="call-settings__select"></select>
+
+      <label class="call-settings__label">Speaker</label>
+      <select data-video-call-target="speakerSelect" data-action="change->video-call#switchSpeaker" class="call-settings__select"></select>
+    </div>
+  </div>
+
   <div class="call-controls">
     <button class="btn call-btn" data-action="video-call#toggleCamera" data-video-call-target="cameraBtn" title="Toggle camera">
       <span class="icon-on"><%= lucide_icon "camera", size: 22 %></span>
@@ -28,6 +45,10 @@
     <button class="btn call-btn" data-action="video-call#toggleScreenShare" data-video-call-target="screenBtn" title="Share screen">
       <span class="icon-on"><%= lucide_icon "screen-share", size: 22 %></span>
       <span class="icon-off" style="display:none"><%= lucide_icon "screen-share-off", size: 22 %></span>
+    </button>
+
+    <button class="btn call-btn" data-action="video-call#toggleSettings" data-video-call-target="settingsBtn" title="Settings">
+      <%= lucide_icon "settings", size: 22 %>
     </button>
 
     <button class="btn call-btn call-btn--leave" data-action="video-call#leave" title="Leave call">

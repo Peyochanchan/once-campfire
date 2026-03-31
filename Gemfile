@@ -53,6 +53,7 @@ gem "thruster"
 
 group :development do
   gem "hotwire-spark"
+  gem "letter_opener"
 end
 
 group :development, :test do

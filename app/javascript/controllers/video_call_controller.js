@@ -1,9 +1,10 @@
 import { Controller } from "@hotwired/stimulus"
 import { Room, RoomEvent } from "livekit-client"
 import { BackgroundProcessor } from "@livekit/track-processors"
+import TomSelect from "tom-select"
 
 export default class extends Controller {
-  static targets = ["grid", "cameraBtn", "micBtn", "screenBtn", "blurBtn"]
+  static targets = ["grid", "cameraBtn", "micBtn", "screenBtn", "blurBtn", "settingsBtn", "settingsPanel", "cameraSelect", "micSelect", "speakerSelect"]
   static values = {
     token: String,
     url: String,
@@ -116,6 +117,32 @@ export default class extends Controller {
     } catch (error) {
       console.warn("[VideoCall] Screen share not available:", error.message)
     }
+  }
+
+  async toggleSettings() {
+    const panel = this.settingsPanelTarget
+    const visible = panel.style.display !== "none"
+    panel.style.display = visible ? "none" : "block"
+    if (!visible) await this._populateDevices()
+  }
+
+  async switchCamera() {
+    if (!this.room) return
+    const deviceId = this.cameraSelectTarget.value
+    await this.room.switchActiveDevice("videoinput", deviceId)
+    this._reattachLocalVideo()
+  }
+
+  async switchMic() {
+    if (!this.room) return
+    const deviceId = this.micSelectTarget.value
+    await this.room.switchActiveDevice("audioinput", deviceId)
+  }
+
+  async switchSpeaker() {
+    if (!this.room) return
+    const deviceId = this.speakerSelectTarget.value
+    await this.room.switchActiveDevice("audiooutput", deviceId)
   }
 
   async leave() {
@@ -347,6 +374,35 @@ export default class extends Controller {
       iconOn.style.display = isOn ? "inline-flex" : "none"
       iconOff.style.display = isOn ? "none" : "inline-flex"
     }
+  }
+
+  async _populateDevices() {
+    const devices = await Room.getLocalDevices("audioinput")
+    const videoDevices = await Room.getLocalDevices("videoinput")
+    const audioOutputDevices = await Room.getLocalDevices("audiooutput")
+
+    this._fillSelect(this.cameraSelectTarget, videoDevices, "camera")
+    this._fillSelect(this.micSelectTarget, devices, "mic")
+    this._fillSelect(this.speakerSelectTarget, audioOutputDevices, "speaker")
+  }
+
+  _fillSelect(select, devices, key) {
+    // Destroy existing TomSelect instance
+    if (select.tomselect) select.tomselect.destroy()
+
+    select.innerHTML = ""
+    devices.forEach(device => {
+      const option = document.createElement("option")
+      option.value = device.deviceId
+      option.textContent = device.label || `Device ${device.deviceId.slice(0, 8)}`
+      select.appendChild(option)
+    })
+
+    new TomSelect(select, {
+      create: false,
+      controlInput: null,
+      allowEmptyOption: false
+    })
   }
 
   _removeParticipantTile(participant) {
