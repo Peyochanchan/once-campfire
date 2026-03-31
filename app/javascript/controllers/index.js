@@ -16,6 +16,7 @@ import local_time from "./local_time_controller"
 import maintain_scroll from "./maintain_scroll_controller"
 import messages from "./messages_controller"
 import notifications from "./notifications_controller"
+import otp_input from "./otp_input_controller"
 import popup from "./popup_controller"
 import presence from "./presence_controller"
 import pwa_install from "./pwa_install_controller"
@@ -54,6 +55,7 @@ application.register("local-time", local_time)
 application.register("maintain-scroll", maintain_scroll)
 application.register("messages", messages)
 application.register("notifications", notifications)
+application.register("otp-input", otp_input)
 application.register("popup", popup)
 application.register("presence", presence)
 application.register("pwa-install", pwa_install)

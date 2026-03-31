@@ -194,3 +194,26 @@
     }
   }
 }
+
+/* OTP code input boxes */
+.otp-boxes {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-block: 1rem;
+}
+
+.otp-box {
+  border: 2px solid var(--color-border-darker);
+  border-radius: 0.5rem;
+  font-size: 1.8rem;
+  font-weight: 700;
+  block-size: 3.5rem;
+  inline-size: 3rem;
+  text-align: center;
+
+  &:focus {
+    border-color: var(--color-text);
+    outline: none;
+  }
+}

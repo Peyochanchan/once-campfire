@@ -10,16 +10,21 @@
       We sent a 6-digit code to <strong><%= @pending_session.user.email_address %></strong>
     </p>
 
-    <%= form_with url: confirm_session_path, method: :post, class: "flex flex-column gap", data: { turbo: false } do |form| %>
-      <fieldset class="flex flex-column gap center-block upad">
-        <label class="flex align-center gap input input--actor txt-large">
-          <%= form.text_field :otp_code, required: true, autofocus: true, autocomplete: "one-time-code", inputmode: "numeric", maxlength: 6, pattern: "[0-9]{6}", placeholder: "Enter 6-digit code", class: "input", style: "text-align: center; letter-spacing: 8px; font-size: 1.5em" %>
-        </label>
+    <%= form_with url: confirm_session_path, method: :post, class: "flex flex-column gap", data: { turbo: false, controller: "otp-input" } do |form| %>
+      <%= form.hidden_field :otp_code, data: { otp_input_target: "hidden" } %>
 
-        <%= form.button class: "btn btn--reversed center txt-large", type: "submit" do %>
-          Verify
+      <div class="otp-boxes">
+        <% 6.times do %>
+          <input type="text" inputmode="numeric" maxlength="1" pattern="[0-9]" autocomplete="off" required
+                 class="otp-box"
+                 data-otp-input-target="digit"
+                 data-action="input->otp-input#input keydown->otp-input#keydown paste->otp-input#paste">
         <% end %>
-      </fieldset>
+      </div>
+
+      <%= form.button class: "btn btn--reversed center txt-large margin-block-start", type: "submit" do %>
+        Verify
+      <% end %>
     <% end %>
 
     <p class="txt-small txt-subtle margin-block-start">

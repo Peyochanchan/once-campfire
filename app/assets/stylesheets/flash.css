@@ -9,15 +9,22 @@
 }
 
 .flash__inner {
-  animation: appear-then-fade 3s 300ms both;
-  aspect-ratio: 1;
+  align-items: center;
+  animation: appear-then-fade 4s 300ms both;
   background-color: var(--flash-background, var(--color-positive));
-  border-radius: 50%;
-  display: grid;
-  padding: var(--block-space);
-  place-items: center;
+  border-radius: 2em;
+  color: white;
+  display: flex;
+  gap: 0.5em;
+  padding: 0.75em 1.5em;
 
   img {
-    grid-area: 1/1;
+    flex-shrink: 0;
   }
+}
+
+.flash__text {
+  font-size: 0.9rem;
+  font-weight: 500;
+  white-space: nowrap;
 }

@@ -1,13 +1,31 @@
-<h2>Your verification code</h2>
-
-<p>Hi <%= @user.name %>,</p>
-
-<p>Enter this code to sign in to <%= Rails.configuration.x.app.name %>:</p>
-
-<div style="font-size: 32px; font-weight: bold; letter-spacing: 8px; padding: 16px; background: #f5f5f5; border-radius: 8px; text-align: center; margin: 24px 0;">
-  <%= @code %>
-</div>
-
-<p>This code expires in 10 minutes.</p>
-
-<p>If you didn't request this, you can safely ignore this email.</p>
+<table width="100%" cellpadding="0" cellspacing="0" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #333;">
+  <tr>
+    <td align="center" style="padding: 40px 20px;">
+      <table width="400" cellpadding="0" cellspacing="0" style="background: #ffffff; border-radius: 8px; border: 1px solid #e0e0e0;">
+        <tr>
+          <td style="padding: 32px; text-align: center;">
+            <h2 style="margin: 0 0 16px; font-size: 22px; color: #333;">Your verification code</h2>
+            <p style="margin: 0 0 24px; color: #666; font-size: 15px;">
+              Hi <%= @user.name %>, enter this code to sign in:
+            </p>
+            <table align="center" cellpadding="0" cellspacing="0">
+              <tr>
+                <% @code.chars.each do |digit| %>
+                  <td style="padding: 0 4px;">
+                    <div style="width: 42px; height: 52px; line-height: 52px; text-align: center; font-size: 28px; font-weight: bold; background: #f5f5f5; border: 1px solid #ddd; border-radius: 6px; color: #333;">
+                      <%= digit %>
+                    </div>
+                  </td>
+                <% end %>
+              </tr>
+            </table>
+            <p style="margin: 24px 0 0; color: #999; font-size: 13px;">
+              This code expires in 10 minutes.<br>
+              If you didn't request this, ignore this email.
+            </p>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
