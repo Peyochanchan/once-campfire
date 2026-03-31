@@ -218,6 +218,13 @@
     border-radius: 0.5em;
   }
 
+  &.room--active {
+    background-color: var(--color-text) !important;
+    border-color: var(--color-text) !important;
+    color: var(--color-text-reversed) !important;
+    font-weight: 600;
+  }
+
   &.unread {
     --btn-border-color: var(--color-text);
     --hover-color: var(--color-text);
