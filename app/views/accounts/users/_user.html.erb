@@ -5,6 +5,9 @@
 
   <div class="min-width">
     <div class="overflow-ellipsis fill-shade"><strong><%= user.name %></strong></div>
+    <% if Current.user.can_administer? && !user.bot? %>
+      <div class="overflow-ellipsis txt-small txt-subtle"><%= user.email_address %></div>
+    <% end %>
   </div>
 
   <hr class="separator" aria-hidden="true">

@@ -47,6 +47,7 @@ class SessionsController < ApplicationController
   end
 
   def destroy
+    Current.user&.call_participants&.destroy_all
     remove_push_subscription
     terminate_current_session
     redirect_to root_url

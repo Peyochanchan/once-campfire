@@ -20,6 +20,8 @@ Rails.application.routes.draw do
   end
 
   resource :account do
+    post :end_all_calls, on: :member
+
     scope module: "accounts" do
       resources :users
 

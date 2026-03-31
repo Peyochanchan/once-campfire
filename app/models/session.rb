@@ -1,5 +1,6 @@
 class Session < ApplicationRecord
   ACTIVITY_REFRESH_RATE = 1.hour
+  INACTIVITY_TIMEOUT = 4.hours
   OTP_EXPIRY = 10.minutes
 
   has_secure_token
@@ -41,5 +42,9 @@ class Session < ApplicationRecord
 
   def pending_verification?
     !verified? && otp_code.present?
+  end
+
+  def expired?
+    last_active_at.present? && last_active_at < INACTIVITY_TIMEOUT.ago
   end
 end

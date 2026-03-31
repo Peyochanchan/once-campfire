@@ -13,6 +13,12 @@ class AccountsController < ApplicationController
     redirect_to edit_account_url, notice: "✓"
   end
 
+  def end_all_calls
+    ensure_can_administer
+    count = CallParticipant.destroy_all.size
+    redirect_to edit_account_url, notice: "#{count} call participants removed, all calls ended."
+  end
+
   private
     def set_account
       @account = Current.account

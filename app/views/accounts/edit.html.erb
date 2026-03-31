@@ -113,6 +113,15 @@
   </div>
 </section>
 
+<% if Current.user.can_administer? && CallParticipant.any? %>
+  <section class="center margin-block-double">
+    <div class="panel txt-align-center">
+      <p class="txt-subtle"><%= CallParticipant.count %> active call participant(s)</p>
+      <%= button_to "End all calls", end_all_calls_account_path, method: :post, class: "btn btn--negative", data: { turbo_confirm: "End all active calls? Participants will be disconnected." } %>
+    </div>
+  </section>
+<% end %>
+
 <% content_for :footer do %>
   <div class="txt-align-center center margin-block-double txt-subtle"><%= app_name %>&trade; version <%= version_badge %></div>
 <% end %>

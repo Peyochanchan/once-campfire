@@ -37,6 +37,12 @@ module Authentication
     def restore_authentication
       if session = find_session_by_cookie
         return if session.pending_verification?
+        if session.expired?
+          session.user.call_participants.destroy_all
+          session.destroy
+          remove_authentication_cookie
+          return
+        end
         resume_session session
       end
     end
