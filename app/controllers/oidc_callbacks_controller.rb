@@ -7,7 +7,8 @@ class OidcCallbacksController < ApplicationController
     user = find_or_create_user(auth)
 
     if user&.persisted?
-      start_new_session_for user
+      session_record = start_new_session_for user
+      session_record.update!(verified: true)
       redirect_to root_url
     else
       redirect_to new_session_url, alert: "Authentication failed"

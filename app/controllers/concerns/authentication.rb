@@ -36,6 +36,7 @@ module Authentication
 
     def restore_authentication
       if session = find_session_by_cookie
+        return if session.pending_verification?
         resume_session session
       end
     end

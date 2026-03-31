@@ -12,6 +12,11 @@ Rails.application.routes.draw do
     scope module: "sessions" do
       resources :transfers, only: %i[ show update ]
     end
+
+    collection do
+      get  :verify
+      post :confirm
+    end
   end
 
   resource :account do

@@ -1,0 +1,30 @@
+<% @page_title = "Verify your identity" %>
+<% turbo_page_requires_reload %>
+
+<section class="txt-align-center">
+  <div class="panel <%= "shake" if flash[:alert] %>">
+    <%= account_logo_tag style: "center margin-block-end txt-xx-large" %>
+
+    <h2 class="txt-large margin-block-end">Check your email</h2>
+    <p class="txt-subtle margin-block-end">
+      We sent a 6-digit code to <strong><%= @pending_session.user.email_address %></strong>
+    </p>
+
+    <%= form_with url: confirm_session_path, method: :post, class: "flex flex-column gap", data: { turbo: false } do |form| %>
+      <fieldset class="flex flex-column gap center-block upad">
+        <label class="flex align-center gap input input--actor txt-large">
+          <%= form.text_field :otp_code, required: true, autofocus: true, autocomplete: "one-time-code", inputmode: "numeric", maxlength: 6, pattern: "[0-9]{6}", placeholder: "Enter 6-digit code", class: "input", style: "text-align: center; letter-spacing: 8px; font-size: 1.5em" %>
+        </label>
+
+        <%= form.button class: "btn btn--reversed center txt-large", type: "submit" do %>
+          Verify
+        <% end %>
+      </fieldset>
+    <% end %>
+
+    <p class="txt-small txt-subtle margin-block-start">
+      Code expires in 10 minutes.
+      <%= link_to "Back to sign in", new_session_path %>
+    </p>
+  </div>
+</section>

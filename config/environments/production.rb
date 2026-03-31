@@ -93,4 +93,17 @@ Rails.application.configure do
   config.active_record.attributes_for_inspect = [ :id ]
 
   config.active_job.queue_adapter = :resque
+
+  # Email via SMTP
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address: ENV.fetch("SMTP_HOST", "localhost"),
+    port: ENV.fetch("SMTP_PORT", 587).to_i,
+    user_name: ENV.fetch("SMTP_USERNAME", nil),
+    password: ENV.fetch("SMTP_PASSWORD", nil),
+    domain: ENV.fetch("SMTP_DOMAIN", "localhost"),
+    authentication: ENV["SMTP_USERNAME"].present? ? :plain : nil,
+    enable_starttls_auto: true
+  }
+  config.action_mailer.default_url_options = { host: ENV.fetch("APP_HOST", "localhost") }
 end
