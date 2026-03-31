@@ -32,6 +32,7 @@ import soft_keyboard from "./soft_keyboard_controller"
 import sorted_list from "./sorted_list_controller"
 import sound from "./sound_controller"
 import toggle_class from "./toggle_class_controller"
+// tom_select loaded separately to avoid bundling tom-select in main JS
 import turbo_frame from "./turbo_frame_controller"
 import turbo_streaming from "./turbo_streaming_controller"
 import typing_notifications from "./typing_notifications_controller"
@@ -71,6 +72,7 @@ application.register("soft-keyboard", soft_keyboard)
 application.register("sorted-list", sorted_list)
 application.register("sound", sound)
 application.register("toggle-class", toggle_class)
+// application.register("tom-select", tom_select) // loaded separately
 application.register("turbo-frame", turbo_frame)
 application.register("turbo-streaming", turbo_streaming)
 application.register("typing-notifications", typing_notifications)

@@ -14,6 +14,6 @@
     "livekit-client": "^2.18.0",
     "lucide": "^1.7.0",
     "tom-select": "^2.5.2",
-    "trix": "^2.1.18"
+    "trix": "2.0.10"
   }
 }

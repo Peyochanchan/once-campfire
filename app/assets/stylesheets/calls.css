@@ -296,51 +296,34 @@
 }
 
 .call-settings__select {
-  border: none;
+  appearance: none;
+  background: oklch(0.25 0 0) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 0.75rem center;
+  border: 1px solid oklch(0.4 0 0);
+  border-radius: 0.5rem;
+  color: white;
+  cursor: pointer;
+  font-size: 0.85rem;
+  outline: none;
+  overflow: hidden;
+  padding: 0.6rem 2rem 0.6rem 0.75rem;
+  text-overflow: ellipsis;
+  transition: border-color 0.2s;
+  white-space: nowrap;
   width: 100%;
 }
 
-.call-settings .ts-wrapper {
-  border: none;
+.call-settings__select:hover {
+  border-color: oklch(0.55 0 0);
 }
 
-.call-settings .ts-wrapper input,
-.call-settings .ts-wrapper .ts-control > input {
-  display: none !important;
+.call-settings__select:focus {
+  border-color: oklch(0.7 0 0);
 }
 
-.call-settings .ts-wrapper.dropdown-active .ts-control {
-  background: oklch(0.25 0 0);
+.call-settings__select option {
+  background: oklch(0.2 0 0);
   color: white;
-}
-
-/* Tom Select dark theme override */
-.call-settings .ts-wrapper .ts-control {
-  background: oklch(0.25 0 0) !important;
-  border: 1px solid oklch(0.35 0 0);
-  border-radius: 0.4rem;
-  color: white !important;
-  cursor: pointer;
-  font-size: 0.85rem;
-  padding: 0.5rem;
-}
-
-.call-settings .ts-wrapper .ts-control .item {
-  color: white;
-}
-
-.call-settings .ts-wrapper .ts-dropdown {
-  background: oklch(0.22 0 0);
-  border: 1px solid oklch(0.35 0 0);
-  color: white;
-}
-
-.call-settings .ts-wrapper .ts-dropdown .option {
-  color: white;
-}
-
-.call-settings .ts-wrapper .ts-dropdown .active {
-  background: oklch(0.35 0 0);
+  padding: 0.4rem;
 }
 
 .call-settings .ts-wrapper .ts-dropdown .option:hover {

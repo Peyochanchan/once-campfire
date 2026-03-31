@@ -1,7 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 import { Room, RoomEvent } from "livekit-client"
 import { BackgroundProcessor } from "@livekit/track-processors"
-import TomSelect from "tom-select"
 
 export default class extends Controller {
   static targets = ["grid", "cameraBtn", "micBtn", "screenBtn", "blurBtn", "settingsBtn", "settingsPanel", "cameraSelect", "micSelect", "speakerSelect", "chatBtn", "chatPanel"]
@@ -463,21 +462,12 @@ export default class extends Controller {
   }
 
   _fillSelect(select, devices, key) {
-    // Destroy existing TomSelect instance
-    if (select.tomselect) select.tomselect.destroy()
-
     select.innerHTML = ""
     devices.forEach(device => {
       const option = document.createElement("option")
       option.value = device.deviceId
       option.textContent = device.label || `Device ${device.deviceId.slice(0, 8)}`
       select.appendChild(option)
-    })
-
-    new TomSelect(select, {
-      create: false,
-      controlInput: null,
-      allowEmptyOption: false
     })
   }
 
