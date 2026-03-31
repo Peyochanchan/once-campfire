@@ -2,18 +2,37 @@
   <div class="chat-embed__messages" id="chat-embed-messages">
     <% @messages.each do |message| %>
       <% body_text = message.body.to_plain_text.presence %>
-      <% next unless body_text %>
+      <% has_attachment = message.attachment.attached? %>
+      <% next unless body_text || has_attachment %>
       <div class="chat-embed__msg <%= "chat-embed__msg--me" if message.creator == Current.user %>">
         <div class="chat-embed__meta">
           <span class="chat-embed__author"><%= message.creator.name %></span>
           <span class="chat-embed__time"><%= message.created_at.strftime("%H:%M") %></span>
         </div>
         <div class="chat-embed__bubble">
-          <%= body_text %>
-          <% if message.attachment.attached? %>
+          <% if body_text %><%= body_text %><% end %>
+          <% if has_attachment %>
             <div class="chat-embed__attachment">
-              <%= image_tag "attachment.svg", size: 14 %>
-              <%= message.attachment.filename %>
+              <% if message.attachment.image? %>
+                <a href="<%= url_for(message.attachment) %>" target="_blank">
+                  <img src="<%= url_for(message.attachment.variant(resize_to_limit: [280, 200])) %>" alt="<%= message.attachment.filename %>" class="chat-embed__image">
+                </a>
+              <% elsif message.attachment.video? %>
+                <video controls class="chat-embed__video">
+                  <source src="<%= url_for(message.attachment) %>">
+                </video>
+              <% elsif message.attachment.previewable? %>
+                <a href="<%= url_for(message.attachment) %>" target="_blank">
+                  <img src="<%= url_for(message.attachment.preview(resize_to_limit: [280, 200])) %>" alt="<%= message.attachment.filename %>" class="chat-embed__image">
+                </a>
+              <% end %>
+              <div class="chat-embed__file-info">
+                <span class="chat-embed__file-name"><%= message.attachment.filename %></span>
+                <span class="chat-embed__file-size">(<%= number_to_human_size(message.attachment.byte_size) %>)</span>
+                <a href="<%= rails_blob_path(message.attachment, disposition: "attachment") %>" class="chat-embed__download" title="Download">
+                  <%= lucide_icon "download", size: 14 %>
+                </a>
+              </div>
             </div>
           <% end %>
         </div>
@@ -21,34 +40,86 @@
     <% end %>
   </div>
 
+  <div class="chat-embed__drop-zone" id="drop-zone" style="display:none">
+    Drop file here
+  </div>
+
   <div class="chat-embed__composer">
-    <%= form_with url: room_messages_path(@room), scope: :message, method: :post, multipart: true, data: { turbo: false } do |form| %>
-      <%= form.hidden_field :client_message_id, value: SecureRandom.hex(8) %>
+    <form action="<%= room_messages_path(@room) %>" method="post" enctype="multipart/form-data" id="chat-form">
+      <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+      <input type="hidden" name="message[client_message_id]" value="<%= SecureRandom.hex(8) %>">
       <div class="chat-embed__input-row">
-        <%= form.text_field :body, placeholder: "Write a message...", class: "chat-embed__input", autocomplete: "off", autofocus: true %>
+        <input type="text" name="message[body]" placeholder="Write a message..." class="chat-embed__input" autocomplete="off" autofocus id="msg-input">
         <label class="chat-embed__file-btn" title="Attach file">
           <%= lucide_icon "paperclip", size: 18 %>
-          <%= form.file_field :attachment, class: "chat-embed__file-input", data: { action: "change->chat-embed#fileSelected" } %>
+          <input type="file" name="message[attachment]" class="chat-embed__file-input" id="file-input">
         </label>
         <button type="submit" class="chat-embed__send">
           <%= lucide_icon "arrow-up", size: 18 %>
         </button>
       </div>
       <div class="chat-embed__file-preview" id="file-preview"></div>
-    <% end %>
+    </form>
   </div>
 </div>
 
 <script>
-  document.getElementById("chat-embed-messages").scrollTop = document.getElementById("chat-embed-messages").scrollHeight;
+  // Scroll to bottom
+  var msgs = document.getElementById("chat-embed-messages");
+  msgs.scrollTop = msgs.scrollHeight;
 
-  document.querySelector('.chat-embed__file-input')?.addEventListener('change', function(e) {
-    const preview = document.getElementById('file-preview');
+  // File input preview
+  document.getElementById("file-input").addEventListener("change", function() {
+    var preview = document.getElementById("file-preview");
     if (this.files.length > 0) {
-      preview.textContent = this.files[0].name;
-      preview.style.display = 'block';
+      preview.textContent = "📎 " + this.files[0].name;
+      preview.style.display = "block";
     } else {
-      preview.style.display = 'none';
+      preview.style.display = "none";
     }
   });
+
+  // Drag & drop
+  var container = document.querySelector(".chat-embed__container");
+  var dropZone = document.getElementById("drop-zone");
+  var fileInput = document.getElementById("file-input");
+
+  container.addEventListener("dragover", function(e) {
+    e.preventDefault();
+    dropZone.style.display = "flex";
+  });
+
+  container.addEventListener("dragleave", function(e) {
+    if (!container.contains(e.relatedTarget)) {
+      dropZone.style.display = "none";
+    }
+  });
+
+  dropZone.addEventListener("drop", function(e) {
+    e.preventDefault();
+    dropZone.style.display = "none";
+    if (e.dataTransfer.files.length > 0) {
+      fileInput.files = e.dataTransfer.files;
+      var preview = document.getElementById("file-preview");
+      preview.textContent = "📎 " + e.dataTransfer.files[0].name;
+      preview.style.display = "block";
+    }
+  });
+
+  // Auto-refresh every 5 seconds for new messages
+  setInterval(function() {
+    var iframe = window.frameElement;
+    if (iframe && document.hasFocus()) {
+      var scrolledToBottom = msgs.scrollHeight - msgs.scrollTop - msgs.clientHeight < 50;
+      fetch(window.location.href).then(function(r) { return r.text(); }).then(function(html) {
+        var parser = new DOMParser();
+        var doc = parser.parseFromString(html, "text/html");
+        var newMessages = doc.getElementById("chat-embed-messages");
+        if (newMessages && newMessages.innerHTML !== msgs.innerHTML) {
+          msgs.innerHTML = newMessages.innerHTML;
+          if (scrolledToBottom) msgs.scrollTop = msgs.scrollHeight;
+        }
+      });
+    }
+  }, 5000);
 </script>
