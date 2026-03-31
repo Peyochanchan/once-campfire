@@ -12,7 +12,7 @@ class SessionsController < ApplicationController
     if user = User.active.authenticate_by(email_address: params[:email_address], password: params[:password])
       session_record = user.sessions.start!(user_agent: request.user_agent, ip_address: request.remote_ip)
       session_record.generate_otp!
-      SessionMailer.otp_code(session_record).deliver_now
+      SessionMailer.otp_code(session_record).deliver_later
 
       session[:pending_session_id] = session_record.id
       redirect_to verify_session_path
