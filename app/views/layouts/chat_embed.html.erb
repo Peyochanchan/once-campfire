@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <meta name="current-room-id" content="<%= @room&.id %>">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= current_user_meta_tags %>
+    <%= script_aware_action_cable_meta_tag %>
+    <%= stylesheet_link_tag :all, "data-turbo-track": "" %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+  </head>
+  <body class="chat-embed">
+    <%= yield %>
+  </body>
+</html>

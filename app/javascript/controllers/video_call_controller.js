@@ -4,7 +4,7 @@ import { BackgroundProcessor } from "@livekit/track-processors"
 import TomSelect from "tom-select"
 
 export default class extends Controller {
-  static targets = ["grid", "cameraBtn", "micBtn", "screenBtn", "blurBtn", "settingsBtn", "settingsPanel", "cameraSelect", "micSelect", "speakerSelect"]
+  static targets = ["grid", "cameraBtn", "micBtn", "screenBtn", "blurBtn", "settingsBtn", "settingsPanel", "cameraSelect", "micSelect", "speakerSelect", "chatBtn", "chatPanel"]
   static values = {
     token: String,
     url: String,
@@ -117,6 +117,15 @@ export default class extends Controller {
     } catch (error) {
       console.warn("[VideoCall] Screen share not available:", error.message)
     }
+  }
+
+  toggleChat() {
+    const panel = this.chatPanelTarget
+    const visible = panel.style.display !== "none"
+    panel.style.display = visible ? "none" : "flex"
+    this.chatBtnTarget.classList.toggle("btn--active", !visible)
+    // Close settings if open
+    if (!visible) this.settingsPanelTarget.style.display = "none"
   }
 
   async toggleSettings() {

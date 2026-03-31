@@ -27,6 +27,14 @@
     </div>
   </div>
 
+  <div class="call-chat-sidebar" data-video-call-target="chatPanel" style="display:none">
+    <div class="call-chat-sidebar__header">
+      <strong>Chat</strong>
+      <button class="call-chat-sidebar__close" data-action="video-call#toggleChat">&times;</button>
+    </div>
+    <iframe src="<%= room_chat_embed_path(room) %>" class="call-chat-sidebar__iframe"></iframe>
+  </div>
+
   <div class="call-controls">
     <button class="btn call-btn" data-action="video-call#toggleCamera" data-video-call-target="cameraBtn" title="Toggle camera">
       <span class="icon-on"><%= lucide_icon "camera", size: 22 %></span>
@@ -45,6 +53,10 @@
     <button class="btn call-btn" data-action="video-call#toggleScreenShare" data-video-call-target="screenBtn" title="Share screen">
       <span class="icon-on"><%= lucide_icon "screen-share", size: 22 %></span>
       <span class="icon-off" style="display:none"><%= lucide_icon "screen-share-off", size: 22 %></span>
+    </button>
+
+    <button class="btn call-btn" data-action="video-call#toggleChat" data-video-call-target="chatBtn" title="Chat">
+      <%= lucide_icon "message-square", size: 22 %>
     </button>
 
     <button class="btn call-btn" data-action="video-call#toggleSettings" data-video-call-target="settingsBtn" title="Settings">

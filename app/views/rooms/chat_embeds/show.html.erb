@@ -1,0 +1,54 @@
+<div class="chat-embed__container">
+  <div class="chat-embed__messages" id="chat-embed-messages">
+    <% @messages.each do |message| %>
+      <% body_text = message.body.to_plain_text.presence %>
+      <% next unless body_text %>
+      <div class="chat-embed__msg <%= "chat-embed__msg--me" if message.creator == Current.user %>">
+        <div class="chat-embed__meta">
+          <span class="chat-embed__author"><%= message.creator.name %></span>
+          <span class="chat-embed__time"><%= message.created_at.strftime("%H:%M") %></span>
+        </div>
+        <div class="chat-embed__bubble">
+          <%= body_text %>
+          <% if message.attachment.attached? %>
+            <div class="chat-embed__attachment">
+              <%= image_tag "attachment.svg", size: 14 %>
+              <%= message.attachment.filename %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="chat-embed__composer">
+    <%= form_with url: room_messages_path(@room), scope: :message, method: :post, multipart: true, data: { turbo: false } do |form| %>
+      <%= form.hidden_field :client_message_id, value: SecureRandom.hex(8) %>
+      <div class="chat-embed__input-row">
+        <%= form.text_field :body, placeholder: "Write a message...", class: "chat-embed__input", autocomplete: "off", autofocus: true %>
+        <label class="chat-embed__file-btn" title="Attach file">
+          <%= lucide_icon "paperclip", size: 18 %>
+          <%= form.file_field :attachment, class: "chat-embed__file-input", data: { action: "change->chat-embed#fileSelected" } %>
+        </label>
+        <button type="submit" class="chat-embed__send">
+          <%= lucide_icon "arrow-up", size: 18 %>
+        </button>
+      </div>
+      <div class="chat-embed__file-preview" id="file-preview"></div>
+    <% end %>
+  </div>
+</div>
+
+<script>
+  document.getElementById("chat-embed-messages").scrollTop = document.getElementById("chat-embed-messages").scrollHeight;
+
+  document.querySelector('.chat-embed__file-input')?.addEventListener('change', function(e) {
+    const preview = document.getElementById('file-preview');
+    if (this.files.length > 0) {
+      preview.textContent = this.files[0].name;
+      preview.style.display = 'block';
+    } else {
+      preview.style.display = 'none';
+    }
+  });
+</script>

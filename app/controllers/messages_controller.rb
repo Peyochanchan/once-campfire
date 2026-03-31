@@ -23,6 +23,11 @@ class MessagesController < ApplicationController
 
     @message.broadcast_create
     deliver_webhooks_to_bots
+
+    respond_to do |format|
+      format.turbo_stream
+      format.html { redirect_to room_chat_embed_path(@room) }
+    end
   rescue ActiveRecord::RecordNotFound
     render action: :room_not_found
   end
