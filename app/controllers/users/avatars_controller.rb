@@ -29,7 +29,11 @@ class Users::AvatarsController < ApplicationController
     SQUARE_WEBP_VARIANT = { resize_to_limit: [ 512, 512 ], format: :webp }
 
     def send_webp_blob_file(key)
-      send_file ActiveStorage::Blob.service.path_for(key), content_type: "image/webp", disposition: :inline
+      if ActiveStorage::Blob.service.respond_to?(:path_for)
+        send_file ActiveStorage::Blob.service.path_for(key), content_type: "image/webp", disposition: :inline
+      else
+        redirect_to ActiveStorage::Blob.service.url(key, expires_in: 30.minutes, filename: ActiveStorage::Filename.new("avatar.webp"), content_type: "image/webp", disposition: :inline), allow_other_host: true
+      end
     end
 
     def render_default_bot

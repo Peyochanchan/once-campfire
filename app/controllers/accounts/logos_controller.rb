@@ -10,7 +10,11 @@ class Accounts::LogosController < ApplicationController
 
       if Current.account&.logo&.attached?
         logo = Current.account.logo.variant(logo_variant).processed
-        send_png_file ActiveStorage::Blob.service.path_for(logo.key)
+        if ActiveStorage::Blob.service.respond_to?(:path_for)
+          send_png_file ActiveStorage::Blob.service.path_for(logo.key)
+        else
+          redirect_to logo.url(expires_in: 5.minutes), allow_other_host: true
+        end
       else
         send_stock_icon
       end
