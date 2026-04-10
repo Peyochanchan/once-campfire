@@ -107,6 +107,8 @@ en:
     settings: "Notification settings for this room"
     ping_settings: "Notification settings for this Ping"
     alert: "Notifications alert"
+    mute: "Mute notifications"
+    unmute: "Unmute notifications"
 
   invites:
     share_title: "Share to invite more people"

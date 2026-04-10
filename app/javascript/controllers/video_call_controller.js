@@ -219,6 +219,10 @@ export default class extends Controller {
 
     this.room.on(RoomEvent.ParticipantDisconnected, (participant) => {
       this._removeParticipantTile(participant)
+      // Auto-leave if last participant remaining
+      if (this.room.remoteParticipants.size === 0) {
+        this.leave()
+      }
     })
 
     this.room.on(RoomEvent.Disconnected, () => {

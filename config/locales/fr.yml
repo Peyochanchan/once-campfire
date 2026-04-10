@@ -107,6 +107,8 @@ fr:
     settings: "Paramètres de notification"
     ping_settings: "Paramètres de notification de ce Ping"
     alert: "Alerte de notifications"
+    mute: "Couper les notifications"
+    unmute: "Activer les notifications"
 
   invites:
     share_title: "Partagez pour inviter d'autres personnes"

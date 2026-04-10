@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_04_10_103450) do
+ActiveRecord::Schema[8.2].define(version: 2026_04_10_120650) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -98,6 +98,7 @@ ActiveRecord::Schema[8.2].define(version: 2026_04_10_103450) do
     t.integer "connections", default: 0, null: false
     t.datetime "created_at", null: false
     t.string "involvement", default: "mentions"
+    t.boolean "muted", default: false, null: false
     t.integer "room_id", null: false
     t.datetime "unread_at"
     t.datetime "updated_at", null: false

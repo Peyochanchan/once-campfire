@@ -80,6 +80,7 @@ Rails.application.routes.draw do
       resource :refresh, only: :show
       resource :settings, only: :show
       resource :involvement, only: %i[ show update ]
+      resource :mute, only: %i[ create destroy ]
       resource :call, only: %i[ show create destroy ] do
         get :status, on: :member
       end
