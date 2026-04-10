@@ -15,7 +15,7 @@ class Messages::PinsController < ApplicationController
 
   private
     def set_message
-      @message = Message.find(params[:message_id])
+      @message = Current.user.reachable_messages.find(params[:message_id])
     end
 
     def broadcast_pinned_update

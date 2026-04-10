@@ -8,6 +8,6 @@ class Messages::ThreadsController < ApplicationController
 
   private
     def set_message
-      @message = Message.find(params[:message_id])
+      @message = Current.user.reachable_messages.find(params[:message_id])
     end
 end

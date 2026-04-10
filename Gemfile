@@ -70,3 +70,5 @@ group :test do
   gem "selenium-webdriver"
   gem "webmock", require: false
 end
+
+gem "rack-attack", "~> 6.8"
