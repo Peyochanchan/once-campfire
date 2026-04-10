@@ -1,19 +1,19 @@
+# Prefix all S3 keys with a folder to organize files in the shared bucket.
+# e.g. "abc123" becomes "campfire/abc123"
 Rails.application.config.after_initialize do
-  if Rails.env.production?
-    ActiveStorage::Blob.class_eval do
-      before_create do
-        unless key.start_with?("campfire/")
-          self.key = "campfire/#{key}"
-          Rails.logger.info "[ActiveStorage] Prefixed blob key: #{key} (service: #{service_name})"
-        end
-      end
-    end
+  if Rails.env.production? && ENV["S3_ACCESS_KEY_ID"].present?
+    prefix = ENV.fetch("S3_KEY_PREFIX", "campfire")
 
-    Rails.logger.info "[ActiveStorage] S3 prefix 'campfire/' configured"
-    Rails.logger.info "[ActiveStorage] Service: #{Rails.configuration.active_storage.service}"
+    require "active_storage/service/s3_service"
+
+    ActiveStorage::Service::S3Service.prepend(Module.new do
+      define_method(:object_for) do |key|
+        super("#{prefix}/#{key}")
+      end
+    end)
+
+    Rails.logger.info "[ActiveStorage] S3 prefix '#{prefix}/' configured"
     Rails.logger.info "[ActiveStorage] Bucket: #{ENV['S3_BUCKET']}"
     Rails.logger.info "[ActiveStorage] Endpoint: #{ENV['S3_ENDPOINT']}"
-    Rails.logger.info "[ActiveStorage] Region: #{ENV['S3_REGION']}"
-    Rails.logger.info "[ActiveStorage] Access Key present: #{ENV['S3_ACCESS_KEY_ID'].present?}"
   end
 end
