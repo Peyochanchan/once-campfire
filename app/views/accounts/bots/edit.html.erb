@@ -15,13 +15,13 @@
 
   <div class="flex align-center gap justify-space-between">
     <%= button_to account_bot_path(@bot), method: :delete, class: "btn txt--small btn--negative", aria: { label: "Delete this chat bot" },
-          data: { turbo_confirm: "Are you sure you want to permanently remove this bot from the account? This can’t be undone." } do %>
+          data: { turbo_confirm: t("bots.confirm_delete") } do %>
       <%= image_tag "trash.svg", aria: { hidden: "true" }, size: 20 %>
       <%= image_tag "bot.svg", aria: { hidden: "true" }, size: 20 %>
     <% end %>
 
     <%= button_to account_bot_key_path(@bot), method: :put, class: "btn full-width txt--small btn--negative", aria: { label: "Generate a new key" },
-          data: { turbo_confirm: "Are you sure you want to change the bot key? All usage of this bot must be updated." } do %>
+          data: { turbo_confirm: t("bots.confirm_regenerate_key") } do %>
       <%= image_tag "refresh.svg", aria: { hidden: "true" }, size: 20 %>
       <%= image_tag "key.svg", aria: { hidden: "true" }, size: 20 %>
     <% end %>

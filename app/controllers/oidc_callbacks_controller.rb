@@ -11,7 +11,7 @@ class OidcCallbacksController < ApplicationController
       session_record.update!(verified: true)
       redirect_to root_url
     else
-      redirect_to new_session_url, alert: "Authentication failed"
+      redirect_to new_session_url, alert: t("auth.failed")
     end
   end
 

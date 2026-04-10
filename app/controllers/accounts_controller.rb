@@ -10,13 +10,13 @@ class AccountsController < ApplicationController
 
   def update
     @account.update!(account_params)
-    redirect_to edit_account_url, notice: "✓"
+    redirect_to edit_account_url, notice: t("common.success")
   end
 
   def end_all_calls
     ensure_can_administer
     count = CallParticipant.destroy_all.size
-    redirect_to edit_account_url, notice: "#{count} call participants removed, all calls ended."
+    redirect_to edit_account_url, notice: "#{count} #{t("calls.participants_removed")}"
   end
 
   private

@@ -2,7 +2,7 @@
   <% url = join_url(Current.account.join_code) %>
 
   <label class="flex flex-column gap full-width" style="--row-gap: 0.5em">
-    <strong id="invite_label" class="invite-label">Share to invite more people</strong>
+    <strong id="invite_label" class="invite-label"><%= t("invites.share_title") %></strong>
     <span class="flex align-center gap input input--actor fill-white">
       <%= image_tag "person-add.svg", aria: { hidden: "true" }, size: 20, class: "colorize--black" %>
       <input type="text" class="input" id="invite_url" value="<%= url %>" aria-labelledby="invite_label" readonly>
@@ -11,24 +11,24 @@
 
   <div class="flex align-center gap">
     <%= link_to_zoom_qr_code(url) do %>
-      <span class="for-screen-reader">Show join link QR code</span>
+      <span class="for-screen-reader"><%= t("invites.show_qr") %></span>
       <%= image_tag "qr-code.svg", aria: { hidden: "true" }, size: 20, class: "colorize--black" %>
     <% end %>
 
     <%= button_to_copy_to_clipboard(url) do %>
-      <span class="for-screen-reader">Copy join link</span>
+      <span class="for-screen-reader"><%= t("invites.copy_link") %></span>
       <%= image_tag "copy-paste.svg", aria: { hidden: "true" }, size: 20, class: "colorize--black" %>
     <% end %>
 
-    <%= web_share_session_button(url, "Link to join Campfire", "Hit this link to join me in Campfire and start chatting.") do %>
-      <span class="for-screen-reader">Share join link</span>
+    <%= web_share_session_button(url, t("invites.share_title"), t("rooms.invite_instructions")) do %>
+      <span class="for-screen-reader"><%= t("invites.share_link") %></span>
       <%= image_tag "share.svg", aria: { hidden: "true" }, size: 20, class: "colorize--black" %>
     <% end %>
 
     <% if Current.user.can_administer? %>
       <%= button_to account_join_code_path, class: "btn btn--regenerate" do %>
         <%= image_tag "refresh.svg", aria: { hidden: "true" }, size: 20, class: "colorize--black" %>
-        <span class="for-screen-reader">Regenerate join link</span>
+        <span class="for-screen-reader"><%= t("invites.regenerate") %></span>
       <% end %>
     <% end %>
   </div>

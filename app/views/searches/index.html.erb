@@ -20,9 +20,9 @@
 
     <% if @recent_searches.any? %>
       <%= button_to clear_searches_url, method: :delete, class: "btn searches__btn",
-              data: { turbo_confirm: "Are you sure you want to clear your recent searches?" } do %>
+              data: { turbo_confirm: t("search.confirm_clear") } do %>
         <%= image_tag "broom.svg", aria: { hidden: "true" } %>
-        <span class="for-screen-reader">Clear recent searches</span>
+        <span class="for-screen-reader"><%= t("search.clear_recents") %></span>
       <% end %>
     <% end %>
   </div>
@@ -38,9 +38,9 @@
 
     <% if @recent_searches.any? %>
       <%= button_to clear_searches_url, method: :delete, class: "btn searches__btn",
-              data: { turbo_confirm: "Are you sure you want to clear your recent searches?" } do %>
+              data: { turbo_confirm: t("search.confirm_clear") } do %>
         <%= image_tag "broom.svg", aria: { hidden: "true" } %>
-        <span class="for-screen-reader">Clear recent searches</span>
+        <span class="for-screen-reader"><%= t("search.clear_recents") %></span>
       <% end %>
     <% end %>
   </div>
@@ -63,7 +63,7 @@
     <%= link_to room_path(@return_to_room),
             class: "btn flex-item-no-shrink margin-block-end", style: "view-transition-name: input-switcher; --btn-border-radius: 0.5em" do %>
       <%= image_tag "arrow-left.svg", aria: { hidden: "true" } %>
-      <span class="for-screen-reader">Exit search </span>
+      <span class="for-screen-reader"><%= t("search.exit") %></span>
     <% end %>
 
     <%= form_with url: searches_path, class: "margin-block flex-item-grow contain flex align-center gap",
@@ -75,12 +75,12 @@
 
         <%= link_to searches_path, data: { form_target: "cancel" }, role: "button", class: "searches__reset" do %>
           <%= image_tag "remove.svg", aria: { hidden: "true" }, size: 14, class: "colorize--black" %>
-          <span class="for-screen-reader">Clear search field</span>
+          <span class="for-screen-reader"><%= t("search.clear_field") %></span>
         <% end %>
 
         <%= form.button type: "submit", class: "btn btn--reversed flex-item-no-shrink txt-small", style: "--btn-border-radius: 0.5em" do %>
           <%= image_tag "arrow-up.svg", aria: { hidden: "true" } %>
-          <span class="for-screen-reader">Search</span>
+          <span class="for-screen-reader"><%= t("search.submit") %></span>
         <% end %>
       </div>
     <% end %>

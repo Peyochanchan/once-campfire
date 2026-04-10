@@ -12,7 +12,7 @@
         <div class="flex align-center gap">
           <%= translation_button(:email_address) %>
           <label class="flex align-center gap input input--actor txt-large">
-            <%= form.email_field :email_address, required: true, class: "input", autofocus: true, autocomplete: "username", placeholder: "Enter your email address", value: params[:email_address] %>
+            <%= form.email_field :email_address, required: true, class: "input", autofocus: true, autocomplete: "username", placeholder: t("auth.email_placeholder"), value: params[:email_address] %>
             <%= image_tag "email.svg", aria: { hidden: "true" }, size: 24, class: "colorize--black" %>
           </label>
         </div>
@@ -20,25 +20,25 @@
         <div class="flex align-center gap">
           <%= translation_button(:password) %>
           <label class="flex align-center gap input input--actor txt-large">
-            <%= form.password_field :password, required: true, class: "input", autocomplete: "current-password", placeholder: "Enter your password", maxlength: 72 %>
+            <%= form.password_field :password, required: true, class: "input", autocomplete: "current-password", placeholder: t("auth.password_placeholder"), maxlength: 72 %>
             <%= image_tag "password.svg", aria: { hidden: "true" }, size: 24, class: "colorize--black" %>
           </label>
         </div>
 
         <%= form.button class: "btn btn--reversed center txt-large", type: "submit", name: "log_in" do %>
           <%= image_tag "arrow-right.svg", aria: { hidden: "true" } %>
-          <span class="for-screen-reader">Go</span>
+          <span class="for-screen-reader"><%= t("common.go") %></span>
         <% end %>
       </fieldset>
     <% end %>
 
     <% if ENV["OIDC_CLIENT_ID"].present? %>
       <div class="separator margin-block">
-        <span class="txt-small">or</span>
+        <span class="txt-small"><%= t("common.or") %></span>
       </div>
 
       <%= button_to "/auth/keycloak", method: :post, class: "btn btn--reversed center txt-large", style: "width: 100%", data: { turbo: false } do %>
-        Sign in with SSO
+        <%= t("auth.sso_login") %>
       <% end %>
     <% end %>
   </div>

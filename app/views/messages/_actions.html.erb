@@ -5,7 +5,7 @@
       data: { controller: "popup", action: "keydown.esc->popup#close toggle->popup#toggle click@document->popup#closeOnClickOutside", popup_orientation_top_class: "popup-orientation-top" } do %>
     <summary class="btn message__action-btn message__options-btn">
       <%= image_tag "menu-dots-horizontal.svg", size: 20, class: "colorize--black", aria: { hidden: "true" } %>
-      <span class="for-screen-reader">Message options</span>
+      <span class="for-screen-reader"><%= t("messages.options") %></span>
     </summary>
 
     <div class="message__actions-menu border shadow" data-popup-target="menu">
@@ -24,22 +24,22 @@
               class: "btn message__action-btn message__boost-btn",
               data: { turbo_frame: dom_id(message, :new_boost), action: "soft-keyboard#open popup#close" } do %>
           <%= image_tag "boost.svg", class: "colorize--black", size: 20, aria: { hidden: "true" } %>
-          <span class="for-screen-reader">New boost</span>
+          <span class="for-screen-reader"><%= t("boosts.new") %></span>
         <% end %>
       </div>
 
       <div class="flex flex-wrap border-top margin-block-start-half pad-block-start-half message__actions-grid">
         <% if message.content_type.attachment? %>
-          <%= link_to rails_blob_path(message.attachment, disposition: "attachment", only_path: true), class: "btn message__action-btn center full-width hide-in-ios-pwa", title: "Download", aria: { label: "Download" } do %>
+          <%= link_to rails_blob_path(message.attachment, disposition: "attachment", only_path: true), class: "btn message__action-btn center full-width hide-in-ios-pwa", title: t("common.download"), aria: { label: t("common.download") } do %>
             <%= image_tag "download.svg", class: "colorize--black", size: 20, aria: { hidden: "true" } %>
           <% end %>
 
           <%= tag.button class: "btn message__action-btn center full-width",
-              data: { controller: "web-share", action: "web-share#share", web_share_files_value: rails_blob_path(message.attachment, only_path: true), web_share_title_value: message.attachment.filename.to_s }, title: "Share", aria: { label: "Share" } do %>
+              data: { controller: "web-share", action: "web-share#share", web_share_files_value: rails_blob_path(message.attachment, only_path: true), web_share_title_value: message.attachment.filename.to_s }, title: t("common.share"), aria: { label: t("common.share") } do %>
             <%= image_tag "share.svg", class: "colorize--black", size: 20, aria: { hidden: "true" } %>
           <% end %>
         <% else %>
-          <%= tag.button class: "btn message__action-btn center full-width", data: { action: "reply#reply" }, title: "Reply", aria: { label: "Reply" } do %>
+          <%= tag.button class: "btn message__action-btn center full-width", data: { action: "reply#reply" }, title: t("messages.reply"), aria: { label: t("messages.reply") } do %>
             <%= image_tag "reply.svg", class: "colorize--black", size: 20, aria: { hidden: "true" } %>
           <% end %>
         <% end %>
@@ -47,17 +47,17 @@
         <% unless message.reply? %>
           <%= tag.button class: "btn message__action-btn center full-width",
                 data: { action: "thread-panel#open", thread_panel_message_id_param: message.id },
-                title: "Thread", aria: { label: "Thread" } do %>
+                title: t("messages.thread"), aria: { label: t("messages.thread") } do %>
             <%= lucide_icon "message-square", size: 20 %>
           <% end %>
         <% end %>
 
-        <%= tag.button class: "btn message__action-btn center full-width", title: "Copy link", aria: { label: "Copy link" }, data: { controller: "copy-to-clipboard", action: "copy-to-clipboard#copy", copy_to_clipboard_success_class: "btn--success", copy_to_clipboard_content_value: url } do %>
+        <%= tag.button class: "btn message__action-btn center full-width", title: t("common.copy_link"), aria: { label: t("common.copy_link") }, data: { controller: "copy-to-clipboard", action: "copy-to-clipboard#copy", copy_to_clipboard_success_class: "btn--success", copy_to_clipboard_content_value: url } do %>
           <%= image_tag "link.svg", class: "colorize--black", size: 20, aria: { hidden: "true" } %>
         <% end %>
 
         <%= link_to edit_room_message_path(message.room, message), class: "btn message__action-btn center full-width message__edit-btn",
-              data: { turbo_frame: dom_id(message, :edit) }, title: "Edit", aria: { label: "Edit"} do %>
+              data: { turbo_frame: dom_id(message, :edit) }, title: t("common.edit"), aria: { label: t("common.edit") } do %>
           <%= image_tag "pencil.svg", class: "colorize--black", size: 20, aria: { hidden: "true" } %>
         <% end %>
       </div>

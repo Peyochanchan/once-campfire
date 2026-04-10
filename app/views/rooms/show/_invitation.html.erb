@@ -8,8 +8,8 @@
             <%= translation_button(:invite_message) %>
           </div>
           <p>
-            <strong>Welcome to <%= app_name %></strong><br>
-            To invite people to chat, share the join link below.
+            <strong><%= t("rooms.welcome_title", app_name: app_name) %></strong><br>
+            <%= t("rooms.invite_instructions") %>
           </p>
         </div>
         <%= render "accounts/invite" %>

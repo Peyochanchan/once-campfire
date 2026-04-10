@@ -13,17 +13,17 @@
 
   <%= link_to_edit_room(room) do %>
     <%= image_tag "menu-dots-horizontal.svg", size: 20, aria: { hidden: "true" } %>
-    <span class="for-screen-reader">Settings for this <%= room.direct? ? "Ping" : "room" %></span>
+    <span class="for-screen-reader"><%= room.direct? ? t("rooms.ping_settings") : t("rooms.settings") %></span>
   <% end %>
 
-  <%= link_to room_call_path(room, video: true), class: "btn", target: "_blank", title: "Video call" do %>
+  <%= link_to room_call_path(room, video: true), class: "btn", target: "_blank", title: t("calls.video_title") do %>
     <%= lucide_icon "camera", size: 20 %>
-    <span class="for-screen-reader">Start a video call</span>
+    <span class="for-screen-reader"><%= t("calls.video_start") %></span>
   <% end %>
 
-  <%= link_to room_call_path(room), class: "btn", target: "_blank", title: "Audio call" do %>
+  <%= link_to room_call_path(room), class: "btn", target: "_blank", title: t("calls.audio_title") do %>
     <%= lucide_icon "phone", size: 20 %>
-    <span class="for-screen-reader">Start an audio call</span>
+    <span class="for-screen-reader"><%= t("calls.audio_start") %></span>
   <% end %>
 
   <%= render "rooms/involvements/bell", room: room %>

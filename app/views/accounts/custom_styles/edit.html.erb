@@ -1,4 +1,4 @@
-<% @page_title = "Custom styles" %>
+<% @page_title = t("admin.custom_styles") %>
 
 <% content_for :nav do %>
   <div class="flex-item-justify-start">
@@ -14,23 +14,23 @@
     </div>
 
     <div class="pad-inline-double margin-inline">
-      <h1 class="margin-none">Custom CSS</h1>
+      <h1 class="margin-none"><%= t("admin.custom_css_title") %></h1>
       <p class="flex flex-wrap align-center justify-center gap margin-none-block-start" style="--column-gap: 0.5ch; --row-gap: 0">
-        <span>Add custom CSS styles.</span>
+        <span><%= t("admin.custom_css_description") %></span>
         <%= image_tag "alert.svg", class: "flex-inline colorize--black", size: 16, aria: { hidden: "true" } %>
-        <span>Use Caution: you could break things.</span>
+        <span><%= t("admin.custom_css_warning") %></span>
       </p>
     </div>
 
     <label class="flex align-start gap flex-item-grow">
-      <%= form.text_area :custom_styles, class: "input input--code txt--small", placeholder: "Add CSS styles…",
+      <%= form.text_area :custom_styles, class: "input input--code txt--small", placeholder: t("admin.custom_css_placeholder"),
             autocomplete: "off", spellcheck: "false", autocorrect: "off", autocapitalize: "off",
             rows: 16, required: false %>
     </label>
 
     <%= form.button class: "btn btn--reversed center txt-large", type: "submit" do %>
       <%= image_tag "check.svg", aria: { hidden: "true" }, size: 20 %>
-      <span class="for-screen-reader">Save changes</span>
+      <span class="for-screen-reader"><%= t("common.save_changes") %></span>
     <% end %>
   <% end %>
 </section>

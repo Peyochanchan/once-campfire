@@ -4,11 +4,11 @@
       <li class="flex align-center gap margin-none">
         <figure class="avatar flex-item-no-shrink" style="--avatar-border-radius: 0; --avatar-size: 4ch;">
           <%= image_tag "everyone.svg", aria: { hidden: "true" }, class: "colorize--black", style: "background-color: transparent" %>
-          <span class="for-screen-reader">Everyone</span>
+          <span class="for-screen-reader"><%= t("rooms.everyone") %></span>
         </figure>
 
         <div class="min-width">
-          <div class="overflow-ellipsis fill-shade"><strong>Everyone</strong></div>
+          <div class="overflow-ellipsis fill-shade"><strong><%= t("rooms.everyone") %></strong></div>
         </div>
 
         <hr class="separator" aria-hidden="true">
@@ -17,7 +17,7 @@
           <label for="room_type" class="switch">
             <input type="checkbox" id="room_type" class="switch__input">
             <span class="switch__btn round"></span>
-            <span class="for-screen-reader">Give everyone access to this room</span>
+            <span class="for-screen-reader"><%= t("rooms.open_access") %></span>
           </label>
         <% end %>
       </li>

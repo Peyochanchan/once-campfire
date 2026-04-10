@@ -10,7 +10,10 @@ export default class extends Controller {
     roomId: Number,
     leaveUrl: String,
     avatarUrl: String,
-    startWithVideo: { type: Boolean, default: true }
+    startWithVideo: { type: Boolean, default: true },
+    labelEnded: { type: String, default: "Call ended" },
+    labelBack: { type: String, default: "Back to room" },
+    labelClose: { type: String, default: "Close tab" }
   }
 
   connect() {
@@ -499,10 +502,10 @@ export default class extends Controller {
   _showCallEndedScreen() {
     this.element.innerHTML = `
       <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:white;gap:1.5rem;background:oklch(0.12 0 0)">
-        <p style="font-size:1.4rem">Call ended</p>
+        <p style="font-size:1.4rem">${this.labelEndedValue}</p>
         <div style="display:flex;gap:1rem">
-          <a href="/rooms/${this.roomIdValue}" style="background:white;color:#333;border-radius:2rem;padding:0.6rem 1.5rem;text-decoration:none;font-weight:600;font-size:0.95rem">Back to room</a>
-          <button onclick="window.close()" style="background:transparent;border:1px solid white;color:white;border-radius:2rem;padding:0.6rem 1.5rem;cursor:pointer;font-weight:600;font-size:0.95rem">Close tab</button>
+          <a href="/rooms/${this.roomIdValue}" style="background:white;color:#333;border-radius:2rem;padding:0.6rem 1.5rem;text-decoration:none;font-weight:600;font-size:0.95rem">${this.labelBackValue}</a>
+          <button onclick="window.close()" style="background:transparent;border:1px solid white;color:white;border-radius:2rem;padding:0.6rem 1.5rem;cursor:pointer;font-weight:600;font-size:0.95rem">${this.labelCloseValue}</button>
         </div>
       </div>
     `

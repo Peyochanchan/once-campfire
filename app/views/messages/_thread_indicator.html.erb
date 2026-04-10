@@ -3,7 +3,7 @@
     <% count = message.replies_count %>
     <button class="thread-indicator" data-action="thread-panel#open" data-thread-panel-message-id-param="<%= message.id %>">
       <%= lucide_icon "message-square", size: 16 %>
-      <span><%= pluralize(count, "reply", "replies") %></span>
+      <span><%= t("threads.reply", count: count) %></span>
     </button>
   <% end %>
 </div>

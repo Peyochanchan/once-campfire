@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_04_10_055919) do
+ActiveRecord::Schema[8.2].define(version: 2026_04_10_092134) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -170,6 +170,7 @@ ActiveRecord::Schema[8.2].define(version: 2026_04_10_055919) do
     t.string "bot_token"
     t.datetime "created_at", null: false
     t.string "email_address"
+    t.string "locale", default: "en"
     t.string "name", null: false
     t.string "oidc_provider"
     t.string "oidc_sub"

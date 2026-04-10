@@ -1,4 +1,4 @@
-<h1 class="for-screen-reader">Chat Bot Setup</h1>
+<h1 class="for-screen-reader"><%= t("bots.setup_title") %></h1>
 <label class="align-center center avatar__form gap" data-controller="upload-preview">
   <div class="btn input--file">
     <%= image_tag "camera.svg", aria: { hidden: "true" }, size: 20 %>
@@ -15,7 +15,7 @@
 <div class="flex align-center gap">
   <%= translation_button(:bot_name) %>
   <label class="flex align-center gap flex-item-grow txt-large input input--actor">
-    <%= form.text_field :name, class: "input", autocomplete: "name", placeholder: "Name the bot", autofocus: true, required: true,
+    <%= form.text_field :name, class: "input", autocomplete: "name", placeholder: t("bots.name_placeholder"), autofocus: true, required: true,
           data: { "1p-ignore": true } %>
     <%= image_tag "bot.svg", aria: { hidden: "true" }, size: 24, class: "colorize--black" %>
   </label>
@@ -24,7 +24,7 @@
 <div class="flex align-center gap">
   <%= translation_button(:webhook_url) %>
   <label class="flex align-center gap flex-item-grow txt-large input input--actor">
-    <%= form.url_field :webhook_url, class: "input", placeholder: "Webhook URL" %>
+    <%= form.url_field :webhook_url, class: "input", placeholder: t("bots.webhook_url") %>
     <%= image_tag "web.svg", aria: { hidden: "true" }, size: 24, class: "colorize--black" %>
   </label>
 </div>

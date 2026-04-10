@@ -17,10 +17,10 @@ class Users::ProfilesController < ApplicationController
     end
 
     def user_params
-      params.require(:user).permit(:name, :avatar, :email_address, :password, :bio, :ringtone).compact
+      params.require(:user).permit(:name, :avatar, :email_address, :password, :bio, :ringtone, :locale).compact
     end
 
     def update_notice
-      params[:user][:avatar] ? "It may take up to 30 minutes to change everywhere." : "✓"
+      params[:user][:avatar] ? t("profile.avatar_update_notice") : t("profile.update_success")
     end
 end

@@ -1,32 +1,171 @@
-# Files in the config/locales directory are used for internationalization
-# and are automatically loaded by Rails. If you want to use locales other
-# than English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t "hello"
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t("hello") %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# The following keys must be escaped otherwise they will not be retrieved by
-# the default I18n backend:
-#
-# true, false, on, off, yes, no
-#
-# Instead, surround them with single quotes.
-#
-# en:
-#   "true": "foo"
-#
-# To learn more, please read the Rails Internationalization guide
-# available at https://guides.rubyonrails.org/i18n.html.
-
 en:
+  common:
+    go: "Go"
+    or: "or"
+    submit: "Submit"
+    cancel: "Cancel"
+    close: "Close"
+    delete: "Delete"
+    edit: "Edit"
+    save_changes: "Save changes"
+    download: "Download"
+    share: "Share"
+    sign_in: "Sign in"
+    success: "✓"
+    close_tab: "Close tab"
+    my_settings: "My settings"
+    copy_link: "Copy link"
+
+  auth:
+    email_placeholder: "Enter your email address"
+    password_placeholder: "Enter your password"
+    sso_login: "Sign in with SSO"
+    verify_email_title: "Check your email"
+    verify_button: "Verify"
+    code_expiry: "Code expires in 10 minutes"
+    back_to_signin: "Back to sign in"
+    code_expired: "Code expired. Please sign in again."
+    signin_success: "Signed in successfully"
+    invalid_code: "Invalid code. Please try again."
+    too_many_requests: "Too many requests or unauthorized."
+    failed: "Authentication failed"
+    logout: "Log out"
+
+  onboarding:
+    title: "Set up %{app_name}"
+    name_placeholder: "Name this account"
+    your_name: "Your name"
+    email: "Email address"
+    password: "Password"
+    confirm_password: "Confirm password"
+
+  messages:
+    confirm_delete: "Are you sure you want to delete this message?"
+    edit_label: "Edit message"
+    discard_changes: "Close editor and discard changes"
+    options: "Message options"
+    reply: "Reply"
+    thread: "Thread"
+    on_a_call: "%{names} on a call"
+
+  threads:
+    title: "Thread"
+    reply_placeholder: "Reply..."
+    reply:
+      one: "1 reply"
+      other: "%{count} replies"
+
+  boosts:
+    add: "Add a boost"
+    new: "New boost"
+
+  composer:
+    search: "Search"
+    message_label: "Write a message"
+    attach_file: "Attach a file"
+    rich_text: "Rich text"
+    send: "Send Message"
+
+  rooms:
+    welcome_title: "Welcome to %{app_name}"
+    invite_instructions: "To invite people to chat, share the join link below."
+    everyone: "Everyone"
+    restrict_access: "Give only some access to this room"
+    open_access: "Give everyone access to this room"
+    start_ping: "Start Ping"
+    type_names_hint: "Type names to ping someone…"
+    ping_with: "Ping with"
+    settings: "Settings for this room"
+    ping_settings: "Settings for this Ping"
+    not_found: "Room not found or inaccessible"
+    confirm_delete_ping: "Are you sure you want to delete this ping and all messages in it? This can't be undone."
+
+  calls:
+    video_title: "Video call"
+    video_start: "Start a video call"
+    audio_title: "Audio call"
+    audio_start: "Start an audio call"
+    end_all: "End all calls"
+    confirm_end_all: "End all active calls? Participants will be disconnected."
+    participants_removed: "call participants removed, all calls ended."
+    ended: "Call ended"
+    back_to_room: "Back to room"
+    join: "Join"
+    leave: "Leave"
+    leave_call: "Leave call"
+    settings_title: "Settings"
+    camera: "Camera"
+    microphone: "Microphone"
+    speaker: "Speaker"
+    toggle_camera: "Toggle camera"
+    toggle_mic: "Toggle microphone"
+    background_blur: "Background blur"
+    share_screen: "Share screen"
+    chat: "Chat"
+
+  notifications:
+    settings: "Notification settings for this room"
+    ping_settings: "Notification settings for this Ping"
+    alert: "Notifications alert"
+
+  invites:
+    share_title: "Share to invite more people"
+    show_qr: "Show join link QR code"
+    copy_link: "Copy join link"
+    share_link: "Share join link"
+    regenerate: "Regenerate join link"
+
+  account:
+    settings_title: "Account settings"
+    name_placeholder: "Name this account"
+    restrict_room_creation: "Must be admin to create new rooms"
+
+  admin:
+    setup_bots: "Set up chat bots"
+    custom_styles: "Custom styles"
+    custom_css_title: "Custom CSS"
+    custom_css_description: "Add custom CSS styles."
+    custom_css_warning: "Use Caution: you could break things."
+    custom_css_placeholder: "Add CSS styles…"
+    user_role_admin: "Administrator"
+    user_role_member: "Member"
+    confirm_remove_user: "Are you sure you want to permanently remove this person from the account? This can't be undone."
+    confirm_ban_user: "Are you sure you want to ban this user? This will log them out, delete their messages, and block their IP addresses."
+    ban: "Ban"
+    confirm_unban_user: "Are you sure you want to remove the ban on this user?"
+    unban: "Remove ban"
+
+  bots:
+    setup_title: "Chat Bot Setup"
+    title: "Chat bots"
+    description: "With Chat bots, other sites and services can post updates directly to %{app_name}."
+    add: "Add a chat bot"
+    name_placeholder: "Name the bot"
+    webhook_url: "Webhook URL"
+    confirm_delete: "Are you sure you want to permanently remove this bot from the account? This can't be undone."
+    confirm_regenerate_key: "Are you sure you want to change the bot key? All usage of this bot must be updated."
+
+  profile:
+    upload_avatar: "Upload avatar"
+    avatar: "Avatar"
+    delete_avatar: "Delete avatar"
+    name_placeholder: "Enter your name"
+    email_placeholder: "Enter your email address"
+    password_placeholder: "Change password"
+    bio_placeholder: "A few words about yourself…"
+    preview_ringtone: "Preview ringtone"
+    edit: "Edit my profile"
+    update_success: "✓"
+    avatar_update_notice: "It may take up to 30 minutes to change everywhere."
+    push_notifications_dev: "Push Notifications Dev Mode"
+
+  search:
+    clear_recents: "Clear recent searches"
+    exit: "Exit search"
+    clear_field: "Clear search field"
+    submit: "Search"
+    confirm_clear: "Are you sure you want to clear your recent searches?"
+
+  files:
+    upload_logo: "Upload logo"
+    delete_logo: "Delete logo"

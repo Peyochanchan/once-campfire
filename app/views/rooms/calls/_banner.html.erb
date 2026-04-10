@@ -9,13 +9,13 @@
          data-call-banner-notify-value="<%= notify %>">
       <div class="call-banner__indicator"></div>
       <span class="txt-small">
-        <%= participant_names %> on a call
+        <%= t("messages.on_a_call", names: participant_names) %>
       </span>
       <span data-call-banner-target="joinBtn">
-        <%= link_to "Join", room_call_path(room), class: "btn btn--small btn--reversed", target: "_blank" %>
+        <%= link_to t("calls.join"), room_call_path(room), class: "btn btn--small btn--reversed", target: "_blank" %>
       </span>
       <span data-call-banner-target="leaveBtn" style="display:none">
-        <%= button_to "Leave", room_call_path(room), method: :delete, class: "btn btn--small btn--negative", data: { turbo_frame: "_top" } %>
+        <%= button_to t("calls.leave"), room_call_path(room), method: :delete, class: "btn btn--small btn--negative", data: { turbo_frame: "_top" } %>
       </span>
     </div>
   <% end %>

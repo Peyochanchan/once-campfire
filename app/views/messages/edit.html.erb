@@ -6,7 +6,7 @@
 
         <div class="message__edit-btns flex align-center justify-space-between gap full-width pad-block-start-half">
           <%= button_tag class: "btn btn--negative center margin-block-end", type: "submit",
-                form: dom_id(@message, :delete_form), data: { turbo_confirm: "Are you sure you want to delete this message?" } do %>
+                form: dom_id(@message, :delete_form), data: { turbo_confirm: t("messages.confirm_delete") } do %>
             <%= image_tag "trash.svg", aria: { hidden: "true" } %>
             <span class="for-screen-reader">Delete message</span>
           <% end %>
@@ -19,7 +19,7 @@
               <%= form.rich_text_area :body,
                     rows: 1,
                     class: "input",
-                    aria: { multiline: "true", label: "Edit message" },
+                    aria: { multiline: "true", label: t("messages.edit_label") },
                     autofocus: true,
                     data: {
                       controller: "rich-autocomplete",
@@ -27,7 +27,7 @@
                       rich_autocomplete_url_value: autocompletable_users_path(room_id: @room.id) } %>
             </div>
 
-            <%= link_to "Close editor and discard changes", room_message_path(@room, @message), data: { form_target: "cancel" }, hidden: true %>
+            <%= link_to t("messages.discard_changes"), room_message_path(@room, @message), data: { form_target: "cancel" }, hidden: true %>
 
             <div class="message__edit-btns flex align-center justify-space-between gap full-width pad-block-start-half">
               <%= button_tag type: "submit", class: "btn btn--reversed" do %>
@@ -36,7 +36,7 @@
               <% end %>
 
               <%= button_tag class: "btn btn--negative", type: "submit", form: dom_id(@message, :delete_form),
-                      data: { turbo_confirm: "Are you sure you want to delete this message?" } do %>
+                      data: { turbo_confirm: t("messages.confirm_delete") } do %>
                 <%= image_tag "trash.svg", aria: { hidden: "true" } %>
                 <span class="for-screen-reader">Delete message</span>
               <% end %>
@@ -49,7 +49,7 @@
     <div class="message__actions flex flex-wrap">
       <%= link_to room_message_path(@room, @message), class: "message__action-btn message__edit-close-btn txt-small btn btn--borderless" do %>
         <%= image_tag "remove.svg", class: "colorize--black", aria: { hidden: "true" } %>
-        <span class="for-screen-reader">Close editor and discard changes</span>
+        <span class="for-screen-reader"><%= t("messages.discard_changes") %></span>
       <% end %>
     </div>
 

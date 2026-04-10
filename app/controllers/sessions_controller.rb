@@ -32,16 +32,16 @@ class SessionsController < ApplicationController
     if @pending_session.nil? || @pending_session.otp_expired?
       @pending_session&.destroy
       session.delete(:pending_session_id)
-      redirect_to new_session_url, alert: "Code expired. Please sign in again."
+      redirect_to new_session_url, alert: t("auth.code_expired")
       return
     end
 
     if @pending_session.verify_otp(params[:otp_code])
       session.delete(:pending_session_id)
       authenticated_as @pending_session
-      redirect_to post_authenticating_url, notice: "Signed in successfully"
+      redirect_to post_authenticating_url, notice: t("auth.signin_success")
     else
-      flash.now[:alert] = "Invalid code. Please try again."
+      flash.now[:alert] = t("auth.invalid_code")
       render :verify, status: :unprocessable_entity
     end
   end
@@ -59,7 +59,7 @@ class SessionsController < ApplicationController
     end
 
     def render_rejection(status)
-      flash.now[:alert] = "Too many requests or unauthorized."
+      flash.now[:alert] = t("auth.too_many_requests")
       render :new, status: status
     end
 

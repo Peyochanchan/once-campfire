@@ -5,7 +5,10 @@
      data-video-call-room-id-value="<%= room.id %>"
      data-video-call-leave-url-value="<%= room_call_path(room) %>"
      data-video-call-avatar-url-value="<%= fresh_user_avatar_path(Current.user) %>"
-     data-video-call-start-with-video-value="<%= video %>">
+     data-video-call-start-with-video-value="<%= video %>"
+     data-video-call-label-ended-value="<%= t("calls.ended") %>"
+     data-video-call-label-back-value="<%= t("calls.back_to_room") %>"
+     data-video-call-label-close-value="<%= t("common.close_tab") %>">
 
   <div class="call-grid" data-video-call-target="grid">
   </div>
@@ -13,57 +16,57 @@
   <div class="call-settings" data-video-call-target="settingsPanel" style="display:none">
     <div class="call-settings__inner">
       <div class="call-settings__header">
-        <strong>Settings</strong>
+        <strong><%= t("calls.settings_title") %></strong>
         <button class="call-settings__close" data-action="video-call#toggleSettings">&times;</button>
       </div>
-      <label class="call-settings__label">Camera</label>
+      <label class="call-settings__label"><%= t("calls.camera") %></label>
       <select data-video-call-target="cameraSelect" data-action="change->video-call#switchCamera" class="call-settings__select"></select>
 
-      <label class="call-settings__label">Microphone</label>
+      <label class="call-settings__label"><%= t("calls.microphone") %></label>
       <select data-video-call-target="micSelect" data-action="change->video-call#switchMic" class="call-settings__select"></select>
 
-      <label class="call-settings__label">Speaker</label>
+      <label class="call-settings__label"><%= t("calls.speaker") %></label>
       <select data-video-call-target="speakerSelect" data-action="change->video-call#switchSpeaker" class="call-settings__select"></select>
     </div>
   </div>
 
   <div class="call-chat-sidebar" data-video-call-target="chatPanel" style="display:none">
     <div class="call-chat-sidebar__header">
-      <strong>Chat</strong>
+      <strong><%= t("calls.chat") %></strong>
       <button class="call-chat-sidebar__close" data-action="video-call#toggleChat">&times;</button>
     </div>
     <iframe src="<%= room_chat_embed_path(room) %>" class="call-chat-sidebar__iframe"></iframe>
   </div>
 
   <div class="call-controls">
-    <button class="btn call-btn" data-action="video-call#toggleCamera" data-video-call-target="cameraBtn" title="Toggle camera">
+    <button class="btn call-btn" data-action="video-call#toggleCamera" data-video-call-target="cameraBtn" title="<%= t("calls.toggle_camera") %>">
       <span class="icon-on"><%= lucide_icon "camera", size: 22 %></span>
       <span class="icon-off" style="display:none"><%= lucide_icon "camera-off", size: 22 %></span>
     </button>
 
-    <button class="btn call-btn" data-action="video-call#toggleMic" data-video-call-target="micBtn" title="Toggle microphone">
+    <button class="btn call-btn" data-action="video-call#toggleMic" data-video-call-target="micBtn" title="<%= t("calls.toggle_mic") %>">
       <span class="icon-on"><%= lucide_icon "mic", size: 22 %></span>
       <span class="icon-off" style="display:none"><%= lucide_icon "mic-off", size: 22 %></span>
     </button>
 
-    <button class="btn call-btn" data-action="video-call#toggleBlur" data-video-call-target="blurBtn" title="Background blur">
+    <button class="btn call-btn" data-action="video-call#toggleBlur" data-video-call-target="blurBtn" title="<%= t("calls.background_blur") %>">
       <%= lucide_icon "user-round", size: 22 %>
     </button>
 
-    <button class="btn call-btn" data-action="video-call#toggleScreenShare" data-video-call-target="screenBtn" title="Share screen">
+    <button class="btn call-btn" data-action="video-call#toggleScreenShare" data-video-call-target="screenBtn" title="<%= t("calls.share_screen") %>">
       <span class="icon-on"><%= lucide_icon "screen-share", size: 22 %></span>
       <span class="icon-off" style="display:none"><%= lucide_icon "screen-share-off", size: 22 %></span>
     </button>
 
-    <button class="btn call-btn" data-action="video-call#toggleChat" data-video-call-target="chatBtn" title="Chat">
+    <button class="btn call-btn" data-action="video-call#toggleChat" data-video-call-target="chatBtn" title="<%= t("calls.chat") %>">
       <%= lucide_icon "message-square", size: 22 %>
     </button>
 
-    <button class="btn call-btn" data-action="video-call#toggleSettings" data-video-call-target="settingsBtn" title="Settings">
+    <button class="btn call-btn" data-action="video-call#toggleSettings" data-video-call-target="settingsBtn" title="<%= t("calls.settings_title") %>">
       <%= lucide_icon "settings", size: 22 %>
     </button>
 
-    <button class="btn call-btn call-btn--leave" data-action="video-call#leave" title="Leave call">
+    <button class="btn call-btn call-btn--leave" data-action="video-call#leave" title="<%= t("calls.leave_call") %>">
       <%= lucide_icon "phone", size: 22 %>
     </button>
   </div>

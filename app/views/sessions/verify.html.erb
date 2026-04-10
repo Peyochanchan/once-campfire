@@ -5,7 +5,7 @@
   <div class="panel <%= "shake" if flash[:alert] %>">
     <%= account_logo_tag style: "center margin-block-end txt-xx-large" %>
 
-    <h2 class="txt-large margin-block-end">Check your email</h2>
+    <h2 class="txt-large margin-block-end"><%= t("auth.verify_email_title") %></h2>
     <p class="txt-subtle margin-block-end">
       We sent a 6-digit code to <strong><%= @pending_session.user.email_address %></strong>
     </p>
@@ -23,13 +23,13 @@
       </div>
 
       <%= form.button class: "btn btn--reversed center txt-large margin-block-start", type: "submit" do %>
-        Verify
+        <%= t("auth.verify_button") %>
       <% end %>
     <% end %>
 
     <p class="txt-small txt-subtle margin-block-start">
-      Code expires in 10 minutes.
-      <%= link_to "Back to sign in", new_session_path %>
+      <%= t("auth.code_expiry") %>.
+      <%= link_to t("auth.back_to_signin"), new_session_path %>
     </p>
   </div>
 </section>

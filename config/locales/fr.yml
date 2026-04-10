@@ -1,0 +1,171 @@
+fr:
+  common:
+    go: "Valider"
+    or: "ou"
+    submit: "Envoyer"
+    cancel: "Annuler"
+    close: "Fermer"
+    delete: "Supprimer"
+    edit: "Modifier"
+    save_changes: "Enregistrer"
+    download: "Télécharger"
+    share: "Partager"
+    sign_in: "Se connecter"
+    success: "✓"
+    close_tab: "Fermer l'onglet"
+    my_settings: "Mes paramètres"
+    copy_link: "Copier le lien"
+
+  auth:
+    email_placeholder: "Adresse email"
+    password_placeholder: "Mot de passe"
+    sso_login: "Se connecter avec SSO"
+    verify_email_title: "Vérifiez vos emails"
+    verify_button: "Vérifier"
+    code_expiry: "Le code expire dans 10 minutes"
+    back_to_signin: "Retour à la connexion"
+    code_expired: "Code expiré. Veuillez vous reconnecter."
+    signin_success: "Connexion réussie"
+    invalid_code: "Code invalide. Veuillez réessayer."
+    too_many_requests: "Trop de requêtes ou non autorisé."
+    failed: "Échec de l'authentification"
+    logout: "Se déconnecter"
+
+  onboarding:
+    title: "Configurer %{app_name}"
+    name_placeholder: "Nom du compte"
+    your_name: "Votre nom"
+    email: "Adresse email"
+    password: "Mot de passe"
+    confirm_password: "Confirmer le mot de passe"
+
+  messages:
+    confirm_delete: "Êtes-vous sûr de vouloir supprimer ce message ?"
+    edit_label: "Modifier le message"
+    discard_changes: "Fermer l'éditeur et annuler les modifications"
+    options: "Options du message"
+    reply: "Répondre"
+    thread: "Fil"
+    on_a_call: "%{names} en appel"
+
+  threads:
+    title: "Fil de discussion"
+    reply_placeholder: "Répondre..."
+    reply:
+      one: "1 réponse"
+      other: "%{count} réponses"
+
+  boosts:
+    add: "Ajouter une réaction"
+    new: "Nouvelle réaction"
+
+  composer:
+    search: "Rechercher"
+    message_label: "Écrire un message"
+    attach_file: "Joindre un fichier"
+    rich_text: "Texte enrichi"
+    send: "Envoyer"
+
+  rooms:
+    welcome_title: "Bienvenue sur %{app_name}"
+    invite_instructions: "Pour inviter des personnes, partagez le lien ci-dessous."
+    everyone: "Tout le monde"
+    restrict_access: "Restreindre l'accès à certaines personnes"
+    open_access: "Donner accès à tout le monde"
+    start_ping: "Nouveau Ping"
+    type_names_hint: "Tapez un nom pour envoyer un ping…"
+    ping_with: "Ping avec"
+    settings: "Paramètres de ce salon"
+    ping_settings: "Paramètres de ce Ping"
+    not_found: "Salon introuvable ou inaccessible"
+    confirm_delete_ping: "Êtes-vous sûr de vouloir supprimer ce ping et tous ses messages ? Cette action est irréversible."
+
+  calls:
+    video_title: "Appel vidéo"
+    video_start: "Lancer un appel vidéo"
+    audio_title: "Appel audio"
+    audio_start: "Lancer un appel audio"
+    end_all: "Terminer tous les appels"
+    confirm_end_all: "Terminer tous les appels actifs ? Les participants seront déconnectés."
+    participants_removed: "participants retirés, tous les appels terminés."
+    ended: "Appel terminé"
+    back_to_room: "Retour au salon"
+    join: "Rejoindre"
+    leave: "Quitter"
+    leave_call: "Quitter l'appel"
+    settings_title: "Paramètres"
+    camera: "Caméra"
+    microphone: "Microphone"
+    speaker: "Haut-parleur"
+    toggle_camera: "Activer/désactiver la caméra"
+    toggle_mic: "Activer/désactiver le micro"
+    background_blur: "Flou d'arrière-plan"
+    share_screen: "Partager l'écran"
+    chat: "Tchat"
+
+  notifications:
+    settings: "Paramètres de notification"
+    ping_settings: "Paramètres de notification de ce Ping"
+    alert: "Alerte de notifications"
+
+  invites:
+    share_title: "Partagez pour inviter d'autres personnes"
+    show_qr: "Afficher le QR code d'invitation"
+    copy_link: "Copier le lien d'invitation"
+    share_link: "Partager le lien d'invitation"
+    regenerate: "Régénérer le lien d'invitation"
+
+  account:
+    settings_title: "Paramètres du compte"
+    name_placeholder: "Nom du compte"
+    restrict_room_creation: "Seuls les admins peuvent créer des salons"
+
+  admin:
+    setup_bots: "Configurer les bots"
+    custom_styles: "Styles personnalisés"
+    custom_css_title: "CSS personnalisé"
+    custom_css_description: "Ajouter des styles CSS personnalisés."
+    custom_css_warning: "Attention : vous pourriez casser l'affichage."
+    custom_css_placeholder: "Ajouter des styles CSS…"
+    user_role_admin: "Administrateur"
+    user_role_member: "Membre"
+    confirm_remove_user: "Êtes-vous sûr de vouloir supprimer définitivement cette personne du compte ? Cette action est irréversible."
+    confirm_ban_user: "Êtes-vous sûr de vouloir bannir cet utilisateur ? Il sera déconnecté, ses messages supprimés et ses adresses IP bloquées."
+    ban: "Bannir"
+    confirm_unban_user: "Êtes-vous sûr de vouloir lever le bannissement de cet utilisateur ?"
+    unban: "Lever le bannissement"
+
+  bots:
+    setup_title: "Configuration des bots"
+    title: "Bots"
+    description: "Les bots permettent à d'autres sites et services de publier des mises à jour directement dans %{app_name}."
+    add: "Ajouter un bot"
+    name_placeholder: "Nom du bot"
+    webhook_url: "URL du webhook"
+    confirm_delete: "Êtes-vous sûr de vouloir supprimer définitivement ce bot du compte ? Cette action est irréversible."
+    confirm_regenerate_key: "Êtes-vous sûr de vouloir changer la clé du bot ? Toutes les intégrations utilisant ce bot devront être mises à jour."
+
+  profile:
+    upload_avatar: "Changer la photo"
+    avatar: "Photo de profil"
+    delete_avatar: "Supprimer la photo"
+    name_placeholder: "Votre nom"
+    email_placeholder: "Votre adresse email"
+    password_placeholder: "Changer le mot de passe"
+    bio_placeholder: "Quelques mots sur vous…"
+    preview_ringtone: "Écouter la sonnerie"
+    edit: "Modifier mon profil"
+    update_success: "✓"
+    avatar_update_notice: "Le changement peut prendre jusqu'à 30 minutes pour s'appliquer partout."
+    push_notifications_dev: "Notifications push (dev)"
+
+  search:
+    clear_recents: "Effacer les recherches récentes"
+    exit: "Quitter la recherche"
+    clear_field: "Effacer le champ"
+    submit: "Rechercher"
+    confirm_clear: "Êtes-vous sûr de vouloir effacer vos recherches récentes ?"
+
+  files:
+    upload_logo: "Changer le logo"
+    delete_logo: "Supprimer le logo"

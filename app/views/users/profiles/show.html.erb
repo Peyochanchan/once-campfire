@@ -11,7 +11,7 @@
 
       <button class="btn" data-action="sessions#logout:prevent">
         <%= image_tag "logout.svg", aria: { hidden: "true" } %>
-        <span class="for-screen-reader">Log out</span>
+        <span class="for-screen-reader"><%= t("auth.logout") %></span>
       </button>
     <% end %>
   </div>
@@ -26,7 +26,7 @@
         <%= image_tag "camera.svg", aria: { hidden: "true" }, size: 20 %>
         <%= form.file_field :avatar, id: "file", class: "input", accept: "image/*",
             data: { upload_preview_target: "input", action: "upload-preview#previewImage change->form#submit" } %>
-        <span class="for-screen-reader">Upload avatar</span>
+        <span class="for-screen-reader"><%= t("profile.upload_avatar") %></span>
       </label>
     <% end %>
 
@@ -35,14 +35,14 @@
         <%= image_tag fresh_user_avatar_path(@user), aria: { hidden: "true" }, size: 300, data: { upload_preview_target: "image" } %>
         <%= form.file_field :avatar, id: "file", class: "input", accept: "image/*",
             data: { upload_preview_target: "input", action: "upload-preview#previewImage change->form#submit" } %>
-        <span class="for-screen-reader">Avatar</span>
+        <span class="for-screen-reader"><%= t("profile.avatar") %></span>
       </label>
     <% end %>
 
     <% if @user.avatar.attached? %>
       <%= button_to user_avatar_path(@user), method: :delete, class: "btn btn--negative txt-small avatar__delete-btn" do %>
         <%= image_tag "minus.svg", aria: { hidden: "true" }, size: 20 %>
-        <span class="for-screen-reader">Delete avatar</span>
+        <span class="for-screen-reader"><%= t("profile.delete_avatar") %></span>
       <% end %>
     <% end %>
   </div>
@@ -53,7 +53,7 @@
         <%= translation_button(:user_name) %>
 
         <label class="flex align-center gap flex-item-grow input input--actor">
-          <%= form.text_field :name, class: "input txt-large ", autocomplete: "name", placeholder: "Enter your name",
+          <%= form.text_field :name, class: "input txt-large ", autocomplete: "name", placeholder: t("profile.name_placeholder"),
                 autofocus: true, required: true,  data: { "1p-ignore": true } %>
           <%= image_tag "person.svg", aria: { hidden: "true" }, size: 24, class: "colorize--black" %>
         </label>
@@ -64,7 +64,7 @@
 
         <label class="flex align-center gap flex-item-grow input input--actor">
           <%= form.email_field :email_address, class: "input txt-large", value: @user.email_address, autocomplete: "username",
-                placeholder: "Enter your email address", required: false %>
+                placeholder: t("profile.email_placeholder"), required: false %>
           <%= image_tag "email.svg", aria: { hidden: "true" }, size: 24, class: "colorize--black" %>
         </label>
       </div>
@@ -73,7 +73,7 @@
         <%= translation_button(:update_password) %>
 
         <label class="flex align-center gap flex-item-grow input input--actor">
-          <%= form.password_field :password, class: "input txt-large", autocomplete: "new-password", placeholder: "Change password",
+          <%= form.password_field :password, class: "input txt-large", autocomplete: "new-password", placeholder: t("profile.password_placeholder"),
                 required: false, maxlength: 72 %>
           <%= image_tag "password.svg", aria: { hidden: "true" }, size: 24, class: "colorize--black" %>
         </label>
@@ -83,9 +83,19 @@
         <%= translation_button(:bio) %>
 
         <label class="flex align--center gap flex-item--grow input input--actor">
-          <%= form.text_area :bio, class: "input txt-large", placeholder: "A few words about yourself…", maxlength: 200,
+          <%= form.text_area :bio, class: "input txt-large", placeholder: t("profile.bio_placeholder"), maxlength: 200,
                 rows: 3, required: false %>
           <%= image_tag "bio.svg", aria: { hidden: "true" }, size: 24, class: "colorize--black" %>
+        </label>
+      </div>
+
+      <div class="flex align-center gap">
+        <label class="flex align-center gap flex-item-grow input input--actor">
+          <%= form.select :locale, [["English", "en"], ["Français", "fr"]],
+                { selected: @user.locale || "en" },
+                class: "input txt-large",
+                style: "cursor: pointer" %>
+          <%= lucide_icon "globe", size: 24 %>
         </label>
       </div>
 
@@ -98,7 +108,7 @@
                 style: "cursor: pointer" %>
           <%= lucide_icon "bell", size: 24 %>
         </label>
-        <button type="button" class="btn" id="ringtone-preview" title="Preview ringtone">
+        <button type="button" class="btn" id="ringtone-preview" title="<%= t("profile.preview_ringtone") %>">
           ▶
         </button>
       </div>
