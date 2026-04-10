@@ -38,6 +38,11 @@ class Rack::Attack
     req.ip if req.path.match?(%r{^/join/}) && req.post?
   end
 
+  # Messages: 24 per IP per minute (~ 1 message every 2.5 seconds)
+  throttle("messages/ip", limit: 24, period: 1.minute) do |req|
+    req.ip if req.path.match?(%r{^/rooms/\d+/messages$}) && req.post?
+  end
+
   # Search: 30 per IP per minute
   throttle("search/ip", limit: 30, period: 1.minute) do |req|
     req.ip if req.path == "/searches" && req.post?
