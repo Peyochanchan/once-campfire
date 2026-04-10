@@ -45,6 +45,11 @@ fr:
     discard_changes: "Fermer l'éditeur et annuler les modifications"
     options: "Options du message"
     reply: "Répondre"
+    pin: "Épingler le message"
+    unpin: "Désépingler le message"
+    pinned_messages:
+      one: "1 message épinglé"
+      other: "%{count} messages épinglés"
     thread: "Fil"
     on_a_call: "%{names} en appel"
 

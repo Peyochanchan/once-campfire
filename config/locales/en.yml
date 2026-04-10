@@ -45,6 +45,11 @@ en:
     discard_changes: "Close editor and discard changes"
     options: "Message options"
     reply: "Reply"
+    pin: "Pin message"
+    unpin: "Unpin message"
+    pinned_messages:
+      one: "1 pinned message"
+      other: "%{count} pinned messages"
     thread: "Thread"
     on_a_call: "%{names} on a call"
 

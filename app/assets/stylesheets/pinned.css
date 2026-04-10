@@ -1,0 +1,107 @@
+/* Pinned messages toggle button + dropdown */
+#pinned-messages {
+  position: absolute;
+  right: 1rem;
+  top: 0.5rem;
+  z-index: 20;
+}
+
+.pinned-toggle {
+  position: relative;
+}
+
+.pinned-toggle__btn {
+  align-items: center;
+  background: white;
+  border: 1px solid oklch(0.85 0 0);
+  border-radius: 2rem;
+  box-shadow: 0 1px 4px oklch(0 0 0 / 0.1);
+  color: oklch(0.45 0.12 50);
+  cursor: pointer;
+  display: flex;
+  gap: 0.3rem;
+  list-style: none;
+  padding: 0.35rem 0.7rem;
+}
+
+.pinned-toggle__btn:hover {
+  background: oklch(0.97 0.02 90);
+}
+
+.pinned-toggle__btn::-webkit-details-marker {
+  display: none;
+}
+
+.pinned-toggle__count {
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.pinned-toggle__panel {
+  background: white;
+  border: 1px solid oklch(0.85 0 0);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 16px oklch(0 0 0 / 0.12);
+  display: flex;
+  flex-direction: column;
+  margin-block-start: 0.5rem;
+  max-height: 300px;
+  overflow-y: auto;
+  position: absolute;
+  right: 0;
+  width: 320px;
+}
+
+.pinned-toggle__message {
+  border-block-end: 1px solid oklch(0.93 0 0);
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.6rem 0.75rem;
+  text-decoration: none;
+}
+
+.pinned-toggle__message:last-child {
+  border-block-end: none;
+}
+
+.pinned-toggle__message:hover {
+  background: oklch(0.97 0 0);
+}
+
+.pinned-toggle__message strong {
+  font-size: 0.8rem;
+}
+
+.pinned-toggle__message span {
+  color: oklch(0.45 0 0);
+  font-size: 0.8rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (prefers-color-scheme: dark) {
+  .pinned-toggle__btn {
+    background: oklch(0.2 0 0);
+    border-color: oklch(0.35 0 0);
+  }
+
+  .pinned-toggle__btn:hover {
+    background: oklch(0.25 0.02 90);
+  }
+
+  .pinned-toggle__panel {
+    background: oklch(0.18 0 0);
+    border-color: oklch(0.3 0 0);
+  }
+
+  .pinned-toggle__message:hover {
+    background: oklch(0.22 0 0);
+  }
+
+  .pinned-toggle__message span {
+    color: oklch(0.6 0 0);
+  }
+}

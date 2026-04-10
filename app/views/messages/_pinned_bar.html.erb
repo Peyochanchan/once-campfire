@@ -1,0 +1,19 @@
+<div id="pinned-messages">
+  <% pinned = room.messages.pinned.with_creator.limit(5) %>
+  <% if pinned.any? %>
+    <details class="pinned-toggle">
+      <summary class="pinned-toggle__btn" title="<%= t("messages.pinned_messages", count: pinned.size) %>">
+        <%= lucide_icon "pin", size: 18 %>
+        <span class="pinned-toggle__count"><%= pinned.size %></span>
+      </summary>
+      <div class="pinned-toggle__panel">
+        <% pinned.each do |message| %>
+          <%= link_to room_at_message_path(message.room, message), class: "pinned-toggle__message" do %>
+            <strong><%= message.creator.name %></strong>
+            <span><%= truncate(message.plain_text_body, length: 100) %></span>
+          <% end %>
+        <% end %>
+      </div>
+    </details>
+  <% end %>
+</div>

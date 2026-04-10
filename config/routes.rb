@@ -100,6 +100,7 @@ Rails.application.routes.draw do
     scope module: "messages" do
       resources :boosts
       resource :thread, only: :show
+      resource :pin, only: %i[ create destroy ]
     end
   end
 

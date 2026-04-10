@@ -52,6 +52,16 @@
           <% end %>
         <% end %>
 
+        <% if message.pinned? %>
+          <%= button_to message_pin_path(message), method: :delete, class: "btn message__action-btn center full-width", title: t("messages.unpin"), aria: { label: t("messages.unpin") } do %>
+            <%= lucide_icon "pin-off", size: 20 %>
+          <% end %>
+        <% else %>
+          <%= button_to message_pin_path(message), class: "btn message__action-btn center full-width", title: t("messages.pin"), aria: { label: t("messages.pin") } do %>
+            <%= lucide_icon "pin", size: 20 %>
+          <% end %>
+        <% end %>
+
         <%= tag.button class: "btn message__action-btn center full-width", title: t("common.copy_link"), aria: { label: t("common.copy_link") }, data: { controller: "copy-to-clipboard", action: "copy-to-clipboard#copy", copy_to_clipboard_success_class: "btn--success", copy_to_clipboard_content_value: url } do %>
           <%= image_tag "link.svg", class: "colorize--black", size: 20, aria: { hidden: "true" } %>
         <% end %>

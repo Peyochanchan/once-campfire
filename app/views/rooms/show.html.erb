@@ -15,6 +15,7 @@
 
 <div class="room-with-thread" data-controller="thread-panel">
   <div class="room-with-thread__main">
+    <%= render "messages/pinned_bar", room: @room %>
     <%= message_area_tag(@room) do %>
       <%= render "messages/template" %>
 

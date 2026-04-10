@@ -15,6 +15,7 @@ class Message < ApplicationRecord
 
   scope :ordered, -> { order(:created_at) }
   scope :root_messages, -> { where(parent_message_id: nil) }
+  scope :pinned, -> { where.not(pinned_at: nil).order(pinned_at: :desc) }
   scope :with_creator, -> { preload(creator: :avatar_attachment) }
   scope :with_attachment_details, -> {
     with_rich_text_body_and_embeds
@@ -37,6 +38,18 @@ class Message < ApplicationRecord
     when sound.present? then "sound"
     else                     "text"
     end.inquiry
+  end
+
+  def pinned?
+    pinned_at.present?
+  end
+
+  def pin!
+    update!(pinned_at: Time.current)
+  end
+
+  def unpin!
+    update!(pinned_at: nil)
   end
 
   def thread?
