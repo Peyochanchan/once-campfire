@@ -17,8 +17,9 @@
 
 <section class="panel txt-align-center">
   <div class="flex flex-column gap <%= "banned" if @user.banned? %>">
-    <div class="avatar txt-xx-large center" style="background: white">
+    <div class="avatar txt-xx-large center <%= @user.online? ? "avatar--online" : "avatar--offline" %>" style="background: white">
       <%= image_tag fresh_user_avatar_path(@user), alt: "Profile avatar", class: "avatar" %>
+      <span class="avatar__status"></span>
     </div>
 
     <% if @user.bot? %>

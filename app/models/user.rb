@@ -27,6 +27,10 @@ class User < ApplicationRecord
   scope :ordered, -> { order("LOWER(name)") }
   scope :filtered_by, ->(query) { where("name like ?", "%#{query}%") }
 
+  def online?
+    memberships.connected.exists?
+  end
+
   def initials
     name.scan(/\b\w/).join
   end

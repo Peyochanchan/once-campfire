@@ -10,9 +10,13 @@ module Users::AvatarsHelper
     AVATAR_COLORS[Zlib.crc32(user.to_param) % AVATAR_COLORS.size]
   end
 
-  def avatar_tag(user, **options)
-    link_to user_path(user), title: user.title, class: "btn avatar", data: { turbo_frame: "_top" } do
-      image_tag fresh_user_avatar_path(user), aria: { hidden: "true" }, size: 48, **options
+  def avatar_tag(user, show_status: false, **options)
+    status_class = show_status ? (user.online? ? "avatar--online" : "avatar--offline") : nil
+    link_to user_path(user), title: user.title, class: ["btn avatar", status_class].compact.join(" "), data: { turbo_frame: "_top", user_id: user.id } do
+      safe_join [
+        image_tag(fresh_user_avatar_path(user), aria: { hidden: "true" }, size: 48, **options),
+        (tag.span(class: "avatar__status") if show_status)
+      ].compact
     end
   end
 end

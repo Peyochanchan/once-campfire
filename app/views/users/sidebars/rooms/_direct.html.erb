@@ -1,4 +1,4 @@
-<% cache membership do %>
+<% cache [membership, membership.room.users.without(membership.user).first&.online?] do %>
   <% members = membership.room.users.without(membership.user).presence || [ membership.user ] %>
 
   <%= link_to_room membership.room, class: [ "direct", "unread": membership.unread? ], id: dom_id(membership.room, :list),
@@ -12,8 +12,9 @@
         <% end %>
       </div>
     <% else %>
-      <span class="avatar">
+      <span class="avatar <%= members.first.online? ? "avatar--online" : "avatar--offline" %>">
         <%= image_tag fresh_user_avatar_path(members.first), size: 48, aria: { hidden: "true" } %>
+        <span class="avatar__status"></span>
       </span>
     <% end %>
 

@@ -93,6 +93,33 @@
   }
 }
 
+/* Online/offline status indicator */
+.avatar__status {
+  background: oklch(0.65 0 0);
+  border: 2px solid white;
+  border-radius: 50%;
+  bottom: 0;
+  display: block;
+  height: 13px;
+  position: absolute;
+  right: 0;
+  width: 13px;
+}
+
+.avatar--online .avatar__status {
+  background: oklch(0.7 0.2 145);
+}
+
+.avatar--offline .avatar__status {
+  background: oklch(0.65 0 0);
+}
+
+@media (prefers-color-scheme: dark) {
+  .avatar__status {
+    border-color: oklch(0.2 0 0);
+  }
+}
+
 .avatar__form {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
