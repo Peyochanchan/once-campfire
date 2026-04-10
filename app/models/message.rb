@@ -3,7 +3,9 @@ class Message < ApplicationRecord
 
   belongs_to :room, touch: true
   belongs_to :creator, class_name: "User", default: -> { Current.user }
+  belongs_to :parent_message, class_name: "Message", optional: true
 
+  has_many :replies, class_name: "Message", foreign_key: :parent_message_id, dependent: :destroy
   has_many :boosts, dependent: :destroy
 
   has_rich_text :body
@@ -12,6 +14,7 @@ class Message < ApplicationRecord
   after_create_commit -> { room.receive(self) }
 
   scope :ordered, -> { order(:created_at) }
+  scope :root_messages, -> { where(parent_message_id: nil) }
   scope :with_creator, -> { preload(creator: :avatar_attachment) }
   scope :with_attachment_details, -> {
     with_rich_text_body_and_embeds
@@ -34,6 +37,18 @@ class Message < ApplicationRecord
     when sound.present? then "sound"
     else                     "text"
     end.inquiry
+  end
+
+  def thread?
+    replies.exists?
+  end
+
+  def reply?
+    parent_message_id.present?
+  end
+
+  def replies_count
+    replies.count
   end
 
   def sound

@@ -1,0 +1,9 @@
+<div id="<%= dom_id(message, :thread_indicator) %>">
+  <% if !message.reply? && message.thread? %>
+    <% count = message.replies_count %>
+    <button class="thread-indicator" data-action="thread-panel#open" data-thread-panel-message-id-param="<%= message.id %>">
+      <%= lucide_icon "message-square", size: 16 %>
+      <span><%= pluralize(count, "reply", "replies") %></span>
+    </button>
+  <% end %>
+</div>

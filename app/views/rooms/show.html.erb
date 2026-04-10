@@ -13,16 +13,25 @@
 <%= turbo_stream_from @room, :call %>
 <div id="<%= dom_id(@room, :call_container) %>"></div>
 
-<%= message_area_tag(@room) do %>
-  <%= render "messages/template" %>
+<div class="room-with-thread" data-controller="thread-panel">
+  <div class="room-with-thread__main">
+    <%= message_area_tag(@room) do %>
+      <%= render "messages/template" %>
 
-  <%= messages_tag(@room) do %>
-    <%= render "rooms/show/invitation", room: @room %>
-    <%= render partial: "messages/message", collection: @messages, cached: true %>
-  <% end %>
+      <%= messages_tag(@room) do %>
+        <%= render "rooms/show/invitation", room: @room %>
+        <%= render partial: "messages/message", collection: @messages, cached: true %>
+      <% end %>
 
-  <%= turbo_stream_from @room, :messages %>
-  <%= button_to_jump_to_newest_message %>
-<% end %>
+      <%= turbo_stream_from @room, :messages %>
+      <%= button_to_jump_to_newest_message %>
+    <% end %>
 
-<%= render "rooms/show/composer", room: @room %>
+    <%= render "rooms/show/composer", room: @room %>
+  </div>
+
+  <div class="room-with-thread__side" data-thread-panel-target="panel">
+    <turbo-frame id="thread-panel" data-thread-panel-target="frame">
+    </turbo-frame>
+  </div>
+</div>

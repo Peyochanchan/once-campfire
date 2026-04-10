@@ -44,6 +44,14 @@
           <% end %>
         <% end %>
 
+        <% unless message.reply? %>
+          <%= tag.button class: "btn message__action-btn center full-width",
+                data: { action: "thread-panel#open", thread_panel_message_id_param: message.id },
+                title: "Thread", aria: { label: "Thread" } do %>
+            <%= lucide_icon "message-square", size: 20 %>
+          <% end %>
+        <% end %>
+
         <%= tag.button class: "btn message__action-btn center full-width", title: "Copy link", aria: { label: "Copy link" }, data: { controller: "copy-to-clipboard", action: "copy-to-clipboard#copy", copy_to_clipboard_success_class: "btn--success", copy_to_clipboard_content_value: url } do %>
           <%= image_tag "link.svg", class: "colorize--black", size: 20, aria: { hidden: "true" } %>
         <% end %>

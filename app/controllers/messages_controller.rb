@@ -24,9 +24,13 @@ class MessagesController < ApplicationController
     @message.broadcast_create
     deliver_webhooks_to_bots
 
-    respond_to do |format|
-      format.turbo_stream
-      format.html { redirect_to room_chat_embed_path(@room) }
+    if @message.reply?
+      redirect_to message_thread_path(@message.parent_message)
+    else
+      respond_to do |format|
+        format.turbo_stream
+        format.html { redirect_to room_chat_embed_path(@room) }
+      end
     end
   rescue ActiveRecord::RecordNotFound
     render action: :room_not_found
@@ -73,7 +77,7 @@ class MessagesController < ApplicationController
 
 
     def message_params
-      params.require(:message).permit(:body, :attachment, :client_message_id)
+      params.require(:message).permit(:body, :attachment, :client_message_id, :parent_message_id)
     end
 
 

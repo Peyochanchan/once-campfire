@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_03_31_220723) do
+ActiveRecord::Schema[8.2].define(version: 2026_04_10_055919) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -112,10 +112,12 @@ ActiveRecord::Schema[8.2].define(version: 2026_03_31_220723) do
     t.string "client_message_id", null: false
     t.datetime "created_at", null: false
     t.integer "creator_id", null: false
+    t.integer "parent_message_id"
     t.integer "room_id", null: false
     t.tsvector "searchable"
     t.datetime "updated_at", null: false
     t.index ["creator_id"], name: "index_messages_on_creator_id"
+    t.index ["parent_message_id"], name: "index_messages_on_parent_message_id"
     t.index ["room_id"], name: "index_messages_on_room_id"
     t.index ["searchable"], name: "index_messages_on_searchable", using: :gin
   end

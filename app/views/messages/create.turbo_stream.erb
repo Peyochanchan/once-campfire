@@ -1,1 +1,5 @@
-<%= turbo_stream.append dom_id(@message.room, :messages), @message %>
+<% if @message.reply? %>
+  <%= turbo_stream.append "thread-replies", @message %>
+<% else %>
+  <%= turbo_stream.append dom_id(@message.room, :messages), @message %>
+<% end %>

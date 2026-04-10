@@ -98,6 +98,7 @@ Rails.application.routes.draw do
   resources :messages do
     scope module: "messages" do
       resources :boosts
+      resource :thread, only: :show
     end
   end
 

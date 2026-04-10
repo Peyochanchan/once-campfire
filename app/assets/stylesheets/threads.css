@@ -1,0 +1,235 @@
+/* Room + Thread layout */
+.room-with-thread {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.room-with-thread__main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.room-with-thread__side {
+  background: var(--surface, oklch(0.98 0 0));
+  border-inline-start: 3px solid oklch(0.55 0.15 250);
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  width: 380px;
+}
+
+.room-with-thread__side.thread-panel--open {
+  display: flex;
+}
+
+/* Thread panel */
+.thread-panel {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.thread-panel__header {
+  align-items: center;
+  border-block-end: 1px solid oklch(0.85 0 0);
+  display: flex;
+  flex-shrink: 0;
+  font-size: 1rem;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+}
+
+.thread-panel__close {
+  background: none;
+  border: none;
+  color: oklch(0.4 0 0);
+  cursor: pointer;
+  font-size: 1.5rem;
+}
+
+.thread-panel__close:hover {
+  color: oklch(0.2 0 0);
+}
+
+.thread-panel__parent {
+  border-block-end: 1px solid oklch(0.9 0 0);
+  flex-shrink: 0;
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 0.5rem;
+}
+
+.thread-panel__parent .message {
+  margin: 0;
+}
+
+.thread-panel__separator {
+  background: oklch(0.95 0 0);
+  color: oklch(0.5 0 0);
+  font-size: 0.75rem;
+  padding: 0.4rem 1rem;
+  text-align: center;
+}
+
+.thread-panel__replies {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.5rem;
+}
+
+/* Thread message (simplified message for panel) */
+.thread-message {
+  padding: 0.5rem 0.75rem;
+}
+
+.thread-message + .thread-message {
+  border-block-start: 1px solid oklch(0.92 0 0);
+}
+
+.thread-message__header {
+  align-items: center;
+  display: flex;
+  gap: 0.5rem;
+  margin-block-end: 0.25rem;
+}
+
+.thread-message__avatar {
+  border-radius: 50%;
+  flex-shrink: 0;
+  height: 20px;
+  object-fit: cover;
+  width: 20px;
+}
+
+.thread-message__author {
+  font-size: 0.85rem;
+}
+
+.thread-message__time {
+  color: oklch(0.55 0 0);
+  font-size: 0.75rem;
+}
+
+.thread-message__body {
+  font-size: 0.9rem;
+  padding-inline-start: 1.75rem;
+}
+
+.thread-panel__composer {
+  border-block-start: 1px solid oklch(0.85 0 0);
+  flex-shrink: 0;
+  padding: 0.75rem;
+}
+
+.thread-panel__form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.thread-panel__input-row {
+  align-items: flex-end;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.thread-panel__text-input {
+  border: 1px solid oklch(0.8 0 0);
+  border-radius: 0.5rem;
+  flex: 1;
+  font-size: 0.9rem;
+  min-height: 36px;
+  outline: none;
+  padding: 0.5rem 0.75rem;
+}
+
+.thread-panel__text-input:focus {
+  border-color: oklch(0.6 0 0);
+}
+
+.thread-panel__send {
+  flex-shrink: 0;
+  padding: 0.5rem;
+}
+
+/* Active thread message highlight */
+.message--thread-active {
+  background: oklch(0.95 0.02 250 / 0.5);
+  border-inline-end: 3px solid oklch(0.55 0.15 250);
+}
+
+/* Thread indicator on messages */
+.thread-indicator {
+  align-items: center;
+  background: none;
+  border: none;
+  color: oklch(0.45 0.15 250);
+  cursor: pointer;
+  display: flex;
+  font-size: 0.8rem;
+  gap: 0.35rem;
+  margin-block-start: 0.25rem;
+  padding: 0.2rem 0;
+}
+
+.thread-indicator:hover {
+  color: oklch(0.35 0.15 250);
+  text-decoration: underline;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  .room-with-thread__side {
+    background: oklch(0.15 0 0);
+    border-color: oklch(0.25 0 0);
+  }
+
+  .thread-panel__header {
+    border-color: oklch(0.25 0 0);
+  }
+
+  .thread-panel__close {
+    color: oklch(0.6 0 0);
+  }
+
+  .thread-panel__close:hover {
+    color: oklch(0.8 0 0);
+  }
+
+  .thread-panel__parent {
+    border-color: oklch(0.25 0 0);
+  }
+
+  .thread-panel__separator {
+    background: oklch(0.2 0 0);
+    color: oklch(0.5 0 0);
+  }
+
+  .thread-panel__composer {
+    border-color: oklch(0.25 0 0);
+  }
+
+  .thread-panel__input-row trix-editor {
+    background: oklch(0.2 0 0);
+    border-color: oklch(0.35 0 0);
+    color: white;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .room-with-thread__side {
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+  }
+}

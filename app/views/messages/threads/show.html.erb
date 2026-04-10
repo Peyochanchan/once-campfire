@@ -1,0 +1,35 @@
+<%= turbo_frame_tag "thread-panel" do %>
+  <div class="thread-panel">
+    <div class="thread-panel__header">
+      <strong>Thread</strong>
+      <button class="thread-panel__close" data-action="thread-panel#close">&times;</button>
+    </div>
+
+    <div class="thread-panel__parent">
+      <%= render partial: "messages/thread_message", locals: { message: @message } %>
+    </div>
+
+    <div class="thread-panel__separator">
+      <span><%= pluralize(@replies.count, "reply", "replies") %></span>
+    </div>
+
+    <div class="thread-panel__replies" id="thread-replies">
+      <% @replies.each do |reply| %>
+        <%= render partial: "messages/thread_message", locals: { message: reply } %>
+      <% end %>
+    </div>
+
+    <div class="thread-panel__composer">
+      <%= form_with url: room_messages_path(@room), class: "thread-panel__form", data: { turbo_frame: "thread-panel" } do |form| %>
+        <%= form.hidden_field :parent_message_id, value: @message.id, name: "message[parent_message_id]" %>
+        <div class="thread-panel__input-row">
+          <input type="text" name="message[body]" class="thread-panel__text-input" placeholder="Reply..." autocomplete="off"
+                 data-action="keydown.enter->thread-panel#submitForm" />
+          <button type="submit" class="btn thread-panel__send">
+            <%= lucide_icon "arrow-up", size: 20 %>
+          </button>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>

@@ -1,0 +1,10 @@
+<div class="thread-message" id="thread_reply_<%= message.id %>">
+  <div class="thread-message__header">
+    <%= image_tag fresh_user_avatar_path(message.creator), class: "thread-message__avatar", size: 20 %>
+    <strong class="thread-message__author"><%= message.creator.name %></strong>
+    <%= message_timestamp(message, class: "thread-message__time") %>
+  </div>
+  <div class="thread-message__body">
+    <%= message_presentation(message) %>
+  </div>
+</div>
