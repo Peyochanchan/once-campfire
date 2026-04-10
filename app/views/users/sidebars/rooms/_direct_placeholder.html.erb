@@ -1,5 +1,5 @@
 <%= button_to rooms_directs_path(user_ids: [ user.id ]), class: "direct borderless fill-transparent unpad" do %>
-  <span class="avatar <%= user.online? ? "avatar--online" : "avatar--offline" %>">
+  <span class="avatar avatar--<%= user.display_status %>">
     <%= image_tag fresh_user_avatar_path(user), aria: { hidden: "true" } %>
     <span class="avatar__status"></span>
   </span>

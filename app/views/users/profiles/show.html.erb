@@ -91,6 +91,29 @@
 
       <div class="flex align-center gap">
         <label class="flex align-center gap flex-item-grow input input--actor">
+          <%= form.select :custom_status,
+                [[t("profile.status_auto"), "auto"], [t("profile.status_away"), "away"], [t("profile.status_dnd"), "dnd"]],
+                { selected: @user.custom_status },
+                class: "input txt-large",
+                id: "status-select",
+                style: "cursor: pointer" %>
+          <span class="avatar__status-preview" id="status-dot"></span>
+        </label>
+      </div>
+
+      <script>
+        var statusColors = { auto: "<%= @user.online? ? 'online' : 'offline' %>", away: "away", dnd: "dnd" };
+        var dot = document.getElementById("status-dot");
+        var sel = document.getElementById("status-select");
+        function updateDot() {
+          dot.className = "avatar__status-preview avatar__status-preview--" + (statusColors[sel.value] || "offline");
+        }
+        updateDot();
+        sel?.addEventListener("change", updateDot);
+      </script>
+
+      <div class="flex align-center gap">
+        <label class="flex align-center gap flex-item-grow input input--actor">
           <%= form.select :locale, [["English", "en"], ["Français", "fr"]],
                 { selected: @user.locale || "en" },
                 class: "input txt-large",

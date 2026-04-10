@@ -158,6 +158,9 @@ fr:
     update_success: "✓"
     avatar_update_notice: "Le changement peut prendre jusqu'à 30 minutes pour s'appliquer partout."
     push_notifications_dev: "Notifications push (dev)"
+    status_auto: "Auto (en ligne/en appel)"
+    status_away: "Absent"
+    status_dnd: "Ne pas déranger"
 
   search:
     clear_recents: "Effacer les recherches récentes"

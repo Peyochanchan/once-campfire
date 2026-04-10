@@ -11,7 +11,7 @@ module Users::AvatarsHelper
   end
 
   def avatar_tag(user, show_status: false, **options)
-    status_class = show_status ? (user.online? ? "avatar--online" : "avatar--offline") : nil
+    status_class = show_status ? "avatar--#{user.display_status}" : nil
     link_to user_path(user), title: user.title, class: ["btn avatar", status_class].compact.join(" "), data: { turbo_frame: "_top", user_id: user.id } do
       safe_join [
         image_tag(fresh_user_avatar_path(user), aria: { hidden: "true" }, size: 48, **options),

@@ -5,6 +5,7 @@ import autocomplete from "./autocomplete_controller"
 import badge_dot from "./badge_dot_controller"
 import boost_delete from "./boost_delete_controller"
 import call_banner from "./call_banner_controller"
+import call_status_refresh from "./call_status_refresh_controller"
 import composer from "./composer_controller"
 import copy_to_clipboard from "./copy_to_clipboard_controller"
 import drop_target from "./drop_target_controller"
@@ -46,6 +47,7 @@ application.register("autocomplete", autocomplete)
 application.register("badge-dot", badge_dot)
 application.register("boost-delete", boost_delete)
 application.register("call-banner", call_banner)
+application.register("call-status-refresh", call_status_refresh)
 application.register("composer", composer)
 application.register("copy-to-clipboard", copy_to_clipboard)
 application.register("drop-target", drop_target)

@@ -19,6 +19,7 @@ class User < ApplicationRecord
   has_many :bans, dependent: :destroy
 
   enum :status, %i[ active deactivated banned ], default: :active
+  enum :custom_status, { auto: 0, away: 1, dnd: 2 }, default: :auto
 
   has_secure_password validations: false
 
@@ -29,6 +30,20 @@ class User < ApplicationRecord
 
   def online?
     memberships.connected.exists?
+  end
+
+  def in_call?
+    call_participants.exists?
+  end
+
+  # Returns the effective display status combining auto-detection and manual override
+  # Priority: dnd > in_call > away > online > offline
+  def display_status
+    return "dnd" if dnd?
+    return "in_call" if in_call?
+    return "away" if away?
+    return "online" if online?
+    "offline"
   end
 
   def initials

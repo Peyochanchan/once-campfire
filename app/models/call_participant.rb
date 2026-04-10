@@ -5,8 +5,8 @@ class CallParticipant < ApplicationRecord
   belongs_to :room
   belongs_to :user
 
-  after_create_commit  :broadcast_participant_joined
-  after_destroy_commit :broadcast_participant_left
+  after_create_commit  :broadcast_participant_joined, :touch_user
+  after_destroy_commit :broadcast_participant_left, :touch_user
 
   private
     def broadcast_participant_joined
@@ -21,5 +21,9 @@ class CallParticipant < ApplicationRecord
         target: dom_id(room, :call_banner),
         partial: "rooms/calls/banner",
         locals: { room: room, notify: false }
+    end
+
+    def touch_user
+      user.touch
     end
 end

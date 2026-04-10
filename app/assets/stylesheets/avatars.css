@@ -98,16 +98,34 @@
   background: oklch(0.65 0 0);
   border: 2px solid white;
   border-radius: 50%;
-  bottom: 0;
+  bottom: -10%;
   display: block;
-  height: 13px;
+  height: 15px;
   position: absolute;
-  right: 0;
-  width: 13px;
+  right: 5%;
+  width: 15px;
 }
 
 .avatar--online .avatar__status {
   background: oklch(0.7 0.2 145);
+}
+
+.avatar--away .avatar__status {
+  background: oklch(0.75 0.17 70);
+}
+
+.avatar--in_call .avatar__status {
+  background: oklch(0.6 0.22 25);
+}
+
+.avatar--dnd .avatar__status {
+  background: oklch(0.55 0.25 25);
+  background-image: linear-gradient(
+    transparent 40%,
+    white 40%,
+    white 60%,
+    transparent 60%
+  );
 }
 
 .avatar--offline .avatar__status {
@@ -118,6 +136,36 @@
   .avatar__status {
     border-color: oklch(0.2 0 0);
   }
+}
+
+/* Status preview dot in profile form */
+.avatar__status-preview {
+  border-radius: 50%;
+  flex-shrink: 0;
+  height: 13px;
+  width: 13px;
+}
+
+.avatar__status-preview--online {
+  background: oklch(0.7 0.2 145);
+}
+.avatar__status-preview--away {
+  background: oklch(0.75 0.17 70);
+}
+.avatar__status-preview--in_call {
+  background: oklch(0.6 0.22 25);
+}
+.avatar__status-preview--dnd {
+  background: oklch(0.55 0.25 25);
+  background-image: linear-gradient(
+    transparent 40%,
+    white 40%,
+    white 60%,
+    transparent 60%
+  );
+}
+.avatar__status-preview--offline {
+  background: oklch(0.65 0 0);
 }
 
 .avatar__form {
