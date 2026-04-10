@@ -20,7 +20,7 @@ class SearchesController < ApplicationController
   private
     def set_messages
       if query.present?
-        @messages = Current.user.reachable_messages.search(query).last(100)
+        @messages = Current.user.reachable_messages.search(query).limit(100)
       else
         @messages = Message.none
       end
