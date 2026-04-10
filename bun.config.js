@@ -1,10 +1,13 @@
 import path from 'path';
 import fs from 'fs';
 
+const isWatch = process.argv.includes('--watch');
+
 const config = {
   sourcemap: "external",
   entrypoints: ["app/javascript/application.js"],
   outdir: path.join(process.cwd(), "app/assets/builds"),
+  minify: !isWatch,
 };
 
 const build = async (config) => {
