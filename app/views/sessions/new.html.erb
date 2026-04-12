@@ -37,9 +37,12 @@
         <span class="txt-small"><%= t("common.or") %></span>
       </div>
 
-      <%= button_to "/auth/keycloak", method: :post, class: "btn btn--reversed center txt-large", style: "width: 100%", data: { turbo: false } do %>
-        <%= t("auth.sso_login") %>
-      <% end %>
+      <form action="/auth/keycloak" method="post" data-turbo="false">
+        <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+        <button type="submit" class="btn btn--reversed center txt-large" style="width: 100%">
+          <%= t("auth.sso_login") %>
+        </button>
+      </form>
     <% end %>
   </div>
 
