@@ -10,9 +10,12 @@ class UsersController < ApplicationController
 
   def create
     @user = User.create!(user_params)
-    session_record = start_new_session_for @user
-    session_record.update!(verified: true)
-    redirect_to root_url
+    session_record = @user.sessions.start!(user_agent: request.user_agent, ip_address: request.remote_ip)
+    session_record.generate_otp!
+    SessionMailer.otp_code(session_record).deliver_later
+
+    session[:pending_session_id] = session_record.id
+    redirect_to verify_session_path
   rescue ActiveRecord::RecordNotUnique
     redirect_to new_session_url(email_address: user_params[:email_address])
   end

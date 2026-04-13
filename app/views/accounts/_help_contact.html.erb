@@ -1,4 +1,16 @@
-<% if owner = User.administrator.first %>
+<% contact_email = ENV["CONTACT_EMAIL"].presence %>
+<% contact_name = ENV["CONTACT_NAME"].presence || app_name %>
+
+<% if contact_email %>
+  <div class="txt-align-center margin-block-double full-width">
+    <%= link_to "mailto:\"#{contact_name}\" <#{contact_email}>", class: "btn center", title: "Email #{contact_name}" do %>
+      <%= image_tag "lifebuoy.svg", aria: { hidden: "true" } %>
+      <span><%= contact_email %></span>
+    <% end %>
+
+    <div class="txt-align-center center margin-block txt-subtle"><%= app_name %>&trade; version <%= version_badge %></div>
+  </div>
+<% elsif owner = User.active.administrator.first %>
   <div class="txt-align-center margin-block-double full-width">
     <%= link_to "mailto:\"#{owner.name}\" <#{owner.email_address}>", class: "btn center", title: "Email #{owner.name}" do %>
       <%= image_tag "lifebuoy.svg", aria: { hidden: "true" } %>

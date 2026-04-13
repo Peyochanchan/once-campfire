@@ -4,7 +4,7 @@ module ApplicationHelper
   end
 
   def app_name
-    Rails.configuration.x.app.name
+    Current.account&.name.presence || Rails.configuration.x.app.name
   end
 
   def current_user_meta_tags

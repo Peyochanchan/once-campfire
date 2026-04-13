@@ -3,10 +3,11 @@ class SessionMailer < ApplicationMailer
     @session = session
     @code = session.otp_code
     @user = session.user
+    @app_name = Account.first&.name.presence || Rails.configuration.x.app.name
 
     mail(
       to: @user.email_address,
-      subject: "#{Rails.configuration.x.app.name} — Your verification code: #{@code}"
+      subject: "#{@app_name} — Your verification code: #{@code}"
     )
   end
 end
