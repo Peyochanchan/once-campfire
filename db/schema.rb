@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_04_10_163827) do
+ActiveRecord::Schema[8.2].define(version: 2026_04_13_105613) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -93,6 +93,24 @@ ActiveRecord::Schema[8.2].define(version: 2026_04_10_163827) do
     t.index ["room_id", "user_id"], name: "index_call_participants_on_room_id_and_user_id", unique: true
     t.index ["room_id"], name: "index_call_participants_on_room_id"
     t.index ["user_id"], name: "index_call_participants_on_user_id"
+  end
+
+  create_table "invitations", force: :cascade do |t|
+    t.datetime "accepted_at"
+    t.bigint "accepted_user_id"
+    t.datetime "created_at", null: false
+    t.string "email", null: false
+    t.datetime "expires_at", null: false
+    t.bigint "invited_by_id", null: false
+    t.datetime "revoked_at"
+    t.bigint "room_id"
+    t.string "token", null: false
+    t.datetime "updated_at", null: false
+    t.index ["accepted_user_id"], name: "index_invitations_on_accepted_user_id"
+    t.index ["email"], name: "index_invitations_on_email"
+    t.index ["invited_by_id"], name: "index_invitations_on_invited_by_id"
+    t.index ["room_id"], name: "index_invitations_on_room_id"
+    t.index ["token"], name: "index_invitations_on_token", unique: true
   end
 
   create_table "memberships", force: :cascade do |t|
@@ -203,6 +221,9 @@ ActiveRecord::Schema[8.2].define(version: 2026_04_10_163827) do
   add_foreign_key "boosts", "messages"
   add_foreign_key "call_participants", "rooms"
   add_foreign_key "call_participants", "users"
+  add_foreign_key "invitations", "rooms"
+  add_foreign_key "invitations", "users", column: "accepted_user_id"
+  add_foreign_key "invitations", "users", column: "invited_by_id"
   add_foreign_key "messages", "rooms"
   add_foreign_key "messages", "users", column: "creator_id"
   add_foreign_key "push_subscriptions", "users"

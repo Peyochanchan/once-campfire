@@ -1,0 +1,36 @@
+<% @page_title = t("invitations.new_to_room") %>
+
+<% content_for :nav do %>
+  <div class="flex-item-justify-start">
+    <%= link_back_to room_path(@room) %>
+  </div>
+<% end %>
+
+<section class="panel flex flex-column gap">
+  <h1 class="txt-large margin-none txt-align-center">
+    <%= t("invitations.new_to_room_heading", room: room_display_name(@room)) %>
+  </h1>
+  <p class="txt-subtle txt-align-center margin-none">
+    <%= t("invitations.new_to_room_hint") %>
+  </p>
+
+  <%= form_with model: @invitation, url: room_invitations_path(@room), class: "flex flex-column gap" do |form| %>
+    <% if @invitation.errors.any? %>
+      <div class="flash flash--negative">
+        <% @invitation.errors.full_messages.each do |msg| %>
+          <div><%= msg %></div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <label class="flex align-center gap input input--actor">
+      <%= form.email_field :email, class: "input txt-large", placeholder: t("invitations.form.email_placeholder"), required: true, autofocus: true %>
+      <%= image_tag "email.svg", aria: { hidden: "true" }, size: 24, class: "colorize--black" %>
+    </label>
+
+    <%= form.button class: "btn btn--reversed center txt-large", type: "submit" do %>
+      <%= lucide_icon "send", size: 18 %>
+      <%= t("invitations.form.submit") %>
+    <% end %>
+  <% end %>
+</section>

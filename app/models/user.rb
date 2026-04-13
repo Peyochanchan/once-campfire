@@ -18,6 +18,9 @@ class User < ApplicationRecord
   has_many :sessions, dependent: :destroy
   has_many :bans, dependent: :destroy
 
+  has_many :sent_invitations, class_name: "Invitation", foreign_key: :invited_by_id, dependent: :destroy
+  has_one  :invitation, class_name: "Invitation", foreign_key: :accepted_user_id, dependent: :nullify
+
   enum :status, %i[ active deactivated banned ], default: :active
   enum :custom_status, { auto: 0, away: 1, dnd: 2 }, default: :auto
 

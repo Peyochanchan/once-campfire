@@ -115,6 +115,52 @@ en:
     mute: "Mute notifications"
     unmute: "Unmute notifications"
 
+  invitations:
+    title: "Invitations"
+    new: "Invite a user"
+    empty: "No invitations yet."
+    accept_title: "Accept your invitation"
+    accept_heading: "Welcome to %{app_name}"
+    accept_body: "%{inviter} has invited you. Create your account to join."
+    accept_submit: "Create my account"
+    invalid_title: "Invitation not valid"
+    invalid_body: "This invitation link is invalid, expired, or has already been used."
+    back_home: "Back home"
+    confirm_revoke: "Are you sure you want to revoke this invitation?"
+    status:
+      pending: "Pending"
+      accepted: "Accepted"
+      expired: "Expired"
+      revoked: "Revoked"
+    table:
+      email: "Email"
+      status: "Status"
+      invited_by: "Invited by"
+      expires: "Expires"
+    form:
+      email_placeholder: "Enter email address"
+      submit: "Send invitation"
+    mailer:
+      subject: "%{inviter} invites you to join %{app_name}"
+      heading: "You're invited to %{app_name}"
+      body_html: "<strong>%{inviter}</strong> has invited you to collaborate on <strong>%{app_name}</strong>. Click below to create your account."
+      body_text: "%{inviter} has invited you to collaborate on %{app_name}. Click the link to create your account."
+      body_room_html: "<strong>%{inviter}</strong> has invited you to the room <strong>%{room}</strong> on <strong>%{app_name}</strong>. Click below to create your account."
+      body_room_text: "%{inviter} has invited you to the room %{room} on %{app_name}. Click the link to create your account."
+      cta: "Accept invitation"
+      expiry: "This invitation expires in %{days} days."
+      ignore: "If you weren't expecting this, you can safely ignore this email."
+    notices:
+      sent: "Invitation sent."
+      revoked: "Invitation revoked."
+      added_existing_user: "%{name} has been added to this room."
+    errors:
+      email_taken: "is already a member of this account"
+    new_to_room: "Invite to room"
+    new_to_room_heading: "Invite someone to %{room}"
+    new_to_room_hint: "If the user already has an account, they'll be added directly. Otherwise, they'll receive an invitation email."
+    invite_to_room: "Invite to this room"
+
   invites:
     share_title: "Share to invite more people"
     show_qr: "Show join link QR code"
@@ -126,6 +172,7 @@ en:
     settings_title: "Account settings"
     name_placeholder: "Name this account"
     restrict_room_creation: "Must be admin to create new rooms"
+    allow_generic_join_code: "Allow generic join link (everyone with the link can register)"
 
   admin:
     setup_bots: "Set up chat bots"

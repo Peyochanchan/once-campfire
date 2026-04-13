@@ -53,6 +53,16 @@ class Rack::Attack
     req.ip if req.path.start_with?("/autocompletable")
   end
 
+  # Invitation creation: 20 per IP per hour
+  throttle("invitations/ip", limit: 20, period: 1.hour) do |req|
+    req.ip if req.path == "/account/invitations" && req.post?
+  end
+
+  # Invitation acceptance: 5 per IP per 5 minutes
+  throttle("invitation_accept/ip", limit: 5, period: 5.minutes) do |req|
+    req.ip if req.path.match?(%r{^/invite/\w+$}) && req.post?
+  end
+
   ### Blocklists ###
 
   # Block suspicious paths

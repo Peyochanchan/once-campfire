@@ -1,0 +1,9 @@
+<%= t("invitations.mailer.heading", app_name: @app_name) %>
+
+<%= t("invitations.mailer.body_text", inviter: @invited_by.name, app_name: @app_name) %>
+
+<%= t("invitations.mailer.cta") %>: <%= @invitation_url %>
+
+<%= t("invitations.mailer.expiry", days: ((@invitation.expires_at - Time.current) / 1.day).ceil) %>
+
+<%= t("invitations.mailer.ignore") %>

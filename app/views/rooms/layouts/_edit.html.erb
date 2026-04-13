@@ -10,6 +10,30 @@
   <%= yield %>
 </section>
 
+<% if Current.user.can_administer?(@room) && !room.direct? %>
+  <section class="panel flex flex-column gap">
+    <h2 class="txt-medium margin-none txt-align-center">
+      <%= lucide_icon "user-plus", size: 18 %>
+      <%= t("invitations.invite_to_room") %>
+    </h2>
+    <p class="txt-subtle txt-align-center margin-none txt-small">
+      <%= t("invitations.new_to_room_hint") %>
+    </p>
+
+    <%= form_with model: Invitation.new, url: room_invitations_path(room), class: "flex flex-column gap" do |form| %>
+      <label class="flex align-center gap input input--actor">
+        <%= form.email_field :email, class: "input", placeholder: t("invitations.form.email_placeholder"), required: true %>
+        <%= image_tag "email.svg", aria: { hidden: "true" }, size: 20, class: "colorize--black" %>
+      </label>
+
+      <%= form.button class: "btn btn--reversed center", type: "submit" do %>
+        <%= lucide_icon "send", size: 16 %>
+        <%= t("invitations.form.submit") %>
+      <% end %>
+    <% end %>
+  </section>
+<% end %>
+
 <% if Current.user.can_administer?(@room) %>
   <section class="panel txt-align-center">
     <%= button_to_delete_room room %>

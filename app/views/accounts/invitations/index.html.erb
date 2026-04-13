@@ -1,0 +1,64 @@
+<% @page_title = t("invitations.title") %>
+
+<% content_for :nav do %>
+  <div class="flex-item-justify-start">
+    <%= link_back_to edit_account_path %>
+  </div>
+<% end %>
+
+<section class="panel panel--wide flex flex-column gap">
+  <div class="flex align-center justify-between gap">
+    <h1 class="txt-large margin-none"><%= t("invitations.title") %></h1>
+    <%= link_to new_account_invitation_path, class: "btn btn--reversed" do %>
+      <%= lucide_icon "user-plus", size: 18 %>
+      <%= t("invitations.new") %>
+    <% end %>
+  </div>
+
+  <% if @invitations.any? %>
+    <table class="invitations-table">
+      <thead>
+        <tr>
+          <th><%= t("invitations.table.email") %></th>
+          <th><%= t("invitations.table.status") %></th>
+          <th><%= t("invitations.table.invited_by") %></th>
+          <th><%= t("invitations.table.expires") %></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @invitations.each do |invitation| %>
+          <tr>
+            <td><%= invitation.email %></td>
+            <td>
+              <span class="badge badge--<%= invitation.status %>">
+                <%= t("invitations.status.#{invitation.status}") %>
+              </span>
+            </td>
+            <td><%= invitation.invited_by.name %></td>
+            <td>
+              <% if invitation.pending? %>
+                <%= time_ago_in_words(invitation.expires_at, include_seconds: false) %>
+              <% else %>
+                —
+              <% end %>
+            </td>
+            <td>
+              <% if invitation.pending? %>
+                <%= button_to account_invitation_path(invitation), method: :delete,
+                      class: "btn btn--small btn--negative",
+                      data: { turbo_confirm: t("invitations.confirm_revoke") } do %>
+                  <%= lucide_icon "x", size: 14 %>
+                <% end %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p class="txt-subtle txt-align-center margin-block-double">
+      <%= t("invitations.empty") %>
+    </p>
+  <% end %>
+</section>

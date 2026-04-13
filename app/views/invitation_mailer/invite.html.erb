@@ -1,0 +1,31 @@
+<table width="100%" cellpadding="0" cellspacing="0" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #333;">
+  <tr>
+    <td align="center" style="padding: 40px 20px;">
+      <table width="440" cellpadding="0" cellspacing="0">
+        <tr>
+          <td style="padding: 32px; text-align: center;">
+            <h2 style="margin: 0 0 16px; font-size: 22px; color: #333;">
+              <%= t("invitations.mailer.heading", app_name: @app_name) %>
+            </h2>
+            <p style="margin: 0 0 24px; color: #666; font-size: 15px;">
+              <% if @invitation.room %>
+                <%= t("invitations.mailer.body_room_html", inviter: @invited_by.name, app_name: @app_name, room: @invitation.room.name).html_safe %>
+              <% else %>
+                <%= t("invitations.mailer.body_html", inviter: @invited_by.name, app_name: @app_name).html_safe %>
+              <% end %>
+            </p>
+            <p style="margin: 32px 0;">
+              <a href="<%= @invitation_url %>" style="background: #333; color: white; border-radius: 2rem; padding: 12px 28px; text-decoration: none; font-weight: 600; font-size: 15px; display: inline-block;">
+                <%= t("invitations.mailer.cta") %>
+              </a>
+            </p>
+            <p style="margin: 24px 0 0; color: #999; font-size: 13px;">
+              <%= t("invitations.mailer.expiry", days: ((@invitation.expires_at - Time.current) / 1.day).ceil) %><br>
+              <%= t("invitations.mailer.ignore") %>
+            </p>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>

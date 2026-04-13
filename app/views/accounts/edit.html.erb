@@ -7,6 +7,11 @@
 
   <% if Current.user.administrator? %>
     <div class="flex align-center gap flex-item-justify-end">
+      <%= link_to account_invitations_path, class: "btn" do %>
+        <%= lucide_icon "user-plus", size: 20 %>
+        <span class="for-screen-reader"><%= t("invitations.title") %></span>
+      <% end %>
+
       <%= link_to account_bots_path, class: "btn", style: "view-transition-name: chat-bots" do %>
         <%= image_tag "bot.svg", aria: { hidden: "true" }, size: 20 %>
         <span class="for-screen-reader"><%= t("admin.setup_bots") %></span>
@@ -86,6 +91,28 @@
           </span>
         </label>
 
+      <% end %>
+
+      <%= form_with model: @account, method: :put, data: { controller: "form" }, class: "flex align-center gap center margin-block-start" do |form| %>
+        <div class="flex-item-grow flex align-center gap txt-align-start">
+          <%= lucide_icon "globe", size: 18, class: "flex-item-no-shrink" %>
+          <span><%= t("account.allow_generic_join_code") %></span>
+        </div>
+        <%= form.fields_for :settings, @account.settings do |settings_form| %>
+          <%= settings_form.hidden_field :allow_generic_join_code,
+              value: !Current.account.settings.allow_generic_join_code? %>
+        <% end %>
+
+        <label class="switch flex-item-no-shrink">
+          <input type="checkbox"
+                class="switch__input"
+                <%= "checked" if Current.account.settings.allow_generic_join_code? %>
+                data-action="change->form#submit">
+          <span class="switch__btn round"></span>
+          <span class="for-screen-reader">
+            <%= t("account.allow_generic_join_code") %>
+          </span>
+        </label>
       <% end %>
     </div>
   <% else %>

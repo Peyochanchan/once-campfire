@@ -115,6 +115,52 @@ fr:
     mute: "Couper les notifications"
     unmute: "Activer les notifications"
 
+  invitations:
+    title: "Invitations"
+    new: "Inviter une personne"
+    empty: "Aucune invitation pour le moment."
+    accept_title: "Accepter l'invitation"
+    accept_heading: "Bienvenue sur %{app_name}"
+    accept_body: "%{inviter} vous a invité·e. Créez votre compte pour rejoindre."
+    accept_submit: "Créer mon compte"
+    invalid_title: "Invitation non valide"
+    invalid_body: "Ce lien d'invitation est invalide, expiré, ou a déjà été utilisé."
+    back_home: "Retour à l'accueil"
+    confirm_revoke: "Voulez-vous vraiment révoquer cette invitation ?"
+    status:
+      pending: "En attente"
+      accepted: "Acceptée"
+      expired: "Expirée"
+      revoked: "Révoquée"
+    table:
+      email: "Email"
+      status: "Statut"
+      invited_by: "Invité·e par"
+      expires: "Expire"
+    form:
+      email_placeholder: "Adresse email"
+      submit: "Envoyer l'invitation"
+    mailer:
+      subject: "%{inviter} vous invite à rejoindre %{app_name}"
+      heading: "Vous êtes invité·e sur %{app_name}"
+      body_html: "<strong>%{inviter}</strong> vous invite à collaborer sur <strong>%{app_name}</strong>. Cliquez ci-dessous pour créer votre compte."
+      body_text: "%{inviter} vous invite à collaborer sur %{app_name}. Cliquez sur le lien pour créer votre compte."
+      body_room_html: "<strong>%{inviter}</strong> vous invite dans le salon <strong>%{room}</strong> sur <strong>%{app_name}</strong>. Cliquez ci-dessous pour créer votre compte."
+      body_room_text: "%{inviter} vous invite dans le salon %{room} sur %{app_name}. Cliquez sur le lien pour créer votre compte."
+      cta: "Accepter l'invitation"
+      expiry: "Cette invitation expire dans %{days} jours."
+      ignore: "Si vous ne vous attendiez pas à recevoir cet email, vous pouvez l'ignorer."
+    notices:
+      sent: "Invitation envoyée."
+      revoked: "Invitation révoquée."
+      added_existing_user: "%{name} a été ajouté·e à ce salon."
+    errors:
+      email_taken: "est déjà membre de ce compte"
+    new_to_room: "Inviter dans le salon"
+    new_to_room_heading: "Inviter quelqu'un dans %{room}"
+    new_to_room_hint: "Si la personne a déjà un compte, elle sera ajoutée directement. Sinon, elle recevra un email d'invitation."
+    invite_to_room: "Inviter dans ce salon"
+
   invites:
     share_title: "Partagez pour inviter d'autres personnes"
     show_qr: "Afficher le QR code d'invitation"
@@ -126,6 +172,7 @@ fr:
     settings_title: "Paramètres du compte"
     name_placeholder: "Nom du compte"
     restrict_room_creation: "Seuls les admins peuvent créer des salons"
+    allow_generic_join_code: "Autoriser le lien d'invitation générique (quiconque avec le lien peut s'inscrire)"
 
   admin:
     setup_bots: "Configurer les bots"

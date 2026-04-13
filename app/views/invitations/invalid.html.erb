@@ -1,0 +1,14 @@
+<% @page_title = t("invitations.invalid_title") %>
+
+<section class="txt-align-center">
+  <div class="panel">
+    <%= account_logo_tag style: "center margin-block-end txt-xx-large" %>
+
+    <h1 class="txt-large"><%= t("invitations.invalid_title") %></h1>
+    <p class="txt-subtle margin-block">
+      <%= t("invitations.invalid_body") %>
+    </p>
+
+    <%= link_to t("invitations.back_home"), root_path, class: "btn btn--reversed" %>
+  </div>
+</section>

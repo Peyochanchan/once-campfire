@@ -1,0 +1,31 @@
+<% @page_title = t("invitations.new") %>
+
+<% content_for :nav do %>
+  <div class="flex-item-justify-start">
+    <%= link_back_to account_invitations_path %>
+  </div>
+<% end %>
+
+<section class="panel flex flex-column gap">
+  <h1 class="txt-large margin-none txt-align-center"><%= t("invitations.new") %></h1>
+
+  <%= form_with model: @invitation, url: account_invitations_path, class: "flex flex-column gap" do |form| %>
+    <% if @invitation.errors.any? %>
+      <div class="flash flash--negative">
+        <% @invitation.errors.full_messages.each do |msg| %>
+          <div><%= msg %></div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <label class="flex align-center gap input input--actor">
+      <%= form.email_field :email, class: "input txt-large", placeholder: t("invitations.form.email_placeholder"), required: true, autofocus: true %>
+      <%= image_tag "email.svg", aria: { hidden: "true" }, size: 24, class: "colorize--black" %>
+    </label>
+
+    <%= form.button class: "btn btn--reversed center txt-large", type: "submit" do %>
+      <%= lucide_icon "send", size: 18 %>
+      <%= t("invitations.form.submit") %>
+    <% end %>
+  <% end %>
+</section>

@@ -1,3 +1,4 @@
+<% if Current.account.settings.allow_generic_join_code? && Current.user.can_administer? %>
 <div class="flex flex-column align-center gap">
   <% url = join_url(Current.account.join_code) %>
 
@@ -33,3 +34,4 @@
     <% end %>
   </div>
 </div>
+<% end %>

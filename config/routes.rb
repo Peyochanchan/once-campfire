@@ -34,8 +34,12 @@ Rails.application.routes.draw do
       resource :join_code, only: :create
       resource :logo, only: %i[ show destroy ]
       resource :custom_styles, only: %i[ edit update ]
+      resources :invitations, only: %i[ index new create destroy ]
     end
   end
+
+  get  "invite/:token", to: "invitations#show",   as: :invitation
+  post "invite/:token", to: "invitations#accept", as: :accept_invitation
 
   direct :fresh_account_logo do |options|
     route_for :account_logo, v: Current.account&.updated_at&.to_fs(:number), size: options[:size]
@@ -81,6 +85,7 @@ Rails.application.routes.draw do
       resource :settings, only: :show
       resource :involvement, only: %i[ show update ]
       resource :mute, only: %i[ create destroy ]
+      resources :invitations, only: %i[ new create ]
       resource :call, only: %i[ show create destroy ] do
         get :status, on: :member
       end
