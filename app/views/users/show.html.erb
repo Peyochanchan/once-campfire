@@ -17,9 +17,10 @@
 
 <section class="panel txt-align-center">
   <div class="flex flex-column gap <%= "banned" if @user.banned? %>">
-    <div class="avatar txt-xx-large center avatar--<%= @user.display_status %>" style="background: white">
+    <% status = @user.display_status_for(Current.user) %>
+    <div class="avatar txt-xx-large center <%= "avatar--#{status}" if status %>" style="background: white">
       <%= image_tag fresh_user_avatar_path(@user), alt: "Profile avatar", class: "avatar" %>
-      <span class="avatar__status"></span>
+      <% if status %><span class="avatar__status"></span><% end %>
     </div>
 
     <% if @user.bot? %>

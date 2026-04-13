@@ -11,11 +11,12 @@ module Users::AvatarsHelper
   end
 
   def avatar_tag(user, show_status: false, **options)
-    status_class = show_status ? "avatar--#{user.display_status}" : nil
+    status = show_status ? user.display_status_for(Current.user) : nil
+    status_class = status ? "avatar--#{status}" : nil
     link_to user_path(user), title: user.title, class: ["btn avatar", status_class].compact.join(" "), data: { turbo_frame: "_top", user_id: user.id } do
       safe_join [
         image_tag(fresh_user_avatar_path(user), aria: { hidden: "true" }, size: 48, **options),
-        (tag.span(class: "avatar__status") if show_status)
+        (tag.span(class: "avatar__status") if status)
       ].compact
     end
   end

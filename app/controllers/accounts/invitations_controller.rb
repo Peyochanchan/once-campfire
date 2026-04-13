@@ -24,6 +24,9 @@ class Accounts::InvitationsController < ApplicationController
 
   def destroy
     invitation = Invitation.find(params[:id])
+    unless invitation.invited_by == Current.user
+      head :forbidden and return
+    end
     invitation.revoke!
     redirect_to account_invitations_path, notice: I18n.t("invitations.notices.revoked")
   end

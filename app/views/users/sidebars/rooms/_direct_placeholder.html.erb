@@ -1,7 +1,8 @@
 <%= button_to rooms_directs_path(user_ids: [ user.id ]), class: "direct borderless fill-transparent unpad" do %>
-  <span class="avatar avatar--<%= user.display_status %>">
+  <% status = user.display_status_for(Current.user) %>
+  <span class="avatar <%= "avatar--#{status}" if status %>">
     <%= image_tag fresh_user_avatar_path(user), aria: { hidden: "true" } %>
-    <span class="avatar__status"></span>
+    <% if status %><span class="avatar__status"></span><% end %>
   </span>
 
   <span class="direct__author flex align-center gap max-width min-width border-radius txt-small">

@@ -27,9 +27,16 @@ class Invitation < ApplicationRecord
     status == :pending
   end
 
+  # Atomically accept the invitation. Returns true if successful, false if already accepted/revoked/expired.
   def accept!(user)
     transaction do
-      update!(accepted_user: user, accepted_at: Time.current)
+      # Atomic check + update — only updates if still pending
+      updated = self.class.where(id: id, accepted_at: nil, revoked_at: nil)
+                          .where("expires_at > ?", Time.current)
+                          .update_all(accepted_user_id: user.id, accepted_at: Time.current, updated_at: Time.current)
+      raise ActiveRecord::RecordNotFound, "Invitation already used or no longer valid" if updated.zero?
+
+      reload
       # If invitation is room-scoped, grant access to that room
       room.memberships.find_or_create_by!(user: user) if room.present?
     end

@@ -49,6 +49,19 @@ class User < ApplicationRecord
     "offline"
   end
 
+  # Same as display_status but only if the viewer shares at least one room with this user
+  # Prevents status disclosure across the whole instance.
+  def display_status_for(viewer)
+    return display_status if viewer == self
+    return nil if viewer.nil?
+    return display_status if shares_room_with?(viewer)
+    nil
+  end
+
+  def shares_room_with?(other_user)
+    rooms.where(id: other_user.rooms.select(:id)).exists?
+  end
+
   def initials
     name.scan(/\b\w/).join
   end
