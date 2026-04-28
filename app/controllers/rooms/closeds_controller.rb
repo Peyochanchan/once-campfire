@@ -13,7 +13,7 @@ class Rooms::ClosedsController < RoomsController
 
   def new
     @room  = Rooms::Closed.new(name: DEFAULT_ROOM_NAME)
-    @users = User.active.ordered
+    @users = User.active.visible_to(Current.user).ordered
   end
 
   def create
@@ -25,7 +25,8 @@ class Rooms::ClosedsController < RoomsController
 
   def edit
     selected_user_ids = @room.users.pluck(:id)
-    @selected_users, @unselected_users = User.active.ordered.partition { |user| selected_user_ids.include?(user.id) }
+    candidates = User.active.where(id: @room.users.select(:id)).or(User.active.visible_to(Current.user)).ordered
+    @selected_users, @unselected_users = candidates.partition { |user| selected_user_ids.include?(user.id) }
   end
 
   def update

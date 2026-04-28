@@ -30,6 +30,17 @@ class User < ApplicationRecord
 
   scope :ordered, -> { order("LOWER(name)") }
   scope :filtered_by, ->(query) { where("name like ?", "%#{query}%") }
+  scope :visible, -> { where(hidden: false) }
+  scope :visible_to, ->(viewer) {
+    if viewer&.administrator?
+      all
+    elsif viewer
+      shared_user_ids = Membership.where(room_id: viewer.rooms.select(:id)).select(:user_id)
+      where(hidden: false).or(where(id: shared_user_ids))
+    else
+      visible
+    end
+  }
 
   def online?
     memberships.connected.exists?

@@ -6,7 +6,7 @@ class Accounts::UsersController < ApplicationController
   end
 
   def update
-    @user.update(role_params)
+    @user.update(user_params)
     redirect_to edit_account_url
   end
 
@@ -20,7 +20,11 @@ class Accounts::UsersController < ApplicationController
       @user = User.active.find(params[:user_id] || params[:id])
     end
 
-    def role_params
-      { role: params.require(:user)[:role].presence_in(%w[ member administrator ]) || "member" }
+    def user_params
+      attrs = params.require(:user)
+      result = {}
+      result[:role] = attrs[:role].presence_in(%w[ member administrator ]) || "member" if attrs.key?(:role)
+      result[:hidden] = ActiveModel::Type::Boolean.new.cast(attrs[:hidden]) if attrs.key?(:hidden)
+      result
     end
 end

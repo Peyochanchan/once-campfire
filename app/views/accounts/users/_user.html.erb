@@ -21,6 +21,14 @@
           <%= form.check_box :role, { data: { action: "form#submit" }, hidden: true, id: dom_id(user, :role), disabled: user == Current.user }, "administrator", "member" %>
         </label>
       <% end %>
+
+      <%= form_with model: user, url: account_user_path(user), data: { controller: "form" }, method: :patch do | form | %>
+        <label class="btn txt-small flex-item-no-shrink <%= 'btn--active' if user.hidden? %>" for="<%= dom_id(user, :hidden) %>" title="<%= user.hidden? ? t("admin.user_hidden") : t("admin.user_visible") %>">
+          <span class="for-screen-reader"><%= user.hidden? ? t("admin.user_hidden") : t("admin.user_visible") %></span>
+          <%= image_tag "lock.svg", size: 20, aria: { hidden: "true" } %>
+          <%= form.check_box :hidden, { data: { action: "form#submit" }, hidden: true, id: dom_id(user, :hidden), disabled: user == Current.user }, "1", "0" %>
+        </label>
+      <% end %>
     <% end %>
 
     <% unless user == Current.user %>

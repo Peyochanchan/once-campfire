@@ -13,7 +13,7 @@ class Rooms::OpensController < RoomsController
 
   def new
     @room = Rooms::Open.new(name: DEFAULT_ROOM_NAME)
-    @users = User.active.ordered
+    @users = User.active.visible_to(Current.user).ordered
   end
 
   def create
@@ -24,7 +24,7 @@ class Rooms::OpensController < RoomsController
   end
 
   def edit
-    @users = User.active.ordered
+    @users = User.active.visible_to(Current.user).ordered
   end
 
   def update

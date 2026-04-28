@@ -9,6 +9,6 @@ class Autocompletable::UsersController < ApplicationController
     end
 
     def users_scope
-      params[:room_id].present? ? Current.user.rooms.find(params[:room_id]).users : User.all
+      params[:room_id].present? ? Current.user.rooms.find(params[:room_id]).users : User.visible_to(Current.user)
     end
 end
