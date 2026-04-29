@@ -32,7 +32,7 @@ class AccountsController < ApplicationController
       if Current.user.can_administer?
         User.where(status: [ :active, :banned ])
       else
-        User.active
+        User.active.visible_to(Current.user)
       end
     end
 end
