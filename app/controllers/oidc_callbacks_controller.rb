@@ -36,13 +36,15 @@ class OidcCallbacksController < ApplicationController
         return user
       end
 
-      # Create new user
+      # Create new user — hidden by default so they don't appear in directories
+      # until an admin makes them visible.
       User.create!(
         name: info.name || info.preferred_username || info.email.split("@").first,
         email_address: info.email,
         password: SecureRandom.hex(32),
         oidc_sub: sub,
-        oidc_provider: provider
+        oidc_provider: provider,
+        hidden: true
       )
     end
 end
