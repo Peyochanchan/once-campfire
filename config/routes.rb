@@ -119,4 +119,13 @@ Rails.application.routes.draw do
   get "service-worker" => "pwa#service_worker"
 
   get "up" => "rails/health#show", as: :rails_health_check
+
+  # Service-to-service admin API (auth via X-Admin-Token shared secret).
+  # Used by external services (e.g. Portal) to deactivate users when their
+  # SSO identity is removed upstream.
+  namespace :admin do
+    namespace :api do
+      delete "users/by_email/:email", to: "users#destroy_by_email", constraints: { email: /[^\/]+/ }
+    end
+  end
 end
