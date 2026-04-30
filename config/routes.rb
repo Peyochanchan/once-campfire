@@ -126,6 +126,7 @@ Rails.application.routes.draw do
   namespace :admin do
     namespace :api do
       delete "users/by_email/:email", to: "users#destroy_by_email", constraints: { email: /[^\/]+/ }
+      patch  "users/by_email/:email", to: "users#update_by_email",  constraints: { email: /[^\/]+/ }
     end
   end
 end
