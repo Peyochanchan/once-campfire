@@ -107,6 +107,7 @@ en:
     background_blur: "Background blur"
     share_screen: "Share screen"
     chat: "Chat"
+    pip: "Picture in picture"
 
   notifications:
     settings: "Notification settings for this room"

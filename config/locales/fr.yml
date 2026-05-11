@@ -107,6 +107,7 @@ fr:
     background_blur: "Flou d'arrière-plan"
     share_screen: "Partager l'écran"
     chat: "Tchat"
+    pip: "Image dans l'image"
 
   notifications:
     settings: "Paramètres de notification"
