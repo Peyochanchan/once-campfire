@@ -38,6 +38,9 @@
           <% if Current.user.can_administer? %>
             <div><%= mail_to @user.email_address %></div>
           <% end %>
+          <% if @user.custom_status_line.present? %>
+            <div class="txt-large"><%= @user.custom_status_line %></div>
+          <% end %>
           <div><%= @user.bio %></div>
         </div>
 

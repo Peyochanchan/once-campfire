@@ -218,6 +218,8 @@ en:
     status_auto: "Auto (online/in call)"
     status_away: "Away"
     status_dnd: "Do not disturb"
+    custom_status_emoji_placeholder: "🌴"
+    custom_status_text_placeholder: "What's up?"
 
   search:
     clear_recents: "Clear recent searches"
