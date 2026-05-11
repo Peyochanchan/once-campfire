@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+#
+# push-private
+# Pushes the current branch (or specified branch) to both private Gitea
+# remotes: `gitea` (Acme) and `acme`.
+#
+# Usage:
+#   bin/push-private                         # current branch, both remotes
+#   bin/push-private main                    # explicit branch
+#   bin/push-private feat/foo --force-with-lease
+#
+# Note: pushing main triggers production deploys on both instances.
+
+set -uo pipefail
+
+REMOTES=(gitea acme)
+
+if [[ -n "${1:-}" && "${1:0:1}" != "-" ]]; then
+  BRANCH="$1"
+  shift
+else
+  BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+fi
+
+if [[ "$BRANCH" == "HEAD" ]]; then
+  echo "Detached HEAD — checkout a branch first." >&2
+  exit 1
+fi
+
+echo "Pushing '$BRANCH' to: ${REMOTES[*]}"
+echo
+
+FAILED=()
+for remote in "${REMOTES[@]}"; do
+  echo "→ $remote"
+  if git push "$remote" "$BRANCH" "$@"; then
+    echo "  ✓ $remote OK"
+  else
+    echo "  ✗ $remote failed"
+    FAILED+=("$remote")
+  fi
+  echo
+done
+
+if [[ ${#FAILED[@]} -gt 0 ]]; then
+  echo "FAILED: ${FAILED[*]}" >&2
+  exit 1
+fi
+
+echo "All pushes succeeded."
