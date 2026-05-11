@@ -24,10 +24,11 @@
                         aria: { multiline: "true", label: t("composer.message_label") },
                         data: {
                           controller: "rich-autocomplete",
-                          action: rich_text_data_actions,
+                          action: "#{rich_text_data_actions} trix-change->room-draft#save",
                           rich_autocomplete_url_value: autocompletable_users_path(room_id: room.id),
                           permitted_attachment_types: "application/vnd.actiontext.opengraph-embed",
-                          composer_target: "text" } %>
+                          composer_target: "text",
+                          room_draft_target: "editor" } %>
                 </div>
 
                 <label class="btn btn--borderless txt-small flex-item-no-shrink composer__attachment-btn input--file">

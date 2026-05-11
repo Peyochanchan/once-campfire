@@ -63,10 +63,11 @@ module RoomsHelper
   private
     def composer_data_options(room)
       {
-        controller: "composer drop-target",
+        controller: "composer drop-target room-draft",
         action: composer_data_actions,
         composer_messages_outlet: "#message-area",
-        composer_toolbar_class: "composer--rich-text", composer_room_id_value: room.id
+        composer_toolbar_class: "composer--rich-text", composer_room_id_value: room.id,
+        room_draft_room_id_value: room.id
       }
     end
 
