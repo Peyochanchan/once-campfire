@@ -107,6 +107,8 @@ en:
     background_blur: "Background blur"
     share_screen: "Share screen"
     chat: "Chat"
+    spotlight: "Spotlight"
+    unspotlight: "Remove spotlight"
 
   notifications:
     settings: "Notification settings for this room"
