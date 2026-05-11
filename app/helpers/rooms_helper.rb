@@ -66,7 +66,9 @@ module RoomsHelper
         controller: "composer drop-target",
         action: composer_data_actions,
         composer_messages_outlet: "#message-area",
-        composer_toolbar_class: "composer--rich-text", composer_room_id_value: room.id
+        composer_toolbar_class: "composer--rich-text", composer_room_id_value: room.id,
+        composer_room_member_count_value: room.users.count,
+        composer_global_mention_confirm_value: t("composer.global_mention_confirm")
       }
     end
 

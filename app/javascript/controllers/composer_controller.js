@@ -3,10 +3,17 @@ import FileUploader from "../models/file_uploader"
 import { onNextEventLoopTick, nextFrame } from "../helpers/timing_helpers"
 import { escapeHTML } from "../helpers/dom_helpers"
 
+const GLOBAL_MENTION_THRESHOLD = 10
+const GLOBAL_MENTION_PATTERN = /(?:^|\s)@(everyone|channel|here)\b/i
+
 export default class extends Controller {
   static classes = ["toolbar"]
   static targets = [ "clientid", "fields", "fileList", "text" ]
-  static values = { roomId: Number }
+  static values = {
+    roomId: Number,
+    roomMemberCount: { type: Number, default: 0 },
+    globalMentionConfirm: String
+  }
   static outlets = [ "messages" ]
 
   #files = []
@@ -20,12 +27,23 @@ export default class extends Controller {
   submit(event) {
     event.preventDefault()
 
-    if (!this.fieldsTarget.disabled) {
-      this.#submitFiles()
-      this.#submitMessage()
-      this.collapseToolbar()
-      this.textTarget.focus()
-    }
+    if (this.fieldsTarget.disabled) return
+    if (!this.#confirmGlobalMentionIfNeeded()) return
+
+    this.#submitFiles()
+    this.#submitMessage()
+    this.collapseToolbar()
+    this.textTarget.focus()
+  }
+
+  #confirmGlobalMentionIfNeeded() {
+    const text = this.textTarget.textContent || ""
+    if (!GLOBAL_MENTION_PATTERN.test(text)) return true
+    if (this.roomMemberCountValue <= GLOBAL_MENTION_THRESHOLD) return true
+
+    const message = (this.globalMentionConfirmValue || "Ping all room members?")
+      .replace("%{count}", this.roomMemberCountValue)
+    return window.confirm(message)
   }
 
   submitEnd(event) {
