@@ -1,0 +1,7 @@
+<%= t("message_notifications.mailer.mention.intro_text", sender: @sender.name, room: @room.name.presence || @app_name) %>
+
+<%= @snippet %>
+
+<%= t("message_notifications.mailer.cta") %>: <%= @room_url %>
+
+<%= t("message_notifications.mailer.unsubscribe_hint", app_name: @app_name) %>

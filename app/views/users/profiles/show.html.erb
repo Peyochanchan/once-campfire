@@ -148,6 +148,14 @@
         });
       </script>
 
+      <div class="flex align-center gap">
+        <label class="flex align-center gap flex-item-grow input input--actor" style="cursor: pointer">
+          <%= form.check_box :email_notifications_enabled %>
+          <span class="txt-large flex-item-grow"><%= t("profile.email_notifications_enabled") %></span>
+          <%= lucide_icon "mail", size: 24 %>
+        </label>
+      </div>
+
       <%= profile_form_submit_button %>
     </div>
   <% end %>
