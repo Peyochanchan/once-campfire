@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_05_11_120000) do
+ActiveRecord::Schema[8.2].define(version: 2026_05_11_130000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -118,6 +118,7 @@ ActiveRecord::Schema[8.2].define(version: 2026_05_11_120000) do
     t.integer "connections", default: 0, null: false
     t.datetime "created_at", null: false
     t.string "involvement", default: "mentions"
+    t.datetime "last_email_notified_at"
     t.boolean "muted", default: false, null: false
     t.integer "room_id", null: false
     t.datetime "unread_at"
@@ -195,6 +196,7 @@ ActiveRecord::Schema[8.2].define(version: 2026_05_11_120000) do
     t.string "custom_status_emoji", limit: 16
     t.string "custom_status_text", limit: 80
     t.string "email_address"
+    t.boolean "email_notifications_enabled", default: true, null: false
     t.boolean "hidden", default: false, null: false
     t.string "locale", default: "en"
     t.string "name", null: false

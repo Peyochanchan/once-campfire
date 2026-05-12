@@ -162,6 +162,19 @@ en:
     new_to_room_hint: "If the user already has an account, they'll be added directly. Otherwise, they'll receive an invitation email."
     invite_to_room: "Invite to this room"
 
+  message_notifications:
+    mailer:
+      cta: "Open conversation"
+      unsubscribe_hint: "You can disable email notifications in your %{app_name} profile."
+      mention:
+        subject: "%{sender} mentioned you in %{room}"
+        intro_html: "mentioned you in %{room}:"
+        intro_text: "%{sender} mentioned you in %{room}:"
+      activity:
+        subject: "New activity in %{room}"
+        intro_html: "There's new activity in %{room}:"
+        intro_text: "There's new activity in %{room}:"
+
   invites:
     share_title: "Share to invite more people"
     show_qr: "Show join link QR code"
@@ -221,6 +234,7 @@ en:
     status_dnd: "Do not disturb"
     custom_status_emoji_placeholder: "🌴"
     custom_status_text_placeholder: "What's up?"
+    email_notifications_enabled: "Receive email notifications when offline"
 
   search:
     clear_recents: "Clear recent searches"
