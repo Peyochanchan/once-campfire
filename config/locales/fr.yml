@@ -70,6 +70,7 @@ fr:
     attach_file: "Joindre un fichier"
     rich_text: "Texte enrichi"
     send: "Envoyer"
+    global_mention_confirm: "Vous allez notifier %{count} personnes dans ce salon. Continuer ?"
 
   rooms:
     welcome_title: "Bienvenue sur %{app_name}"
