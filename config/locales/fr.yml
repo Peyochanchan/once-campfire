@@ -110,6 +110,7 @@ fr:
     chat: "Tchat"
     spotlight: "Focus"
     unspotlight: "Retirer le focus"
+    pip: "Image dans l'image"
 
   notifications:
     settings: "Paramètres de notification"

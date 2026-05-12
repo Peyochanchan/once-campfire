@@ -110,6 +110,7 @@ en:
     chat: "Chat"
     spotlight: "Spotlight"
     unspotlight: "Remove spotlight"
+    pip: "Picture in picture"
 
   notifications:
     settings: "Notification settings for this room"
