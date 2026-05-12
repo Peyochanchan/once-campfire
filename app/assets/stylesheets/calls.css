@@ -145,6 +145,53 @@
   width: auto;
 }
 
+/* Spotlight: one remote tile spans the main area, others shrink to bottom strip */
+.call-grid--spotlight {
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  grid-template-rows: 1fr auto;
+}
+
+.call-grid--spotlight .call-tile:not(.call-tile--local):not(.call-tile--spotlight) {
+  height: auto;
+  max-height: 120px;
+}
+
+.call-tile--spotlight {
+  grid-column: 1 / -1;
+}
+
+.call-tile__pin {
+  align-items: center;
+  background: oklch(0 0 0 / 0.55);
+  backdrop-filter: blur(6px);
+  border: none;
+  border-radius: 999px;
+  block-size: 2rem;
+  color: white;
+  cursor: pointer;
+  display: none;
+  inline-size: 2rem;
+  inset-block-start: 0.5rem;
+  inset-inline-end: 0.5rem;
+  justify-content: center;
+  padding: 0;
+  position: absolute;
+  z-index: 3;
+}
+
+.call-tile:hover .call-tile__pin,
+.call-tile--spotlight .call-tile__pin {
+  display: inline-flex;
+}
+
+.call-tile--spotlight .call-tile__pin {
+  background: oklch(0.65 0.18 250);
+}
+
+.call-tile--local .call-tile__pin {
+  display: none !important;
+}
+
 /* Grid columns managed by JS via _updateGridLayout() */
 
 /* Remote tiles: fill the grid */
