@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_04_13_105613) do
+ActiveRecord::Schema[8.2].define(version: 2026_05_11_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -192,7 +192,10 @@ ActiveRecord::Schema[8.2].define(version: 2026_04_13_105613) do
     t.string "bot_token"
     t.datetime "created_at", null: false
     t.integer "custom_status", default: 0
+    t.string "custom_status_emoji", limit: 16
+    t.string "custom_status_text", limit: 80
     t.string "email_address"
+    t.boolean "hidden", default: false, null: false
     t.string "locale", default: "en"
     t.string "name", null: false
     t.string "oidc_provider"
@@ -204,6 +207,7 @@ ActiveRecord::Schema[8.2].define(version: 2026_04_13_105613) do
     t.datetime "updated_at", null: false
     t.index ["bot_token"], name: "index_users_on_bot_token", unique: true
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
+    t.index ["hidden"], name: "index_users_on_hidden"
     t.index ["oidc_sub", "oidc_provider"], name: "index_users_on_oidc_sub_and_oidc_provider", unique: true, where: "(oidc_sub IS NOT NULL)"
   end
 

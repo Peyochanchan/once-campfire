@@ -101,6 +101,19 @@
         </label>
       </div>
 
+      <div class="flex align-center gap">
+        <label class="flex align-center gap input input--actor" style="flex-basis: 5rem; flex-grow: 0">
+          <%= form.text_field :custom_status_emoji, class: "input txt-large txt-align-center",
+                placeholder: t("profile.custom_status_emoji_placeholder"), maxlength: 16,
+                autocomplete: "off" %>
+        </label>
+        <label class="flex align-center gap flex-item-grow input input--actor">
+          <%= form.text_field :custom_status_text, class: "input txt-large",
+                placeholder: t("profile.custom_status_text_placeholder"), maxlength: 80,
+                autocomplete: "off" %>
+        </label>
+      </div>
+
       <script>
         var statusColors = { auto: "<%= @user.online? ? 'online' : 'offline' %>", away: "away", dnd: "dnd" };
         var dot = document.getElementById("status-dot");
