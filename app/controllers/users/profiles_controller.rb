@@ -18,7 +18,8 @@ class Users::ProfilesController < ApplicationController
 
     def user_params
       params.require(:user).permit(:name, :avatar, :email_address, :password, :bio, :ringtone, :locale,
-                                   :custom_status, :email_notifications_enabled).compact
+                                   :custom_status, :custom_status_text, :custom_status_emoji,
+                                   :email_notifications_enabled).compact
     end
 
     def update_notice

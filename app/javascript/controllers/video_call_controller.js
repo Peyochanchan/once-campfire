@@ -3,7 +3,7 @@ import { Room, RoomEvent } from "livekit-client"
 import { BackgroundProcessor } from "@livekit/track-processors"
 
 export default class extends Controller {
-  static targets = ["grid", "cameraBtn", "micBtn", "screenBtn", "blurBtn", "settingsBtn", "settingsPanel", "cameraSelect", "micSelect", "speakerSelect", "chatBtn", "chatPanel"]
+  static targets = ["grid", "cameraBtn", "micBtn", "screenBtn", "blurBtn", "settingsBtn", "settingsPanel", "cameraSelect", "micSelect", "speakerSelect", "chatBtn", "chatPanel", "pipBtn"]
   static values = {
     token: String,
     url: String,
@@ -28,6 +28,7 @@ export default class extends Controller {
     window.addEventListener("beforeunload", this._boundBeforeUnload)
     this._setupControlsAutoHide()
     this._startCallStatusPoll()
+    this._setupPipSupport()
   }
 
   disconnect() {
@@ -35,6 +36,49 @@ export default class extends Controller {
     clearTimeout(this._controlsTimer)
     clearInterval(this._statusPollTimer)
     this._cleanup()
+  }
+
+  _setupPipSupport() {
+    if (!this.hasPipBtnTarget) return
+    if (!document.pictureInPictureEnabled) this.pipBtnTarget.disabled = true
+  }
+
+  async togglePip() {
+    if (!document.pictureInPictureEnabled) return
+
+    if (document.pictureInPictureElement) {
+      try { await document.exitPictureInPicture() } catch (_) {}
+      this.pipBtnTarget?.classList.remove("btn--active")
+      return
+    }
+
+    const video = this._findVideoForPip()
+    if (!video) return
+
+    try {
+      video.addEventListener("leavepictureinpicture", () => {
+        this.pipBtnTarget?.classList.remove("btn--active")
+      }, { once: true })
+
+      await video.requestPictureInPicture()
+      this.pipBtnTarget?.classList.add("btn--active")
+    } catch (error) {
+      console.warn("[VideoCall] PiP request failed:", error.message)
+    }
+  }
+
+  _findVideoForPip() {
+    const spotlight = this.gridTarget.querySelector(".call-tile--spotlight video")
+    if (spotlight && spotlight.readyState >= 2) return spotlight
+
+    const screenShare = this.gridTarget.querySelector(".call-screen-share video")
+    if (screenShare && screenShare.readyState >= 2) return screenShare
+
+    const remoteVideos = this.gridTarget.querySelectorAll(".call-tile:not(.call-tile--local) video")
+    for (const v of remoteVideos) {
+      if (v.readyState >= 2 && v.offsetParent !== null) return v
+    }
+    return null
   }
 
   showControls() {

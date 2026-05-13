@@ -398,6 +398,7 @@
 }
 
 .call-container:hover .call-controls,
+.call-container:focus-within .call-controls,
 .call-container--controls-visible .call-controls {
   opacity: 1;
 }
@@ -414,16 +415,37 @@
   display: flex;
   justify-content: center;
   padding: 0;
+  transition: background 0.15s ease, border-color 0.15s ease;
 }
 
 .call-btn:hover {
   background: oklch(0.4 0 0);
 }
 
+.call-btn:focus-visible {
+  outline: 2px solid oklch(0.78 0.16 240);
+  outline-offset: 3px;
+}
+
 .call-btn.btn--active {
-  background: white;
-  border-color: white;
-  color: oklch(0.15 0 0);
+  background: oklch(0.55 0.18 250);
+  border-color: oklch(0.65 0.18 250);
+  color: white;
+}
+
+.call-btn.btn--active:hover {
+  background: oklch(0.6 0.18 250);
+}
+
+.call-btn:disabled,
+.call-btn[disabled] {
+  cursor: not-allowed;
+  filter: grayscale(0.6);
+  opacity: 0.55;
+}
+
+.call-btn:disabled:hover {
+  background: oklch(0.3 0 0);
 }
 
 .call-btn--leave {

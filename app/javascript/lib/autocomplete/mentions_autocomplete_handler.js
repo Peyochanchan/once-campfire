@@ -7,8 +7,17 @@ export default class extends BaseAutocompleteHandler {
   }
 
   insertAutocompletable(autocompletable, range, terminator, options = {}) {
-    const attachment = this.#createAttachmentForAutocompletable(autocompletable)
-    this.#insertAttachmentAndTerminatorIntoEditorAtRange(attachment, terminator, range, options)
+    if (autocompletable.type === "global") {
+      this.#insertPlainTextAtRange(`${autocompletable.value} `, range)
+    } else {
+      const attachment = this.#createAttachmentForAutocompletable(autocompletable)
+      this.#insertAttachmentAndTerminatorIntoEditorAtRange(attachment, terminator, range, options)
+    }
+  }
+
+  #insertPlainTextAtRange(text, range) {
+    if (range) { this.#editor.setSelectedRange(range) }
+    this.#editor.insertString(text)
   }
 
   // Override to set selector's position relative to the cursor in the editor

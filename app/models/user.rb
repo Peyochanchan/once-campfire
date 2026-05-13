@@ -24,6 +24,9 @@ class User < ApplicationRecord
   enum :status, %i[ active deactivated banned ], default: :active
   enum :custom_status, { auto: 0, away: 1, dnd: 2 }, default: :auto
 
+  validates :custom_status_text,  length: { maximum: 80 }, allow_blank: true
+  validates :custom_status_emoji, length: { maximum: 16 }, allow_blank: true
+
   has_secure_password validations: false
 
   after_create_commit :grant_membership_to_open_rooms
@@ -79,6 +82,10 @@ class User < ApplicationRecord
 
   def title
     [ name, bio ].compact_blank.join(" – ")
+  end
+
+  def custom_status_line
+    [ custom_status_emoji, custom_status_text ].compact_blank.join(" ")
   end
 
   def deactivate

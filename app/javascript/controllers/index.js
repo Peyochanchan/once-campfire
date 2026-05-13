@@ -25,6 +25,7 @@ import read_rooms from "./read_rooms_controller"
 import refresh_room from "./refresh_room_controller"
 import reply from "./reply_controller"
 import rich_autocomplete from "./rich_autocomplete_controller"
+import room_draft from "./room_draft_controller"
 import rooms_list from "./rooms_list_controller"
 import scroll_into_view from "./scroll_into_view_controller"
 import search_results from "./search_results_controller"
@@ -67,6 +68,7 @@ application.register("read-rooms", read_rooms)
 application.register("refresh-room", refresh_room)
 application.register("reply", reply)
 application.register("rich-autocomplete", rich_autocomplete)
+application.register("room-draft", room_draft)
 application.register("rooms-list", rooms_list)
 application.register("scroll-into-view", scroll_into_view)
 application.register("search-results", search_results)
