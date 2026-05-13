@@ -26,14 +26,5 @@
     <span class="for-screen-reader"><%= t("calls.audio_start") %></span>
   <% end %>
 
-  <% membership = Current.user.memberships.find_by(room: room) %>
-  <% if membership&.muted? %>
-    <%= button_to room_mute_path(room), method: :delete, class: "btn", title: t("notifications.unmute") do %>
-      <%= lucide_icon "bell-off", size: 20 %>
-    <% end %>
-  <% else %>
-    <%= button_to room_mute_path(room), class: "btn", title: t("notifications.mute") do %>
-      <%= lucide_icon "bell", size: 20 %>
-    <% end %>
-  <% end %>
+  <%= render "rooms/involvements/bell", room: room %>
 <% end %>
