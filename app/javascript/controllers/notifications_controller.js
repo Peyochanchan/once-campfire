@@ -28,20 +28,53 @@ export default class extends Controller {
     }
   }
 
-  async attemptToSubscribe() {
-    if (this.#allowed) {
-      const registration = await this.#serviceWorkerRegistration || await this.#registerServiceWorker()
-
-      switch(Notification.permission) {
-        case "denied":  { this.#revealNotAllowedNotice(); break }
-        case "granted": { this.#subscribe(registration); break }
-        case "default": { this.#requestPermissionAndSubscribe(registration) }
-      }
-    } else {
+  attemptToSubscribe() {
+    console.log("[push] attemptToSubscribe", { allowed: this.#allowed, permission: Notification.permission, userActivation: navigator.userActivation?.isActive })
+    if (!this.#allowed) {
       this.#revealNotAllowedNotice()
+      this.#endFirstRun()
+      return
     }
 
-    this.#endFirstRun()
+    const permission = Notification.permission
+
+    if (permission === "denied") {
+      this.#revealNotAllowedNotice()
+      this.#endFirstRun()
+      return
+    }
+
+    if (permission === "granted") {
+      this.#registerAndSubscribe()
+      this.#endFirstRun()
+      return
+    }
+
+    Notification.requestPermission()
+      .then(result => {
+        console.log("[push] requestPermission result:", result)
+        if (result === "granted") {
+          return this.#registerAndSubscribe()
+        } else if (result === "denied") {
+          this.#revealNotAllowedNotice()
+        }
+      })
+      .catch(err => console.error("[push] requestPermission FAILED:", err?.name, err?.message))
+      .finally(() => this.#endFirstRun())
+  }
+
+  async #registerAndSubscribe() {
+    try {
+      let registration = await this.#serviceWorkerRegistration
+      if (!registration) {
+        await this.#registerServiceWorker()
+      }
+      registration = await navigator.serviceWorker.ready
+      console.log("[push] SW active", registration?.scope, registration?.active?.state)
+      this.#subscribe(registration)
+    } catch (err) {
+      console.error("[push] SW register FAILED:", err?.name, err?.message)
+    }
   }
 
   async isEnabled() {
@@ -96,22 +129,25 @@ export default class extends Controller {
   }
 
   async #subscribe(registration) {
+    console.log("[push] subscribe start", { registration, vapidLength: this.#vapidPublicKey?.length })
     registration.pushManager
       .subscribe({ userVisibleOnly: true, applicationServerKey: this.#vapidPublicKey })
       .then(subscription => {
+        console.log("[push] subscribe OK", subscription?.endpoint)
         this.#syncPushSubscription(subscription)
         this.dispatch("ready")
       })
+      .catch(err => console.error("[push] subscribe FAILED:", err?.name, err?.message, err))
   }
 
   async #syncPushSubscription(subscription) {
-    const response = await post(this.subscriptionsUrlValue, { body: this.#extractJsonPayloadAsString(subscription), responseKind: "turbo-stream" })
-    if (!response.ok) subscription.unsubscribe()
-  }
-
-  async #requestPermissionAndSubscribe(registration) {
-    const permission = await Notification.requestPermission()
-    if (permission === "granted") this.#subscribe(registration)
+    try {
+      const response = await post(this.subscriptionsUrlValue, { body: this.#extractJsonPayloadAsString(subscription), responseKind: "turbo-stream" })
+      console.log("[push] sync sub response", response?.statusCode, response?.ok)
+      if (!response.ok) subscription.unsubscribe()
+    } catch (err) {
+      console.error("[push] sync sub FAILED:", err)
+    }
   }
 
   get #vapidPublicKey() {
