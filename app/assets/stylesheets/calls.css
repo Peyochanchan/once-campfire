@@ -158,6 +158,8 @@
 
 .call-tile--spotlight {
   grid-column: 1 / -1;
+  outline: 3px solid oklch(0.65 0.18 250);
+  outline-offset: -3px;
 }
 
 .call-tile__pin {
