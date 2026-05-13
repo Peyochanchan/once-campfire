@@ -121,7 +121,10 @@ export default class extends Controller {
   async toggleBlur() {
     if (!this.room) return
     const cameraPub = this.room.localParticipant.getTrackPublication("camera")
-    if (!cameraPub || !cameraPub.track) return
+    if (!cameraPub || !cameraPub.track) {
+      console.warn("[blur] no camera track to process")
+      return
+    }
 
     try {
       if (this._blurEnabled) {
@@ -129,26 +132,18 @@ export default class extends Controller {
         this._blurEnabled = false
       } else {
         if (!this._blurProcessor) {
-          this._blurProcessor = BackgroundProcessor({
-            mode: "background-blur",
-            blurRadius: 18,
-            segmenterOptions: {
-              modelType: "landscape",
-              smoothingFactor: 0.8
-            }
-          })
+          this._blurProcessor = BackgroundProcessor({ mode: "background-blur", blurRadius: 18 })
         }
         await cameraPub.track.setProcessor(this._blurProcessor, true)
         this._blurEnabled = true
       }
-      // Re-attach to show processed stream locally
       this._reattachLocalVideo()
 
       if (this.hasBlurBtnTarget) {
         this.blurBtnTarget.classList.toggle("btn--active", this._blurEnabled)
       }
     } catch (error) {
-      console.warn("[VideoCall] Background blur not available:", error.message)
+      console.error("[blur] toggle FAILED:", error?.name, error?.message, error)
     }
   }
 
@@ -244,6 +239,12 @@ export default class extends Controller {
     this.room.on(RoomEvent.LocalTrackPublished, (publication) => {
       if (publication.track) {
         this._attachTrack(publication.track, this.room.localParticipant)
+      }
+    })
+
+    this.room.on(RoomEvent.LocalTrackUnpublished, (publication) => {
+      if (publication.track) {
+        this._detachTrack(publication.track)
       }
     })
 
