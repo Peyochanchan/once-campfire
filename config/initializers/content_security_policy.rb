@@ -4,13 +4,13 @@ Rails.application.configure do
     policy.font_src    :self, :data
     policy.img_src     :self, :data, :blob, "https://*.your-objectstorage.com"
     policy.object_src  :none
-    policy.script_src  :self, :unsafe_inline
+    policy.script_src  :self, :unsafe_inline, :wasm_unsafe_eval, "https://cdn.jsdelivr.net"
     policy.style_src   :self, :unsafe_inline
-    policy.connect_src :self, :wss
+    policy.connect_src :self, :wss, "https://cdn.jsdelivr.net", "https://storage.googleapis.com"
+    policy.worker_src  :self, :blob, "https://cdn.jsdelivr.net"
     policy.media_src   :self, :blob, "https://*.your-objectstorage.com"
     policy.frame_src   :self
     policy.child_src   :self, :blob
-    policy.worker_src  :self, :blob
     policy.frame_ancestors :self
   end
 
