@@ -148,11 +148,13 @@
         });
       </script>
 
-      <div class="flex align-center gap">
-        <label class="flex align-center gap flex-item-grow input input--actor" style="cursor: pointer">
-          <%= form.check_box :email_notifications_enabled %>
-          <span class="txt-large flex-item-grow"><%= t("profile.email_notifications_enabled") %></span>
-          <%= lucide_icon "mail", size: 24 %>
+      <div class="flex align-center gap input input--actor">
+        <%= lucide_icon "mail", size: 20, class: "flex-item-no-shrink" %>
+        <span class="flex-item-grow"><%= t("profile.email_notifications_enabled") %></span>
+        <label class="switch flex-item-no-shrink">
+          <%= form.check_box :email_notifications_enabled, class: "switch__input" %>
+          <span class="switch__btn round"></span>
+          <span class="for-screen-reader"><%= t("profile.email_notifications_enabled") %></span>
         </label>
       </div>
 
