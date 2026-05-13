@@ -44,9 +44,12 @@ class Room < ApplicationRecord
     end
   end
 
+  EMAIL_NOTIFICATION_DELAY = 30.seconds
+
   def receive(message)
     unread_memberships(message)
     push_later(message)
+    email_later(message)
   end
 
   def open?
@@ -76,5 +79,9 @@ class Room < ApplicationRecord
 
     def push_later(message)
       Room::PushMessageJob.perform_later(self, message)
+    end
+
+    def email_later(message)
+      Room::EmailNotificationJob.set(wait: EMAIL_NOTIFICATION_DELAY).perform_later(id, message.id)
     end
 end
