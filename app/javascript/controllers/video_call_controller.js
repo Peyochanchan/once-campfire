@@ -1,9 +1,9 @@
 import { Controller } from "@hotwired/stimulus"
-import { Room, RoomEvent } from "livekit-client"
+import { Room, RoomEvent, createLocalVideoTrack, createLocalAudioTrack } from "livekit-client"
 import { BackgroundProcessor } from "@livekit/track-processors"
 
 export default class extends Controller {
-  static targets = ["grid", "cameraBtn", "micBtn", "screenBtn", "blurBtn", "settingsBtn", "settingsPanel", "cameraSelect", "micSelect", "speakerSelect", "chatBtn", "chatPanel", "pipBtn"]
+  static targets = ["grid", "cameraBtn", "micBtn", "screenBtn", "blurBtn", "settingsBtn", "settingsPanel", "cameraSelect", "micSelect", "speakerSelect", "chatBtn", "chatPanel", "pipBtn", "controlsBar", "prejoinPanel", "prejoinVideo", "prejoinPlaceholder", "prejoinHint", "prejoinCamBtn", "prejoinMicBtn", "prejoinJoinBtn"]
   static values = {
     token: String,
     url: String,
@@ -19,16 +19,20 @@ export default class extends Controller {
   }
 
   _spotlightIdentity = null
+  _prejoinCamEnabled = true
+  _prejoinMicEnabled = true
+  _prejoinVideoTrack = null
+  _prejoinAudioTrack = null
 
   connect() {
-    if (this.hasTokenValue && this.tokenValue) {
-      this._joinRoom()
-    }
     this._boundBeforeUnload = this._beforeUnload.bind(this)
     window.addEventListener("beforeunload", this._boundBeforeUnload)
-    this._setupControlsAutoHide()
-    this._startCallStatusPoll()
     this._setupPipSupport()
+
+    if (this.hasTokenValue && this.tokenValue) {
+      this._prejoinCamEnabled = this.startWithVideoValue
+      this._startPrejoin()
+    }
   }
 
   disconnect() {
@@ -223,6 +227,104 @@ export default class extends Controller {
     this._showCallEndedScreen()
   }
 
+  // Prejoin
+
+  async _startPrejoin() {
+    try {
+      this._prejoinVideoTrack = await createLocalVideoTrack()
+      this._prejoinVideoTrack.attach(this.prejoinVideoTarget)
+    } catch (error) {
+      console.warn("[VideoCall] Prejoin camera unavailable:", error?.message)
+      this._showPrejoinPlaceholder()
+      this._prejoinCamEnabled = false
+      this._updatePrejoinBtnState(this.prejoinCamBtnTarget, false)
+    }
+
+    try {
+      this._prejoinAudioTrack = await createLocalAudioTrack()
+    } catch (error) {
+      console.warn("[VideoCall] Prejoin microphone unavailable:", error?.message)
+      this._prejoinMicEnabled = false
+      this._updatePrejoinBtnState(this.prejoinMicBtnTarget, false)
+    }
+
+    if (!this._prejoinVideoTrack && !this._prejoinAudioTrack) {
+      this.prejoinHintTarget.textContent = this.prejoinHintTarget.dataset.permissionDeniedHint || this.prejoinHintTarget.textContent
+    }
+
+    this._updatePrejoinBtnState(this.prejoinCamBtnTarget, this._prejoinCamEnabled)
+    this._updatePrejoinBtnState(this.prejoinMicBtnTarget, this._prejoinMicEnabled)
+
+    if (!this._prejoinCamEnabled) this._showPrejoinPlaceholder()
+  }
+
+  togglePrejoinCamera() {
+    if (!this._prejoinVideoTrack) return
+    this._prejoinCamEnabled = !this._prejoinCamEnabled
+    if (this._prejoinCamEnabled) {
+      this._prejoinVideoTrack.unmute()
+      this._hidePrejoinPlaceholder()
+    } else {
+      this._prejoinVideoTrack.mute()
+      this._showPrejoinPlaceholder()
+    }
+    this._updatePrejoinBtnState(this.prejoinCamBtnTarget, this._prejoinCamEnabled)
+  }
+
+  togglePrejoinMic() {
+    if (!this._prejoinAudioTrack) return
+    this._prejoinMicEnabled = !this._prejoinMicEnabled
+    if (this._prejoinMicEnabled) {
+      this._prejoinAudioTrack.unmute()
+    } else {
+      this._prejoinAudioTrack.mute()
+    }
+    this._updatePrejoinBtnState(this.prejoinMicBtnTarget, this._prejoinMicEnabled)
+  }
+
+  async joinFromPrejoin() {
+    this.prejoinJoinBtnTarget.disabled = true
+    if (this._prejoinVideoTrack) this._prejoinVideoTrack.detach()
+    await this._joinRoom()
+    this._hidePrejoin()
+  }
+
+  cancelPrejoin() {
+    this._stopPrejoinTracks()
+    window.close()
+  }
+
+  _showPrejoinPlaceholder() {
+    if (!this.hasPrejoinPlaceholderTarget) return
+    this.prejoinVideoTarget.style.display = "none"
+    this.prejoinPlaceholderTarget.style.display = "flex"
+  }
+
+  _hidePrejoinPlaceholder() {
+    if (!this.hasPrejoinPlaceholderTarget) return
+    this.prejoinVideoTarget.style.display = ""
+    this.prejoinPlaceholderTarget.style.display = "none"
+  }
+
+  _updatePrejoinBtnState(btn, isOn) {
+    if (!btn) return
+    btn.classList.toggle("btn--active", isOn)
+    this._toggleIconState(btn, isOn)
+  }
+
+  _hidePrejoin() {
+    this.prejoinPanelTarget.style.display = "none"
+    this.gridTarget.style.display = ""
+    if (this.hasControlsBarTarget) this.controlsBarTarget.style.display = ""
+    this._setupControlsAutoHide()
+    this._startCallStatusPoll()
+  }
+
+  _stopPrejoinTracks() {
+    if (this._prejoinVideoTrack) { this._prejoinVideoTrack.stop(); this._prejoinVideoTrack = null }
+    if (this._prejoinAudioTrack) { this._prejoinAudioTrack.stop(); this._prejoinAudioTrack = null }
+  }
+
   // Private
 
   async _joinRoom() {
@@ -295,18 +397,36 @@ export default class extends Controller {
         this._checkParticipantCamera(participant)
       })
 
-      if (this.startWithVideoValue) {
-        await this.room.localParticipant.enableCameraAndMicrophone()
-        this._attachLocalTracks()
-        this.cameraBtnTarget.classList.add("btn--active")
-        this._toggleIconState(this.cameraBtnTarget, true)
+      if (this._prejoinVideoTrack) {
+        if (this._prejoinCamEnabled) {
+          await this.room.localParticipant.publishTrack(this._prejoinVideoTrack, { source: "camera" })
+          this._attachLocalTracks()
+          this.cameraBtnTarget.classList.add("btn--active")
+          this._toggleIconState(this.cameraBtnTarget, true)
+        } else {
+          this._prejoinVideoTrack.stop()
+          this._toggleAvatar(this.room.localParticipant, true)
+          this._toggleIconState(this.cameraBtnTarget, false)
+        }
+        this._prejoinVideoTrack = null
       } else {
-        await this.room.localParticipant.setMicrophoneEnabled(true)
         this._toggleAvatar(this.room.localParticipant, true)
         this._toggleIconState(this.cameraBtnTarget, false)
       }
-      this.micBtnTarget.classList.add("btn--active")
-      this._toggleIconState(this.micBtnTarget, true)
+
+      if (this._prejoinAudioTrack) {
+        if (this._prejoinMicEnabled) {
+          await this.room.localParticipant.publishTrack(this._prejoinAudioTrack, { source: "microphone" })
+          this.micBtnTarget.classList.add("btn--active")
+          this._toggleIconState(this.micBtnTarget, true)
+        } else {
+          this._prejoinAudioTrack.stop()
+          this._toggleIconState(this.micBtnTarget, false)
+        }
+        this._prejoinAudioTrack = null
+      } else {
+        this._toggleIconState(this.micBtnTarget, false)
+      }
     } catch (error) {
       console.error("[VideoCall] Failed to connect:", error)
     }

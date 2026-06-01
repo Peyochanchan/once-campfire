@@ -12,7 +12,37 @@
      data-video-call-label-spotlight-value="<%= t("calls.spotlight") %>"
      data-video-call-label-unspotlight-value="<%= t("calls.unspotlight") %>">
 
-  <div class="call-grid" data-video-call-target="grid">
+  <div class="call-prejoin" data-video-call-target="prejoinPanel">
+    <div class="call-prejoin__preview">
+      <video data-video-call-target="prejoinVideo" autoplay muted playsinline></video>
+      <div class="call-prejoin__placeholder" data-video-call-target="prejoinPlaceholder" style="display:none">
+        <img src="<%= fresh_user_avatar_path(Current.user) %>" alt="" />
+      </div>
+    </div>
+
+    <div class="call-prejoin__panel">
+      <h1 class="call-prejoin__title"><%= t("calls.prejoin.title", room: room.name) %></h1>
+      <p class="call-prejoin__hint" data-video-call-target="prejoinHint"><%= t("calls.prejoin.hint") %></p>
+
+      <div class="call-prejoin__toggles">
+        <button class="btn call-btn" type="button" data-action="video-call#togglePrejoinCamera" data-video-call-target="prejoinCamBtn" aria-label="<%= t("calls.toggle_camera") %>">
+          <span class="icon-on"><%= lucide_icon "camera", size: 22 %></span>
+          <span class="icon-off" style="display:none"><%= lucide_icon "camera-off", size: 22 %></span>
+        </button>
+        <button class="btn call-btn" type="button" data-action="video-call#togglePrejoinMic" data-video-call-target="prejoinMicBtn" aria-label="<%= t("calls.toggle_mic") %>">
+          <span class="icon-on"><%= lucide_icon "mic", size: 22 %></span>
+          <span class="icon-off" style="display:none"><%= lucide_icon "mic-off", size: 22 %></span>
+        </button>
+      </div>
+
+      <div class="call-prejoin__actions">
+        <button class="btn call-prejoin__cancel" type="button" data-action="video-call#cancelPrejoin"><%= t("calls.prejoin.cancel") %></button>
+        <button class="btn call-prejoin__join" type="button" data-action="video-call#joinFromPrejoin" data-video-call-target="prejoinJoinBtn"><%= t("calls.prejoin.join") %></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="call-grid" data-video-call-target="grid" style="display:none">
   </div>
 
   <div class="call-settings" data-video-call-target="settingsPanel" style="display:none">
@@ -40,7 +70,7 @@
     <iframe src="<%= room_chat_embed_path(room) %>" class="call-chat-sidebar__iframe"></iframe>
   </div>
 
-  <div class="call-controls">
+  <div class="call-controls" data-video-call-target="controlsBar" style="display:none">
     <button class="btn call-btn" data-action="video-call#toggleCamera" data-video-call-target="cameraBtn" type="button" title="<%= t("calls.toggle_camera") %>" aria-label="<%= t("calls.toggle_camera") %>">
       <span class="icon-on"><%= lucide_icon "camera", size: 22 %></span>
       <span class="icon-off" style="display:none"><%= lucide_icon "camera-off", size: 22 %></span>

@@ -35,6 +35,111 @@
   z-index: 10;
 }
 
+/* Prejoin lobby: preview + device controls before connecting to the room */
+.call-prejoin {
+  align-items: center;
+  block-size: 100%;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.call-prejoin__preview {
+  align-items: center;
+  aspect-ratio: 16 / 9;
+  background: oklch(0.18 0 0);
+  border-radius: 0.75rem;
+  display: flex;
+  inline-size: min(720px, 80vw);
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.call-prejoin__preview video {
+  block-size: 100%;
+  inline-size: 100%;
+  object-fit: cover;
+  transform: scaleX(-1);
+}
+
+.call-prejoin__placeholder {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  inset: 0;
+  background: oklch(0.18 0 0);
+}
+
+.call-prejoin__placeholder img {
+  border-radius: 50%;
+  block-size: 6rem;
+  inline-size: 6rem;
+  object-fit: cover;
+}
+
+.call-prejoin__panel {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  inline-size: min(720px, 80vw);
+}
+
+.call-prejoin__title {
+  font-size: 1.4rem;
+  margin: 0;
+  text-align: center;
+}
+
+.call-prejoin__hint {
+  color: oklch(0.7 0 0);
+  font-size: 0.95rem;
+  margin: 0;
+  text-align: center;
+}
+
+.call-prejoin__toggles {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.call-prejoin__actions {
+  display: flex;
+  gap: 1rem;
+  margin-block-start: 0.5rem;
+}
+
+.call-prejoin__cancel {
+  background: transparent;
+  border: 1px solid oklch(0.5 0 0);
+  border-radius: 2rem;
+  color: white;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0.6rem 1.5rem;
+}
+
+.call-prejoin__join {
+  background: oklch(0.65 0.18 250);
+  border: none;
+  border-radius: 2rem;
+  color: white;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0.6rem 1.75rem;
+}
+
+.call-prejoin__join:hover { background: oklch(0.6 0.18 250); }
+.call-prejoin__join:disabled { background: oklch(0.4 0.05 250); cursor: not-allowed; }
+.call-prejoin__cancel:hover { background: oklch(0.18 0 0); }
+
 /* Grid: remote participants fill the space */
 .call-grid {
   display: grid;

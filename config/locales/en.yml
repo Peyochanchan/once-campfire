@@ -111,6 +111,12 @@ en:
     spotlight: "Spotlight"
     unspotlight: "Remove spotlight"
     pip: "Picture in picture"
+    prejoin:
+      title: "Joining %{room}"
+      hint: "Check your camera and microphone before joining."
+      cancel: "Cancel"
+      join: "Join now"
+      permission_denied: "Camera and microphone access blocked. Check your browser permissions."
 
   notifications:
     settings: "Notification settings for this room"

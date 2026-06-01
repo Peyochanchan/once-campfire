@@ -111,6 +111,12 @@ fr:
     spotlight: "Focus"
     unspotlight: "Retirer le focus"
     pip: "Image dans l'image"
+    prejoin:
+      title: "Rejoindre %{room}"
+      hint: "Vérifie ta caméra et ton micro avant de rejoindre."
+      cancel: "Annuler"
+      join: "Rejoindre maintenant"
+      permission_denied: "Accès caméra et micro bloqué. Vérifie les permissions du navigateur."
 
   notifications:
     settings: "Paramètres de notification"

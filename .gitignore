@@ -56,3 +56,4 @@ app/assets/builds/*
 # Internal documentation (not public)
 /docs/intern/
 
+.DS_Store
