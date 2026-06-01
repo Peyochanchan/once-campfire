@@ -13,8 +13,8 @@ class Opengraph::Metadata
 
   class << self
     def from_url(url)
-      document = fetch_document(url)
-      attributes = document.opengraph_attributes
+      html = fetch_html(url)
+      attributes = Opengraph::Document.opengraph_attributes(html)
       new attributes.merge(url: valid_canonical_url(attributes[:url], url), image: valid_image_content_type(attributes[:image]))
     end
 
@@ -23,23 +23,23 @@ class Opengraph::Metadata
       FX_TWITTER_HOST = "fxtwitter.com"
       ALLOWED_IMAGE_CONTENT_TYPES = %w[ image/jpeg image/png image/gif image/webp ]
 
-      def fetch_document(untrusted_url)
-        tweet_url?(untrusted_url) ? fetch_fxtwitter_document(untrusted_url) : fetch_non_fxtwitter_document(untrusted_url)
+      def fetch_html(untrusted_url)
+        tweet_url?(untrusted_url) ? fetch_fxtwitter_html(untrusted_url) : fetch_non_fxtwitter_html(untrusted_url)
       end
 
-      def fetch_fxtwitter_document(untrusted_url)
+      def fetch_fxtwitter_html(untrusted_url)
         fxtwitter_url = replace_twitter_domain_for_opengraph_support(untrusted_url)
 
         Opengraph::Location.new(fxtwitter_url).then do |location|
           # fxtwitter.com HTML response does not include character encoding, resulting in emojis and quotes not
           # being encoded properly.
-          Opengraph::Document.new(location.read_html.force_encoding("UTF-8"))
+          location.read_html.force_encoding("UTF-8")
         end
       end
 
-      def fetch_non_fxtwitter_document(untrusted_url)
+      def fetch_non_fxtwitter_html(untrusted_url)
         Opengraph::Location.new(untrusted_url).then do |location|
-          Opengraph::Document.new(location.read_html)
+          location.read_html
         end
       end
 

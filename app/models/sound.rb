@@ -1,7 +1,7 @@
 class Sound
-  class Image < Struct.new(:asset_path, :width, :height)
-    def initialize(name:, width:, height:)
-      super "sounds/#{name}", width, height
+  Image = Data.define(:asset_path, :width, :height) do
+    def self.from(name:, width:, height:)
+      new(asset_path: "sounds/#{name}", width:, height:)
     end
   end
 
@@ -20,7 +20,7 @@ class Sound
     @asset_path = "#{name}.mp3"
 
     if image
-      @image = Image.new(**image)
+      @image = Image.from(**image)
     else
       @text = text
     end
