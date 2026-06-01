@@ -1,5 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 import MessageFormatter, { ThreadStyle } from "../models/message_formatter"
+import { currentUser } from "../initializers/current"
 
 export default class extends Controller {
   static targets = [ "message" ]
@@ -8,7 +9,7 @@ export default class extends Controller {
   #formatter
 
   initialize() {
-    this.#formatter = new MessageFormatter(Current.user.id, {
+    this.#formatter = new MessageFormatter(currentUser().id, {
       formatted: this.formattedClass,
       me: this.meClass,
       mentioned: this.mentionedClass,

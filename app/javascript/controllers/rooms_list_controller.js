@@ -1,6 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 import { cable } from "@hotwired/turbo-rails"
 import { ignoringBriefDisconnects } from "../helpers/dom_helpers"
+import { currentRoom } from "../initializers/current"
 
 export default class extends Controller {
   static targets = [ "room" ]
@@ -24,7 +25,7 @@ export default class extends Controller {
   }
 
   loaded() {
-    this.read({ detail: { roomId: Current.room.id } })
+    this.read({ detail: { roomId: currentRoom().id } })
   }
 
   read({ detail: { roomId } }) {
@@ -51,7 +52,7 @@ export default class extends Controller {
     const unreadRoom = this.#findRoomTarget(roomId)
 
     if (unreadRoom) {
-      if (Current.room.id != roomId) {
+      if (currentRoom().id != roomId) {
         unreadRoom.classList.add(this.unreadClass)
       }
 

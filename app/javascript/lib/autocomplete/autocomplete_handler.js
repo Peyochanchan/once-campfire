@@ -1,5 +1,6 @@
 import BaseAutocompleteHandler from "./base_autocomplete_handler"
 import Selection from "./selection"
+import { currentUser } from "../../initializers/current"
 
 export default class extends BaseAutocompleteHandler {
   #selection
@@ -40,7 +41,7 @@ export default class extends BaseAutocompleteHandler {
   }
 
   #filterSelectedAutocompletables(autocompletables) {
-    const selectedValues = this.#selection.values.concat(Current.user.id)
+    const selectedValues = this.#selection.values.concat(currentUser().id)
     return autocompletables.filter(autocompletable => !selectedValues.includes(autocompletable.value))
   }
 }

@@ -4,6 +4,7 @@ import ClientMessage from "../models/client_message"
 import MessageFormatter, { ThreadStyle } from "../models/message_formatter"
 import MessagePaginator from "../models/message_paginator"
 import ScrollManager from "../models/scroll_manager"
+import { currentUser } from "../initializers/current"
 
 export default class extends Controller {
   static targets = [ "latest", "message", "body", "messages", "template" ]
@@ -18,7 +19,7 @@ export default class extends Controller {
   // Lifecycle
 
   initialize() {
-    this.#formatter = new MessageFormatter(Current.user.id, {
+    this.#formatter = new MessageFormatter(currentUser().id, {
       firstOfDay: this.firstOfDayClass,
       formatted: this.formattedClass,
       me: this.meClass,

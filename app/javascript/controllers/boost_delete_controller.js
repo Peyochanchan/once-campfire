@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import { currentUser } from "../initializers/current"
 
 export default class extends Controller {
   static classes = [ "reveal", "perform" ]
@@ -28,6 +29,6 @@ export default class extends Controller {
   }
 
   get #currentUserIsBooster() {
-    return Current.user.id === this.boosterIdValue
+    return currentUser().id === this.boosterIdValue
   }
 }

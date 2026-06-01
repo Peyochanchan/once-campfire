@@ -1,23 +1,13 @@
-class Current {
-  get user() {
-    const currentUserId = this.#extractContentFromMetaTag("current-user-id")
-
-    if (currentUserId) {
-      return { id: parseInt(currentUserId), name: this.#extractContentFromMetaTag("current-user-name") }
-    }
-  }
-
-  get room() {
-    const currentRoomId = this.#extractContentFromMetaTag("current-room-id")
-
-    if (currentRoomId) {
-      return { id: parseInt(currentRoomId) }
-    }
-  }
-
-  #extractContentFromMetaTag(name) {
-    return document.head.querySelector(`meta[name="${name}"]`)?.getAttribute("content")
-  }
+function extractFromMeta(name) {
+  return document.head.querySelector(`meta[name="${name}"]`)?.getAttribute("content")
 }
 
-window.Current = new Current()
+export function currentUser() {
+  const id = extractFromMeta("current-user-id")
+  if (id) return { id: parseInt(id), name: extractFromMeta("current-user-name") }
+}
+
+export function currentRoom() {
+  const id = extractFromMeta("current-room-id")
+  if (id) return { id: parseInt(id) }
+}
