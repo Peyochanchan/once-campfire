@@ -7,6 +7,7 @@ class Rooms::CallsController < ApplicationController
     end
     @token = CallParticipant.generate_token(room: @room, user: Current.user, avatar_url: fresh_user_avatar_path(Current.user))
     @video = params[:video].present?
+    @other_participants = @room.call_participants.includes(:user).where.not(user: Current.user).map(&:user)
   end
 
   def create

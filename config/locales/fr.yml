@@ -117,6 +117,9 @@ fr:
       cancel: "Annuler"
       join: "Rejoindre maintenant"
       permission_denied: "Accès caméra et micro bloqué. Vérifie les permissions du navigateur."
+      already_in_call:
+        one: "%{names} est déjà dans l'appel."
+        other: "%{names} sont déjà dans l'appel."
 
   notifications:
     settings: "Paramètres de notification"

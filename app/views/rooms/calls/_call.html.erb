@@ -24,6 +24,23 @@
       <h1 class="call-prejoin__title"><%= t("calls.prejoin.title", room: room.name) %></h1>
       <p class="call-prejoin__hint" data-video-call-target="prejoinHint"><%= t("calls.prejoin.hint") %></p>
 
+      <% if local_assigns[:other_participants].present? %>
+        <div class="call-prejoin__already">
+          <div class="call-prejoin__avatars">
+            <% other_participants.first(5).each do |user| %>
+              <img class="call-prejoin__avatar" src="<%= fresh_user_avatar_path(user) %>" alt="" title="<%= user.name %>" />
+            <% end %>
+            <% extra = other_participants.size - 5 %>
+            <% if extra > 0 %>
+              <span class="call-prejoin__avatar call-prejoin__avatar--more">+<%= extra %></span>
+            <% end %>
+          </div>
+          <p class="call-prejoin__already-text">
+            <%= t("calls.prejoin.already_in_call", names: other_participants.first(3).map(&:name).to_sentence, count: other_participants.size) %>
+          </p>
+        </div>
+      <% end %>
+
       <div class="call-prejoin__toggles">
         <button class="btn call-btn" type="button" data-action="video-call#togglePrejoinCamera" data-video-call-target="prejoinCamBtn" aria-label="<%= t("calls.toggle_camera") %>">
           <span class="icon-on"><%= lucide_icon "camera", size: 22 %></span>

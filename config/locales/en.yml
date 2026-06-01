@@ -117,6 +117,9 @@ en:
       cancel: "Cancel"
       join: "Join now"
       permission_denied: "Camera and microphone access blocked. Check your browser permissions."
+      already_in_call:
+        one: "%{names} is already in the call."
+        other: "%{names} are already in the call."
 
   notifications:
     settings: "Notification settings for this room"
