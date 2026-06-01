@@ -1,7 +1,7 @@
 import Collection from "./collection"
 import SuggestionController from "./suggestion_controller"
 import { generateUUID } from "./helpers"
-import { Renderer } from "./renderer"
+import { renderAutocompletableSuggestions } from "./renderer"
 
 export default class BaseAutocompleteHandler {
   #autocompletables
@@ -84,7 +84,7 @@ export default class BaseAutocompleteHandler {
   fetchResultsForQuery(query, callback) {
     this.loadAutocompletables(query, () => {
       const autocompletables = this.autocompletablesMatchingQuery(query)
-      const html = new Renderer().renderAutocompletableSuggestions(autocompletables)
+      const html = renderAutocompletableSuggestions(autocompletables)
       callback(html)
     })
   }

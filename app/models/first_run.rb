@@ -1,8 +1,10 @@
-class FirstRun
+module FirstRun
+  extend self
+
   ACCOUNT_NAME = Rails.configuration.x.app.name
   FIRST_ROOM_NAME = "All Talk"
 
-  def self.create!(user_params)
+  def create!(user_params)
     account = Account.create!(name: ACCOUNT_NAME)
     room    = Rooms::Open.new(name: FIRST_ROOM_NAME)
 

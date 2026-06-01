@@ -3,7 +3,7 @@ require "restricted_http/private_network_guard"
 
 class Opengraph::FetchTest < ActiveSupport::TestCase
   setup do
-    @fetch = Opengraph::Fetch.new
+    @fetch = Opengraph::Fetch
     @url = URI.parse("https://www.example.com")
   end
 
