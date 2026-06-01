@@ -24,19 +24,19 @@ class WebPush::Pool
   private
     def deliver_later(payload, subscription)
       # Ensure any AR operations happen before we post to the thread pool
-      notification = subscription.notification(**payload)
+      notification_params = subscription.notification_params(**payload)
       subscription_id = subscription.id
 
       delivery_pool.post do
-        deliver(notification, subscription_id)
+        deliver(notification_params, subscription_id)
       rescue Exception => e
         Rails.logger.error "Error in WebPush::Pool.deliver: #{e.class} #{e.message}"
       end
     rescue Concurrent::RejectedExecutionError
     end
 
-    def deliver(notification, id)
-      notification.deliver(connection: connection)
+    def deliver(notification_params, id)
+      WebPush::Notification.deliver(**notification_params, connection: connection)
     rescue WebPush::ExpiredSubscription, OpenSSL::OpenSSLError => ex
       invalidate_subscription_later(id) if invalid_subscription_handler
     end

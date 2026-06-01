@@ -1,13 +1,10 @@
-class WebPush::Notification
-  def initialize(title:, body:, path:, badge:, endpoint:, p256dh_key:, auth_key:)
-    @title, @body, @path, @badge = title, body, path, badge
-    @endpoint, @p256dh_key, @auth_key = endpoint, p256dh_key, auth_key
-  end
+module WebPush::Notification
+  extend self
 
-  def deliver(connection: nil)
+  def deliver(title:, body:, path:, badge:, endpoint:, p256dh_key:, auth_key:, connection: nil)
     WebPush.payload_send \
-      message: encoded_message,
-      endpoint: @endpoint, p256dh: @p256dh_key, auth: @auth_key,
+      message: encoded_message(title: title, body: body, path: path, badge: badge),
+      endpoint: endpoint, p256dh: p256dh_key, auth: auth_key,
       vapid: vapid_identification,
       connection: connection,
       urgency: "high"
@@ -19,8 +16,8 @@ class WebPush::Notification
         Rails.configuration.x.vapid.symbolize_keys
     end
 
-    def encoded_message
-      JSON.generate title: @title, options: { body: @body, icon: icon_path, data: { path: @path, badge: @badge } }
+    def encoded_message(title:, body:, path:, badge:)
+      JSON.generate title: title, options: { body: body, icon: icon_path, data: { path: path, badge: badge } }
     end
 
     def icon_path
