@@ -3,7 +3,7 @@ import { Room, RoomEvent, createLocalVideoTrack, createLocalAudioTrack } from "l
 import { BackgroundProcessor } from "@livekit/track-processors"
 
 export default class extends Controller {
-  static targets = ["grid", "cameraBtn", "micBtn", "screenBtn", "blurBtn", "settingsBtn", "settingsPanel", "cameraSelect", "micSelect", "speakerSelect", "chatBtn", "chatPanel", "pipBtn", "controlsBar", "prejoinPanel", "prejoinVideo", "prejoinPlaceholder", "prejoinHint", "prejoinCamBtn", "prejoinMicBtn", "prejoinJoinBtn", "prejoinCamSelect", "prejoinMicSelect", "prejoinSpkSelect", "prejoinSpkLabel", "prejoinVu", "prejoinVuFill"]
+  static targets = ["grid", "cameraBtn", "micBtn", "screenBtn", "blurBtn", "settingsBtn", "settingsPanel", "cameraSelect", "micSelect", "speakerSelect", "chatBtn", "chatPanel", "pipBtn", "controlsBar", "prejoinPanel", "prejoinVideo", "prejoinPlaceholder", "prejoinHint", "prejoinCamBtn", "prejoinMicBtn", "prejoinJoinBtn", "prejoinCamSelect", "prejoinMicSelect", "prejoinSpkSelect", "prejoinSpkLabel", "prejoinVu", "prejoinVuFill", "prejoinBlurBtn"]
   static values = {
     token: String,
     url: String,
@@ -28,6 +28,7 @@ export default class extends Controller {
   _vuAnalyser = null
   _vuSource = null
   _vuRafId = null
+  _prejoinBlurEnabled = false
 
   static DEVICE_PREFS_KEY = "campfire:devices"
 
@@ -269,6 +270,44 @@ export default class extends Controller {
 
     await this._populatePrejoinDevices()
     this._startVuMeter()
+
+    this._prejoinBlurEnabled = !!this._devicePrefs.blurOn
+    if (this._prejoinBlurEnabled && this._prejoinVideoTrack) {
+      await this._applyPrejoinBlur(true)
+    }
+    this._updatePrejoinBtnState(this.prejoinBlurBtnTarget, this._prejoinBlurEnabled)
+  }
+
+  async togglePrejoinBlur() {
+    if (!this._prejoinVideoTrack) return
+    const next = !this._prejoinBlurEnabled
+    this.prejoinBlurBtnTarget.disabled = true
+    const ok = await this._applyPrejoinBlur(next)
+    this.prejoinBlurBtnTarget.disabled = false
+    if (!ok) return
+    this._prejoinBlurEnabled = next
+    this._devicePrefs.blurOn = next
+    this._saveDevicePrefs()
+    this._updatePrejoinBtnState(this.prejoinBlurBtnTarget, next)
+  }
+
+  async _applyPrejoinBlur(enable) {
+    if (!this._prejoinVideoTrack) return false
+    try {
+      if (enable) {
+        if (!this._blurProcessor) {
+          this._blurProcessor = BackgroundProcessor({ mode: "background-blur", blurRadius: 18 })
+        }
+        await this._prejoinVideoTrack.setProcessor(this._blurProcessor, true)
+      } else {
+        await this._prejoinVideoTrack.stopProcessor()
+      }
+      this._prejoinVideoTrack.attach(this.prejoinVideoTarget)
+      return true
+    } catch (error) {
+      console.error("[blur] prejoin toggle FAILED:", error?.name, error?.message, error)
+      return false
+    }
   }
 
   async _populatePrejoinDevices() {
@@ -316,6 +355,7 @@ export default class extends Controller {
       this._prejoinVideoTrack.attach(this.prejoinVideoTarget)
       if (!this._prejoinCamEnabled) this._prejoinVideoTrack.mute()
       this._hidePrejoinPlaceholder()
+      if (this._prejoinBlurEnabled) await this._applyPrejoinBlur(true)
     } catch (error) {
       console.warn("[VideoCall] switchPrejoinCamera failed:", error?.message)
       this._showPrejoinPlaceholder()
@@ -576,6 +616,11 @@ export default class extends Controller {
 
       if (this._devicePrefs?.spkId) {
         try { await this.room.switchActiveDevice("audiooutput", this._devicePrefs.spkId) } catch (_) {}
+      }
+
+      if (this._prejoinBlurEnabled) {
+        this._blurEnabled = true
+        this.blurBtnTarget.classList.add("btn--active")
       }
     } catch (error) {
       console.error("[VideoCall] Failed to connect:", error)

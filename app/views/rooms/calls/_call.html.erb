@@ -33,6 +33,9 @@
           <span class="icon-on"><%= lucide_icon "mic", size: 22 %></span>
           <span class="icon-off" style="display:none"><%= lucide_icon "mic-off", size: 22 %></span>
         </button>
+        <button class="btn call-btn" type="button" data-action="video-call#togglePrejoinBlur" data-video-call-target="prejoinBlurBtn" aria-label="<%= t("calls.background_blur") %>">
+          <%= lucide_icon "user-round", size: 22 %>
+        </button>
         <div class="call-prejoin__vu" data-video-call-target="prejoinVu" aria-hidden="true">
           <div class="call-prejoin__vu-fill" data-video-call-target="prejoinVuFill"></div>
         </div>
