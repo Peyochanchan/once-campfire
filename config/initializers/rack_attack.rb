@@ -38,24 +38,29 @@ class Rack::Attack
     req.ip if req.path.match?(%r{^/join/}) && req.post?
   end
 
-  # Messages: 24 per IP per minute (~ 1 message every 2.5 seconds)
-  throttle("messages/ip", limit: 24, period: 1.minute) do |req|
-    req.ip if req.path.match?(%r{^/rooms/\d+/messages$}) && req.post?
+  # Throttle key for authenticated endpoints: session_token cookie when present
+  # (signed cookie value, opaque but stable + unique per session), else IP.
+  # Avoids penalising all users behind a shared VPN/CGNAT exit IP.
+  authenticated_throttle_key = ->(req) { req.cookies["session_token"].presence || req.ip }
+
+  # Messages: 24 per session (or IP) per minute (~ 1 message every 2.5 seconds)
+  throttle("messages/session", limit: 24, period: 1.minute) do |req|
+    authenticated_throttle_key.call(req) if req.path.match?(%r{^/rooms/\d+/messages$}) && req.post?
   end
 
-  # Search: 30 per IP per minute
-  throttle("search/ip", limit: 30, period: 1.minute) do |req|
-    req.ip if req.path == "/searches" && req.post?
+  # Search: 30 per session (or IP) per minute
+  throttle("search/session", limit: 30, period: 1.minute) do |req|
+    authenticated_throttle_key.call(req) if req.path == "/searches" && req.post?
   end
 
   # User enumeration protection
-  throttle("autocomplete/ip", limit: 20, period: 1.minute) do |req|
-    req.ip if req.path.start_with?("/autocompletable")
+  throttle("autocomplete/session", limit: 20, period: 1.minute) do |req|
+    authenticated_throttle_key.call(req) if req.path.start_with?("/autocompletable")
   end
 
-  # Invitation creation (account or room scoped): 20 per IP per hour
-  throttle("invitations/ip", limit: 20, period: 1.hour) do |req|
-    req.ip if (req.path == "/account/invitations" || req.path.match?(%r{^/rooms/\d+/invitations$})) && req.post?
+  # Invitation creation (account or room scoped): 20 per session (or IP) per hour
+  throttle("invitations/session", limit: 20, period: 1.hour) do |req|
+    authenticated_throttle_key.call(req) if (req.path == "/account/invitations" || req.path.match?(%r{^/rooms/\d+/invitations$})) && req.post?
   end
 
   # Invitation acceptance: 5 per IP per 5 minutes
