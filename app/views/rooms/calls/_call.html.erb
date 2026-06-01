@@ -35,6 +35,21 @@
         </button>
       </div>
 
+      <div class="call-prejoin__devices">
+        <label class="call-prejoin__device">
+          <span><%= t("calls.camera") %></span>
+          <select data-video-call-target="prejoinCamSelect" data-action="change->video-call#switchPrejoinCamera" class="call-prejoin__select"></select>
+        </label>
+        <label class="call-prejoin__device">
+          <span><%= t("calls.microphone") %></span>
+          <select data-video-call-target="prejoinMicSelect" data-action="change->video-call#switchPrejoinMic" class="call-prejoin__select"></select>
+        </label>
+        <label class="call-prejoin__device" data-video-call-target="prejoinSpkLabel">
+          <span><%= t("calls.speaker") %></span>
+          <select data-video-call-target="prejoinSpkSelect" data-action="change->video-call#switchPrejoinSpeaker" class="call-prejoin__select"></select>
+        </label>
+      </div>
+
       <div class="call-prejoin__actions">
         <button class="btn call-prejoin__cancel" type="button" data-action="video-call#cancelPrejoin"><%= t("calls.prejoin.cancel") %></button>
         <button class="btn call-prejoin__join" type="button" data-action="video-call#joinFromPrejoin" data-video-call-target="prejoinJoinBtn"><%= t("calls.prejoin.join") %></button>

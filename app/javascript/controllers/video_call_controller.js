@@ -3,7 +3,7 @@ import { Room, RoomEvent, createLocalVideoTrack, createLocalAudioTrack } from "l
 import { BackgroundProcessor } from "@livekit/track-processors"
 
 export default class extends Controller {
-  static targets = ["grid", "cameraBtn", "micBtn", "screenBtn", "blurBtn", "settingsBtn", "settingsPanel", "cameraSelect", "micSelect", "speakerSelect", "chatBtn", "chatPanel", "pipBtn", "controlsBar", "prejoinPanel", "prejoinVideo", "prejoinPlaceholder", "prejoinHint", "prejoinCamBtn", "prejoinMicBtn", "prejoinJoinBtn"]
+  static targets = ["grid", "cameraBtn", "micBtn", "screenBtn", "blurBtn", "settingsBtn", "settingsPanel", "cameraSelect", "micSelect", "speakerSelect", "chatBtn", "chatPanel", "pipBtn", "controlsBar", "prejoinPanel", "prejoinVideo", "prejoinPlaceholder", "prejoinHint", "prejoinCamBtn", "prejoinMicBtn", "prejoinJoinBtn", "prejoinCamSelect", "prejoinMicSelect", "prejoinSpkSelect", "prejoinSpkLabel"]
   static values = {
     token: String,
     url: String,
@@ -23,6 +23,9 @@ export default class extends Controller {
   _prejoinMicEnabled = true
   _prejoinVideoTrack = null
   _prejoinAudioTrack = null
+  _devicePrefs = null
+
+  static DEVICE_PREFS_KEY = "campfire:devices"
 
   connect() {
     this._boundBeforeUnload = this._beforeUnload.bind(this)
@@ -201,18 +204,21 @@ export default class extends Controller {
     const deviceId = this.cameraSelectTarget.value
     await this.room.switchActiveDevice("videoinput", deviceId)
     this._reattachLocalVideo()
+    if (this._devicePrefs) { this._devicePrefs.camId = deviceId; this._saveDevicePrefs() }
   }
 
   async switchMic() {
     if (!this.room) return
     const deviceId = this.micSelectTarget.value
     await this.room.switchActiveDevice("audioinput", deviceId)
+    if (this._devicePrefs) { this._devicePrefs.micId = deviceId; this._saveDevicePrefs() }
   }
 
   async switchSpeaker() {
     if (!this.room) return
     const deviceId = this.speakerSelectTarget.value
     await this.room.switchActiveDevice("audiooutput", deviceId)
+    if (this._devicePrefs) { this._devicePrefs.spkId = deviceId; this._saveDevicePrefs() }
   }
 
   async leave() {
@@ -230,22 +236,22 @@ export default class extends Controller {
   // Prejoin
 
   async _startPrejoin() {
+    this._devicePrefs = this._loadDevicePrefs()
+
     try {
-      this._prejoinVideoTrack = await createLocalVideoTrack()
+      this._prejoinVideoTrack = await createLocalVideoTrack(this._devicePrefs.camId ? { deviceId: this._devicePrefs.camId } : undefined)
       this._prejoinVideoTrack.attach(this.prejoinVideoTarget)
     } catch (error) {
       console.warn("[VideoCall] Prejoin camera unavailable:", error?.message)
       this._showPrejoinPlaceholder()
       this._prejoinCamEnabled = false
-      this._updatePrejoinBtnState(this.prejoinCamBtnTarget, false)
     }
 
     try {
-      this._prejoinAudioTrack = await createLocalAudioTrack()
+      this._prejoinAudioTrack = await createLocalAudioTrack(this._devicePrefs.micId ? { deviceId: this._devicePrefs.micId } : undefined)
     } catch (error) {
       console.warn("[VideoCall] Prejoin microphone unavailable:", error?.message)
       this._prejoinMicEnabled = false
-      this._updatePrejoinBtnState(this.prejoinMicBtnTarget, false)
     }
 
     if (!this._prejoinVideoTrack && !this._prejoinAudioTrack) {
@@ -256,6 +262,95 @@ export default class extends Controller {
     this._updatePrejoinBtnState(this.prejoinMicBtnTarget, this._prejoinMicEnabled)
 
     if (!this._prejoinCamEnabled) this._showPrejoinPlaceholder()
+
+    await this._populatePrejoinDevices()
+  }
+
+  async _populatePrejoinDevices() {
+    const [cams, mics, spks] = await Promise.all([
+      Room.getLocalDevices("videoinput").catch(() => []),
+      Room.getLocalDevices("audioinput").catch(() => []),
+      Room.getLocalDevices("audiooutput").catch(() => [])
+    ])
+
+    this._fillSelect(this.prejoinCamSelectTarget, cams, "camera")
+    this._fillSelect(this.prejoinMicSelectTarget, mics, "mic")
+    this._fillSelect(this.prejoinSpkSelectTarget, spks, "speaker")
+
+    if (this._prejoinVideoTrack?.mediaStreamTrack) {
+      const id = this._prejoinVideoTrack.mediaStreamTrack.getSettings().deviceId
+      if (id) this.prejoinCamSelectTarget.value = id
+    }
+    if (this._prejoinAudioTrack?.mediaStreamTrack) {
+      const id = this._prejoinAudioTrack.mediaStreamTrack.getSettings().deviceId
+      if (id) this.prejoinMicSelectTarget.value = id
+    }
+    if (this._devicePrefs.spkId && spks.some(d => d.deviceId === this._devicePrefs.spkId)) {
+      this.prejoinSpkSelectTarget.value = this._devicePrefs.spkId
+    }
+
+    // Hide speaker picker on browsers without setSinkId support (Firefox, Safari mobile)
+    const supportsSetSinkId = typeof HTMLMediaElement.prototype.setSinkId === "function"
+    if (!supportsSetSinkId || spks.length === 0) this.prejoinSpkLabelTarget.style.display = "none"
+  }
+
+  async switchPrejoinCamera() {
+    const deviceId = this.prejoinCamSelectTarget.value
+    if (!deviceId) return
+    this._devicePrefs.camId = deviceId
+    this._saveDevicePrefs()
+
+    if (this._prejoinVideoTrack) {
+      this._prejoinVideoTrack.detach()
+      this._prejoinVideoTrack.stop()
+      this._prejoinVideoTrack = null
+    }
+
+    try {
+      this._prejoinVideoTrack = await createLocalVideoTrack({ deviceId })
+      this._prejoinVideoTrack.attach(this.prejoinVideoTarget)
+      if (!this._prejoinCamEnabled) this._prejoinVideoTrack.mute()
+      this._hidePrejoinPlaceholder()
+    } catch (error) {
+      console.warn("[VideoCall] switchPrejoinCamera failed:", error?.message)
+      this._showPrejoinPlaceholder()
+    }
+  }
+
+  async switchPrejoinMic() {
+    const deviceId = this.prejoinMicSelectTarget.value
+    if (!deviceId) return
+    this._devicePrefs.micId = deviceId
+    this._saveDevicePrefs()
+
+    if (this._prejoinAudioTrack) {
+      this._prejoinAudioTrack.stop()
+      this._prejoinAudioTrack = null
+    }
+
+    try {
+      this._prejoinAudioTrack = await createLocalAudioTrack({ deviceId })
+      if (!this._prejoinMicEnabled) this._prejoinAudioTrack.mute()
+    } catch (error) {
+      console.warn("[VideoCall] switchPrejoinMic failed:", error?.message)
+    }
+  }
+
+  switchPrejoinSpeaker() {
+    const deviceId = this.prejoinSpkSelectTarget.value
+    if (!deviceId) return
+    this._devicePrefs.spkId = deviceId
+    this._saveDevicePrefs()
+  }
+
+  _loadDevicePrefs() {
+    try { return JSON.parse(localStorage.getItem(this.constructor.DEVICE_PREFS_KEY)) || {} }
+    catch (_) { return {} }
+  }
+
+  _saveDevicePrefs() {
+    try { localStorage.setItem(this.constructor.DEVICE_PREFS_KEY, JSON.stringify(this._devicePrefs)) }
+    catch (_) {}
   }
 
   togglePrejoinCamera() {
@@ -426,6 +521,10 @@ export default class extends Controller {
         this._prejoinAudioTrack = null
       } else {
         this._toggleIconState(this.micBtnTarget, false)
+      }
+
+      if (this._devicePrefs?.spkId) {
+        try { await this.room.switchActiveDevice("audiooutput", this._devicePrefs.spkId) } catch (_) {}
       }
     } catch (error) {
       console.error("[VideoCall] Failed to connect:", error)
@@ -684,6 +783,11 @@ export default class extends Controller {
     this._fillSelect(this.cameraSelectTarget, videoDevices, "camera")
     this._fillSelect(this.micSelectTarget, devices, "mic")
     this._fillSelect(this.speakerSelectTarget, audioOutputDevices, "speaker")
+
+    const prefs = this._devicePrefs || {}
+    if (prefs.camId && videoDevices.some(d => d.deviceId === prefs.camId)) this.cameraSelectTarget.value = prefs.camId
+    if (prefs.micId && devices.some(d => d.deviceId === prefs.micId)) this.micSelectTarget.value = prefs.micId
+    if (prefs.spkId && audioOutputDevices.some(d => d.deviceId === prefs.spkId)) this.speakerSelectTarget.value = prefs.spkId
   }
 
   _fillSelect(select, devices, key) {
