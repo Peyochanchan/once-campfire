@@ -1,4 +1,5 @@
 import { onNextEventLoopTick } from "../helpers/timing_helpers"
+import { currentUser } from "../initializers/current"
 
 const THREADING_TIME_WINDOW_MILLISECONDS = 5 * 60 * 1000 // 5 minutes
 
@@ -90,6 +91,6 @@ export default class MessageFormatter {
   }
 
   get #selectorForCurrentUser() {
-    return `.mention img[src^="/users/${Current.user.id}/avatar"]`
+    return `.mention img[src^="/users/${currentUser().id}/avatar"]`
   }
 }

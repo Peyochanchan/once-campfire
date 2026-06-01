@@ -3,6 +3,7 @@ import { cable } from "@hotwired/turbo-rails"
 import { throttle } from "../helpers/timing_helpers"
 import { pageIsTurboPreview } from "../helpers/turbo_helpers"
 import TypingTracker from "../models/typing_tracker"
+import { currentRoom, currentUser } from "../initializers/current"
 
 export default class extends Controller {
   static targets = [ "author", "indicator" ]
@@ -13,7 +14,7 @@ export default class extends Controller {
       this.tracker = new TypingTracker(this.#update.bind(this))
 
       this.channel = await cable.subscribeTo(
-        { channel: "TypingNotificationsChannel", room_id: Current.room.id },
+        { channel: "TypingNotificationsChannel", room_id: currentRoom().id },
         { received: this.#received.bind(this) }
       )
     }
@@ -37,7 +38,7 @@ export default class extends Controller {
   }
 
   #received({ action, user }) {
-    if (user.id !== Current.user.id) {
+    if (user.id !== currentUser().id) {
       if (action === "start") {
         this.tracker.add(user.name)
       } else {

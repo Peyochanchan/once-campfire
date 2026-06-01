@@ -1,6 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 import { cable } from "@hotwired/turbo-rails"
 import { delay, nextFrame } from "../helpers/timing_helpers"
+import { currentRoom } from "../initializers/current"
 
 const REFRESH_INTERVAL = 50 * 1000 // 50 seconds
 
@@ -10,7 +11,7 @@ const VISIBILITY_CHANGE_DELAY = 5000 // 5 seconds
 
 export default class extends Controller {
   async connect() {
-    this.channel = await cable.subscribeTo({ channel: "PresenceChannel", room_id: Current.room.id }, {
+    this.channel = await cable.subscribeTo({ channel: "PresenceChannel", room_id: currentRoom().id }, {
       connected: this.#websocketConnected,
       disconnected: this.#websocketDisconnected
     })
@@ -18,7 +19,7 @@ export default class extends Controller {
     this.wasVisible = true
 
     await nextFrame()
-    this.dispatch("present", { detail: { roomId: Current.room.id } })
+    this.dispatch("present", { detail: { roomId: currentRoom().id } })
   }
 
   disconnect() {
