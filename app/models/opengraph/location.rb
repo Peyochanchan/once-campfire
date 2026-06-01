@@ -16,7 +16,7 @@ class Opengraph::Location
   end
 
   def fetch_content_type
-    Opengraph::Fetch.new.fetch_content_type(parsed_url, ip: resolved_ip) if valid?
+    Opengraph::Fetch.fetch_content_type(parsed_url, ip: resolved_ip) if valid?
   rescue => e
     Rails.logger.warn "Failed to fetch #{parsed_url} at #{resolved_ip} (#{e})"
     nil
@@ -44,7 +44,7 @@ class Opengraph::Location
     end
 
     def fetch_html
-      Opengraph::Fetch.new.fetch_document(parsed_url, ip: resolved_ip)
+      Opengraph::Fetch.fetch_document(parsed_url, ip: resolved_ip)
     rescue => e
       Rails.logger.warn "Failed to fetch #{parsed_url} at #{resolved_ip} (#{e})"
       nil

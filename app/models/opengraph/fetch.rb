@@ -1,7 +1,9 @@
 require "net/http"
 require "restricted_http/private_network_guard"
 
-class Opengraph::Fetch
+module Opengraph::Fetch
+  extend self
+
   ALLOWED_DOCUMENT_CONTENT_TYPE = "text/html"
   MAX_BODY_SIZE = 5.megabytes
   MAX_REDIRECTS = 10
