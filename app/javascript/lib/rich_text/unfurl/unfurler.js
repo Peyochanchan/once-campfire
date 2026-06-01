@@ -16,44 +16,38 @@ const performOperation = (function() {
   }
 })()
 
-export default class Unfurler {
-  install() {
-    this.#addEventListeners()
-  }
+export function installUnfurler() {
+  addEventListener("trix-initialize", function(event) {
+    if (editorElementPermitsAttribute(event.target, "href")) {
+      event.target.addEventListener("trix-paste", didPaste)
+    }
+  })
+}
 
-  #addEventListeners() {
-    addEventListener("trix-initialize", function(event) {
-      if (this.#editorElementPermitsAttribute(event.target, "href")) {
-        return event.target.addEventListener("trix-paste", this.#didPaste.bind(this))
-      }
-    }.bind(this))
-  }
+function didPaste(event) {
+  const { range } = event.paste
+  const { editor } = event.target
 
-  #didPaste(event) {
-    const {range} = event.paste
-    const {editor} = event.target
+  if (range != null) {
+    const paste = new Paste(range, editor).getSignificantPaste()
 
-    if (range != null) {
-      const paste = new Paste(range, editor).getSignificantPaste()
-
-      if (paste.isURL()) {
-        if (this.#editorElementPermitsOpengraphAttachment(event.target)) {
-          performOperation(new OpengraphEmbedOperation(paste))
-        }
+    if (paste.isURL()) {
+      if (editorElementPermitsOpengraphAttachment(event.target)) {
+        performOperation(new OpengraphEmbedOperation(paste))
       }
     }
   }
+}
 
-  #editorElementPermitsAttribute(element, attributeName) {
-    if (element.hasAttribute("data-permitted-attributes")) {
-      return Array.from(element.getAttribute("data-permitted-attributes").split(" ")).includes(attributeName)
-    } else {
-      return true
-    }
+function editorElementPermitsAttribute(element, attributeName) {
+  if (element.hasAttribute("data-permitted-attributes")) {
+    return Array.from(element.getAttribute("data-permitted-attributes").split(" ")).includes(attributeName)
+  } else {
+    return true
   }
+}
 
-  #editorElementPermitsOpengraphAttachment(element) {
-    const permittedAttachmentTypes = element.getAttribute("data-permitted-attachment-types")
-    return permittedAttachmentTypes && permittedAttachmentTypes.includes("application/vnd.actiontext.opengraph-embed")
-  }
+function editorElementPermitsOpengraphAttachment(element) {
+  const permittedAttachmentTypes = element.getAttribute("data-permitted-attachment-types")
+  return permittedAttachmentTypes && permittedAttachmentTypes.includes("application/vnd.actiontext.opengraph-embed")
 }
