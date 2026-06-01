@@ -4,6 +4,17 @@ class Rack::Attack
     Rack::Attack.cache.store = ActiveSupport::Cache::RedisCacheStore.new(url: ENV["REDIS_URL"])
   end
 
+  # Behind a reverse proxy (Caddy / Kamal-Proxy / Nginx) the socket IP is the
+  # proxy's, not the client's. Read X-Forwarded-For instead so throttle keys
+  # are scoped to the real client. The first hop is the client; subsequent
+  # entries are proxies appended along the way.
+  class Request < ::Rack::Request
+    def real_ip
+      forwarded = env["HTTP_X_FORWARDED_FOR"]
+      forwarded.present? ? forwarded.split(",").first.strip : ip
+    end
+  end
+
   ### Safelists ###
 
   # Allow health checks
@@ -20,28 +31,28 @@ class Rack::Attack
 
   # General: 300 req/min per IP
   throttle("req/ip", limit: 300, period: 1.minute) do |req|
-    req.ip unless req.path.start_with?("/assets", "/up")
+    req.real_ip unless req.path.start_with?("/assets", "/up")
   end
 
   # Login: 5 attempts per IP per 3 minutes
   throttle("logins/ip", limit: 5, period: 3.minutes) do |req|
-    req.ip if req.path == "/session" && req.post?
+    req.real_ip if req.path == "/session" && req.post?
   end
 
   # OTP: 5 attempts per IP per 3 minutes
   throttle("otp/ip", limit: 5, period: 3.minutes) do |req|
-    req.ip if req.path == "/session/confirm" && req.post?
+    req.real_ip if req.path == "/session/confirm" && req.post?
   end
 
   # User creation: 5 per IP per hour
   throttle("signup/ip", limit: 5, period: 1.hour) do |req|
-    req.ip if req.path.match?(%r{^/join/}) && req.post?
+    req.real_ip if req.path.match?(%r{^/join/}) && req.post?
   end
 
   # Throttle key for authenticated endpoints: session_token cookie when present
   # (signed cookie value, opaque but stable + unique per session), else IP.
   # Avoids penalising all users behind a shared VPN/CGNAT exit IP.
-  authenticated_throttle_key = ->(req) { req.cookies["session_token"].presence || req.ip }
+  authenticated_throttle_key = ->(req) { req.cookies["session_token"].presence || req.real_ip }
 
   # Messages: 24 per session (or IP) per minute (~ 1 message every 2.5 seconds)
   throttle("messages/session", limit: 24, period: 1.minute) do |req|
@@ -65,7 +76,7 @@ class Rack::Attack
 
   # Invitation acceptance: 5 per IP per 5 minutes
   throttle("invitation_accept/ip", limit: 5, period: 5.minutes) do |req|
-    req.ip if req.path.match?(%r{^/invite/\w+$}) && req.post?
+    req.real_ip if req.path.match?(%r{^/invite/\w+$}) && req.post?
   end
 
   ### Blocklists ###
@@ -80,7 +91,7 @@ class Rack::Attack
 
   # Block after 10 failed login attempts per IP (1 hour ban)
   blocklist("login-failures/ip") do |req|
-    Rack::Attack::Allow2Ban.filter("login-failures:#{req.ip}", maxretry: 10, findtime: 10.minutes, bantime: 1.hour) do
+    Rack::Attack::Allow2Ban.filter("login-failures:#{req.real_ip}", maxretry: 10, findtime: 10.minutes, bantime: 1.hour) do
       req.path == "/session" && req.post? && req.env["rack.attack.match_type"].nil?
     end
   end
