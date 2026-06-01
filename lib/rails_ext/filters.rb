@@ -1,12 +1,5 @@
-class ActionText::Content::Filters
-  def initialize(*filters)
-    @filters = filters
-  end
-
+ActionText::Content::Filters = Data.define(:filters) do
   def apply(content)
     filters.reduce(content) { |content, filter| filter.apply(content) }
   end
-
-  private
-    attr_reader :filters
 end

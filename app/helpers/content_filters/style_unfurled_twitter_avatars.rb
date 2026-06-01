@@ -1,21 +1,26 @@
-class ContentFilters::StyleUnfurledTwitterAvatars < ActionText::Content::Filter
-  def applicable?
-    unfurled_twitter_avatars.present?
-  end
+module ContentFilters::StyleUnfurledTwitterAvatars
+  extend self
 
-  def apply
-    fragment.update do |source|
+  UNFURLED_TWITTER_AVATAR_CSS_CLASS = "cf-twitter-avatar"
+  TWITTER_AVATAR_URL_PREFIX = "https://pbs.twimg.com/profile_images"
+
+  def apply(content)
+    return content unless applicable?(content)
+
+    new_fragment = content.fragment.update do |source|
       div = source.at_css("div")
       div["class"] = UNFURLED_TWITTER_AVATAR_CSS_CLASS
     end
+    ActionText::Content.new(new_fragment, canonicalize: false)
+  end
+
+  def applicable?(content)
+    unfurled_twitter_avatars(content).present?
   end
 
   private
-    UNFURLED_TWITTER_AVATAR_CSS_CLASS = "cf-twitter-avatar"
-    TWITTER_AVATAR_URL_PREFIX = "https://pbs.twimg.com/profile_images"
-
-    def unfurled_twitter_avatars
-      fragment.find_all("#{opengraph_css_selector}[url*='#{TWITTER_AVATAR_URL_PREFIX}']")
+    def unfurled_twitter_avatars(content)
+      content.fragment.find_all("#{opengraph_css_selector}[url*='#{TWITTER_AVATAR_URL_PREFIX}']")
     end
 
     def opengraph_css_selector
