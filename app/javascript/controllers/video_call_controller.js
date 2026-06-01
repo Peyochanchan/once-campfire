@@ -3,7 +3,7 @@ import { Room, RoomEvent, createLocalVideoTrack, createLocalAudioTrack } from "l
 import { BackgroundProcessor } from "@livekit/track-processors"
 
 export default class extends Controller {
-  static targets = ["grid", "cameraBtn", "micBtn", "screenBtn", "blurBtn", "settingsBtn", "settingsPanel", "cameraSelect", "micSelect", "speakerSelect", "chatBtn", "chatPanel", "pipBtn", "controlsBar", "prejoinPanel", "prejoinVideo", "prejoinPlaceholder", "prejoinHint", "prejoinCamBtn", "prejoinMicBtn", "prejoinJoinBtn", "prejoinCamSelect", "prejoinMicSelect", "prejoinSpkSelect", "prejoinSpkLabel"]
+  static targets = ["grid", "cameraBtn", "micBtn", "screenBtn", "blurBtn", "settingsBtn", "settingsPanel", "cameraSelect", "micSelect", "speakerSelect", "chatBtn", "chatPanel", "pipBtn", "controlsBar", "prejoinPanel", "prejoinVideo", "prejoinPlaceholder", "prejoinHint", "prejoinCamBtn", "prejoinMicBtn", "prejoinJoinBtn", "prejoinCamSelect", "prejoinMicSelect", "prejoinSpkSelect", "prejoinSpkLabel", "prejoinVu", "prejoinVuFill"]
   static values = {
     token: String,
     url: String,
@@ -24,6 +24,10 @@ export default class extends Controller {
   _prejoinVideoTrack = null
   _prejoinAudioTrack = null
   _devicePrefs = null
+  _vuContext = null
+  _vuAnalyser = null
+  _vuSource = null
+  _vuRafId = null
 
   static DEVICE_PREFS_KEY = "campfire:devices"
 
@@ -264,6 +268,7 @@ export default class extends Controller {
     if (!this._prejoinCamEnabled) this._showPrejoinPlaceholder()
 
     await this._populatePrejoinDevices()
+    this._startVuMeter()
   }
 
   async _populatePrejoinDevices() {
@@ -331,6 +336,7 @@ export default class extends Controller {
     try {
       this._prejoinAudioTrack = await createLocalAudioTrack({ deviceId })
       if (!this._prejoinMicEnabled) this._prejoinAudioTrack.mute()
+      this._startVuMeter()
     } catch (error) {
       console.warn("[VideoCall] switchPrejoinMic failed:", error?.message)
     }
@@ -351,6 +357,49 @@ export default class extends Controller {
   _saveDevicePrefs() {
     try { localStorage.setItem(this.constructor.DEVICE_PREFS_KEY, JSON.stringify(this._devicePrefs)) }
     catch (_) {}
+  }
+
+  _startVuMeter() {
+    this._stopVuMeter()
+    if (!this._prejoinAudioTrack?.mediaStreamTrack) return
+    if (!this.hasPrejoinVuFillTarget) return
+
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext
+      this._vuContext = new AudioCtx()
+      this._vuSource = this._vuContext.createMediaStreamSource(new MediaStream([this._prejoinAudioTrack.mediaStreamTrack]))
+      this._vuAnalyser = this._vuContext.createAnalyser()
+      this._vuAnalyser.fftSize = 1024
+      this._vuAnalyser.smoothingTimeConstant = 0.5
+      this._vuSource.connect(this._vuAnalyser)
+
+      const buffer = new Uint8Array(this._vuAnalyser.fftSize)
+      const tick = () => {
+        if (!this._vuAnalyser) return
+        this._vuAnalyser.getByteTimeDomainData(buffer)
+        let sumSquares = 0
+        for (let i = 0; i < buffer.length; i++) {
+          const norm = (buffer[i] - 128) / 128
+          sumSquares += norm * norm
+        }
+        const rms = Math.sqrt(sumSquares / buffer.length)
+        const level = this._prejoinMicEnabled ? Math.min(1, rms * 4) : 0
+        this.prejoinVuFillTarget.style.inlineSize = `${level * 100}%`
+        this._vuRafId = requestAnimationFrame(tick)
+      }
+      tick()
+    } catch (error) {
+      console.warn("[VideoCall] VU meter unavailable:", error?.message)
+      this._stopVuMeter()
+    }
+  }
+
+  _stopVuMeter() {
+    if (this._vuRafId) { cancelAnimationFrame(this._vuRafId); this._vuRafId = null }
+    if (this._vuSource) { try { this._vuSource.disconnect() } catch (_) {} this._vuSource = null }
+    if (this._vuAnalyser) { try { this._vuAnalyser.disconnect() } catch (_) {} this._vuAnalyser = null }
+    if (this._vuContext) { try { this._vuContext.close() } catch (_) {} this._vuContext = null }
+    if (this.hasPrejoinVuFillTarget) this.prejoinVuFillTarget.style.inlineSize = "0%"
   }
 
   togglePrejoinCamera() {
@@ -379,12 +428,14 @@ export default class extends Controller {
 
   async joinFromPrejoin() {
     this.prejoinJoinBtnTarget.disabled = true
+    this._stopVuMeter()
     if (this._prejoinVideoTrack) this._prejoinVideoTrack.detach()
     await this._joinRoom()
     this._hidePrejoin()
   }
 
   cancelPrejoin() {
+    this._stopVuMeter()
     this._stopPrejoinTracks()
     window.close()
   }
