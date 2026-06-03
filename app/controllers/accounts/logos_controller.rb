@@ -6,15 +6,11 @@ class Accounts::LogosController < ApplicationController
 
   def show
     if stale?(etag: Current.account)
-      expires_in 5.minutes, public: true, stale_while_revalidate: 1.week
+      expires_in 1.hour, public: true
 
       if Current.account&.logo&.attached?
         logo = Current.account.logo.variant(logo_variant).processed
-        if ActiveStorage::Blob.service.respond_to?(:path_for)
-          send_png_file ActiveStorage::Blob.service.path_for(logo.key)
-        else
-          redirect_to logo.url(expires_in: 5.minutes), allow_other_host: true
-        end
+        send_data ActiveStorage::Blob.service.download(logo.key), content_type: "image/png", disposition: :inline
       else
         send_stock_icon
       end

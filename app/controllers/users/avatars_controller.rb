@@ -7,7 +7,7 @@ class Users::AvatarsController < ApplicationController
     @user = User.from_avatar_token(params[:user_id])
 
     if stale?(etag: @user)
-      expires_in 30.minutes, public: true, stale_while_revalidate: 1.week
+      expires_in 1.hour, public: true
 
       if @user.avatar.attached?
         avatar_variant = @user.avatar.variant(SQUARE_WEBP_VARIANT).processed
@@ -29,11 +29,7 @@ class Users::AvatarsController < ApplicationController
     SQUARE_WEBP_VARIANT = { resize_to_limit: [ 512, 512 ], format: :webp }
 
     def send_webp_blob_file(key)
-      if ActiveStorage::Blob.service.respond_to?(:path_for)
-        send_file ActiveStorage::Blob.service.path_for(key), content_type: "image/webp", disposition: :inline
-      else
-        redirect_to ActiveStorage::Blob.service.url(key, expires_in: 30.minutes, filename: ActiveStorage::Filename.new("avatar.webp"), content_type: "image/webp", disposition: :inline), allow_other_host: true
-      end
+      send_data ActiveStorage::Blob.service.download(key), content_type: "image/webp", disposition: :inline
     end
 
     def render_default_bot
