@@ -247,6 +247,8 @@ en:
     custom_status_emoji_placeholder: "🌴"
     custom_status_text_placeholder: "What's up?"
     email_notifications_enabled: "Receive email notifications when offline"
+    current_password_placeholder: "Current password (required to change email or password)"
+    current_password_required: "Please enter your current password to change your email or password."
 
   search:
     clear_recents: "Clear recent searches"

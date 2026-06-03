@@ -29,11 +29,14 @@ class OidcCallbacksController < ApplicationController
       user = User.find_by(oidc_sub: sub, oidc_provider: provider)
       return user if user
 
-      # Find by email and link OIDC
+      # Auto-link to an existing local account by email is only allowed when the
+      # IdP explicitly asserts the email has been verified. Otherwise an
+      # attacker who registers `victim@corp` at an IdP with no email
+      # verification could hijack the local victim account on first callback.
       user = User.find_by(email_address: info.email)
       if user
-        user.update!(oidc_sub: sub, oidc_provider: provider)
-        return user
+        return user if email_verified?(auth) && user.update(oidc_sub: sub, oidc_provider: provider)
+        return nil
       end
 
       # Create new user — hidden by default so they don't appear in directories
@@ -46,5 +49,11 @@ class OidcCallbacksController < ApplicationController
         oidc_provider: provider,
         hidden: true
       )
+    end
+
+    def email_verified?(auth)
+      info = auth.info
+      raw  = auth.extra&.raw_info
+      [ info.try(:email_verified), raw&.dig("email_verified"), raw&.dig(:email_verified) ].any? { |v| v == true || v == "true" }
     end
 end

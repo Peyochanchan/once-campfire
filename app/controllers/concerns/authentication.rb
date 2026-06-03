@@ -91,7 +91,15 @@ module Authentication
     end
 
     def set_authentication_cookie(session)
-      cookies.signed.permanent[:session_token] = { value: session.token, httponly: true, same_site: :lax, secure: Rails.env.production? }
+      # Cookie lifetime is bounded by Session::MAX_LIFETIME so a stolen
+      # cookie can't outlive the absolute server-side expiry.
+      cookies.signed[:session_token] = {
+        value: session.token,
+        expires: Session::MAX_LIFETIME.from_now,
+        httponly: true,
+        same_site: :lax,
+        secure: Rails.env.production?
+      }
     end
 
     def remove_authentication_cookie

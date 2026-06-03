@@ -79,6 +79,14 @@
         </label>
       </div>
 
+      <div class="flex align-center gap">
+        <label class="flex align-center gap flex-item-grow input input--actor">
+          <%= password_field_tag :current_password, nil, class: "input txt-large", autocomplete: "current-password",
+                placeholder: t("profile.current_password_placeholder"), required: false, maxlength: 72 %>
+          <%= image_tag "password.svg", aria: { hidden: "true" }, size: 24, class: "colorize--black" %>
+        </label>
+      </div>
+
       <div class="flex align-start gap">
         <%= translation_button(:bio) %>
 

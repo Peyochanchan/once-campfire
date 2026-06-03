@@ -1,6 +1,7 @@
 class Session < ApplicationRecord
   ACTIVITY_REFRESH_RATE = 1.hour
   INACTIVITY_TIMEOUT = 4.hours
+  MAX_LIFETIME = 30.days
   OTP_EXPIRY = 10.minutes
 
   has_secure_token
@@ -45,6 +46,15 @@ class Session < ApplicationRecord
   end
 
   def expired?
-    last_active_at.present? && last_active_at < INACTIVITY_TIMEOUT.ago
+    inactive? || past_max_lifetime?
   end
+
+  private
+    def inactive?
+      last_active_at.present? && last_active_at < INACTIVITY_TIMEOUT.ago
+    end
+
+    def past_max_lifetime?
+      created_at.present? && created_at < MAX_LIFETIME.ago
+    end
 end

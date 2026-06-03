@@ -247,6 +247,8 @@ fr:
     custom_status_emoji_placeholder: "🌴"
     custom_status_text_placeholder: "Quoi de neuf ?"
     email_notifications_enabled: "Recevoir des notifications par email quand hors-ligne"
+    current_password_placeholder: "Mot de passe actuel (requis pour changer l'email ou le mot de passe)"
+    current_password_required: "Saisissez votre mot de passe actuel pour modifier votre email ou votre mot de passe."
 
   search:
     clear_recents: "Effacer les recherches récentes"
