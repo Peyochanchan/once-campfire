@@ -79,6 +79,23 @@ class Rack::Attack
     req.real_ip if req.path.match?(%r{^/invite/\w+$}) && req.post?
   end
 
+  # Web push registration: 10 per session per hour. The endpoint URL is
+  # validated against an allowlist in Push::Subscription, but throttling
+  # additionally bounds the rate at which an attacker could probe via the
+  # POST /users/me/push_subscriptions path.
+  throttle("push_subscriptions/session", limit: 10, period: 1.hour) do |req|
+    authenticated_throttle_key.call(req) if req.path == "/users/me/push_subscriptions" && req.post?
+  end
+
+  # Test notifications: 5 per session per hour. Each call triggers an outbound
+  # POST to the subscription endpoint — strict throttle prevents using this as
+  # a fast SSRF/blind port scan if an attacker bypasses the host allowlist.
+  throttle("test_notifications/session", limit: 5, period: 1.hour) do |req|
+    if req.path.match?(%r{^/users/me/push_subscriptions/\d+/test_notifications$}) && req.post?
+      authenticated_throttle_key.call(req)
+    end
+  end
+
   ### Blocklists ###
 
   # Block suspicious paths
