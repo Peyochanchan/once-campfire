@@ -5,13 +5,16 @@ class Rack::Attack
   end
 
   # Behind a reverse proxy (Caddy / Kamal-Proxy / Nginx) the socket IP is the
-  # proxy's, not the client's. Read X-Forwarded-For instead so throttle keys
-  # are scoped to the real client. The first hop is the client; subsequent
-  # entries are proxies appended along the way.
+  # proxy's, not the client's. Delegate IP detection to ActionDispatch::Request,
+  # which walks X-Forwarded-For from the right and skips trusted_proxies — so a
+  # forged `X-Forwarded-For: 1.1.1.1` from a browser cannot bypass throttles by
+  # rotating spoofed client IPs. The previous `xff.split(",").first.strip`
+  # approach blindly trusted the leftmost entry, which is attacker-controlled.
   class Request < ::Rack::Request
     def real_ip
-      forwarded = env["HTTP_X_FORWARDED_FOR"]
-      forwarded.present? ? forwarded.split(",").first.strip : ip
+      @real_ip ||= ActionDispatch::Request.new(env).remote_ip
+    rescue StandardError
+      ip
     end
   end
 
