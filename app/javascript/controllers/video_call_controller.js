@@ -5,8 +5,7 @@ import { BackgroundProcessor } from "@livekit/track-processors"
 export default class extends Controller {
   static targets = ["grid", "cameraBtn", "micBtn", "screenBtn", "blurBtn", "settingsBtn", "settingsPanel", "cameraSelect", "micSelect", "speakerSelect", "chatBtn", "chatPanel", "pipBtn", "controlsBar", "prejoinPanel", "prejoinVideo", "prejoinPlaceholder", "prejoinHint", "prejoinCamBtn", "prejoinMicBtn", "prejoinJoinBtn", "prejoinCamSelect", "prejoinMicSelect", "prejoinSpkSelect", "prejoinSpkLabel", "prejoinVu", "prejoinVuFill", "prejoinBlurBtn"]
   static values = {
-    token: String,
-    url: String,
+    tokenUrl: String,
     roomId: Number,
     leaveUrl: String,
     avatarUrl: String,
@@ -37,7 +36,7 @@ export default class extends Controller {
     window.addEventListener("beforeunload", this._boundBeforeUnload)
     this._setupPipSupport()
 
-    if (this.hasTokenValue && this.tokenValue) {
+    if (this.hasTokenUrlValue && this.tokenUrlValue) {
       this._prejoinCamEnabled = this.startWithVideoValue
       this._startPrejoin()
     }
@@ -513,6 +512,27 @@ export default class extends Controller {
 
   // Private
 
+  // Mint a fresh LiveKit join token at the moment the user actually joins.
+  // The JWT is never rendered into the DOM — it is fetched on demand from a
+  // session-authenticated, throttled endpoint (rate-limited via Rack::Attack),
+  // so a browser extension or DOM-snooping XSS payload can no longer grab a
+  // valid LiveKit credential by inspecting page source.
+  async _fetchJoinToken() {
+    const csrf = document.querySelector('meta[name="csrf-token"]')?.content
+    const response = await fetch(this.tokenUrlValue, {
+      method: "POST",
+      headers: {
+        "Accept":           "application/json",
+        "X-CSRF-Token":     csrf,
+        "X-Requested-With": "XMLHttpRequest"
+      }
+    })
+    if (!response.ok) {
+      throw new Error(`Failed to fetch LiveKit token: HTTP ${response.status}`)
+    }
+    return await response.json()
+  }
+
   async _joinRoom() {
     this.room = new Room({ adaptiveStream: true, dynacast: true })
 
@@ -567,7 +587,8 @@ export default class extends Controller {
     })
 
     try {
-      await this.room.connect(this.urlValue, this.tokenValue)
+      const { token, url } = await this._fetchJoinToken()
+      await this.room.connect(url, token)
 
       // Always create local tile upfront
       this._getOrCreateTile(this.room.localParticipant)
@@ -665,17 +686,26 @@ export default class extends Controller {
 
     const isLocal = participant === this.room.localParticipant
 
-    // Only show bar for remote screen shares
+    // Only show bar for remote screen shares.
+    // Participant name is user-controlled (set via LiveKit JWT, sourced from
+    // user.name in Rails). Build the bar with textContent / explicit nodes —
+    // never interpolate participant.name into innerHTML.
     if (!isLocal) {
       const bar = document.createElement("div")
       bar.className = "call-screen-share__bar"
       bar.id = "screen-share-bar"
-      bar.innerHTML = `
-        <span class="call-screen-share__dot"></span>
-        ${participant.name || participant.identity} is sharing their screen
-        <button class="call-screen-share__minimize" id="minimize-bar">&times;</button>
-      `
-      bar.querySelector("#minimize-bar").addEventListener("click", () => bar.remove())
+
+      const dot = document.createElement("span")
+      dot.className = "call-screen-share__dot"
+      bar.append(dot, ` ${participant.name || participant.identity} is sharing their screen `)
+
+      const minimize = document.createElement("button")
+      minimize.className = "call-screen-share__minimize"
+      minimize.id = "minimize-bar"
+      minimize.textContent = "×"
+      minimize.addEventListener("click", () => bar.remove())
+      bar.append(minimize)
+
       container.appendChild(bar)
     }
 

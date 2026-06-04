@@ -87,7 +87,8 @@ Rails.application.routes.draw do
       resource :mute, only: %i[ create destroy ]
       resources :invitations, only: %i[ new create ]
       resource :call, only: %i[ show create destroy ] do
-        get :status, on: :member
+        get  :status, on: :member
+        post :token,  on: :member
       end
       resource :chat_embed, only: :show
     end

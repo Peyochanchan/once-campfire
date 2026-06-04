@@ -96,6 +96,16 @@ class Rack::Attack
     end
   end
 
+  # LiveKit join token mint: 30 per session per minute. The token is short-lived
+  # (10 min default TTL) and scoped to a single room, but throttling prevents an
+  # attacker (or buggy client) from spinning the mint endpoint as a token-bombing
+  # vector against the LiveKit signaling tier.
+  throttle("call_token/session", limit: 30, period: 1.minute) do |req|
+    if req.path.match?(%r{^/rooms/\d+/call/token$}) && req.post?
+      authenticated_throttle_key.call(req)
+    end
+  end
+
   ### Blocklists ###
 
   # Block suspicious paths

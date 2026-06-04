@@ -3,5 +3,5 @@
 <% end %>
 
 <%= turbo_stream.replace dom_id(@room, :call_container) do %>
-  <%= render "rooms/calls/call", room: @room, token: @token %>
+  <%= render "rooms/calls/call", room: @room %>
 <% end %>
