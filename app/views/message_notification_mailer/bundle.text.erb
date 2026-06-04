@@ -1,0 +1,16 @@
+<% @ctx.rooms.each do |room_bundle| %>
+<% room_label = room_bundle.room.name.presence || @ctx.app_name %>
+<% if @ctx.rooms.size > 1 || room_bundle.messages.size > 1 %>
+
+# <%= room_bundle.room.is_a?(Rooms::Direct) ? t("message_notifications.mailer.bundle.intro_dm_text") : room_label %>
+<% end %>
+<% room_bundle.messages.each do |message| %>
+
+<%= message.creator.name %><%= room_bundle.room.is_a?(Rooms::Direct) ? "" : " — #{room_label}" %>
+> <%= message.plain_text_body.to_s.truncate(MessageNotificationMailer::SNIPPET_LENGTH) %>
+<% end %>
+
+<%= t("message_notifications.mailer.cta") %>: <%= room_url(room_bundle.room) %>
+<% end %>
+
+<%= t("message_notifications.mailer.unsubscribe_hint", app_name: @ctx.app_name) %>

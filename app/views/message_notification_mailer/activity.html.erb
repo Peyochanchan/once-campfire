@@ -1,7 +1,0 @@
-<p><%= t("message_notifications.mailer.activity.intro_html", room: tag.strong(@room.name.presence || @app_name)).html_safe %></p>
-
-<blockquote style="border-left:3px solid #ccc;padding:0.4em 0.8em;color:#444"><strong><%= @sender.name %>:</strong> <%= @snippet %></blockquote>
-
-<p><%= link_to t("message_notifications.mailer.cta"), @room_url, style: "display:inline-block;background:#000;color:#fff;text-decoration:none;padding:0.6em 1.2em;border-radius:0.4em" %></p>
-
-<p style="font-size:0.85em;color:#888"><%= t("message_notifications.mailer.unsubscribe_hint", app_name: @app_name) %></p>

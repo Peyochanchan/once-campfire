@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_05_11_130000) do
+ActiveRecord::Schema[8.2].define(version: 2026_06_04_215128) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -145,6 +145,19 @@ ActiveRecord::Schema[8.2].define(version: 2026_05_11_130000) do
     t.index ["searchable"], name: "index_messages_on_searchable", using: :gin
   end
 
+  create_table "pending_email_notifications", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "kind", null: false
+    t.bigint "message_id", null: false
+    t.bigint "room_id", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["message_id"], name: "index_pending_email_notifications_on_message_id"
+    t.index ["room_id"], name: "index_pending_email_notifications_on_room_id"
+    t.index ["user_id", "created_at"], name: "index_pending_email_notifications_on_user_id_and_created_at"
+    t.index ["user_id"], name: "index_pending_email_notifications_on_user_id"
+  end
+
   create_table "push_subscriptions", force: :cascade do |t|
     t.string "auth_key"
     t.datetime "created_at", null: false
@@ -198,6 +211,8 @@ ActiveRecord::Schema[8.2].define(version: 2026_05_11_130000) do
     t.string "email_address"
     t.boolean "email_notifications_enabled", default: true, null: false
     t.boolean "hidden", default: false, null: false
+    t.datetime "last_email_notified_at"
+    t.datetime "last_seen_at"
     t.string "locale", default: "en"
     t.string "name", null: false
     t.string "oidc_provider"
@@ -210,6 +225,7 @@ ActiveRecord::Schema[8.2].define(version: 2026_05_11_130000) do
     t.index ["bot_token"], name: "index_users_on_bot_token", unique: true
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
     t.index ["hidden"], name: "index_users_on_hidden"
+    t.index ["last_seen_at"], name: "index_users_on_last_seen_at"
     t.index ["oidc_sub", "oidc_provider"], name: "index_users_on_oidc_sub_and_oidc_provider", unique: true, where: "(oidc_sub IS NOT NULL)"
   end
 
@@ -232,6 +248,9 @@ ActiveRecord::Schema[8.2].define(version: 2026_05_11_130000) do
   add_foreign_key "invitations", "users", column: "invited_by_id"
   add_foreign_key "messages", "rooms"
   add_foreign_key "messages", "users", column: "creator_id"
+  add_foreign_key "pending_email_notifications", "messages"
+  add_foreign_key "pending_email_notifications", "rooms"
+  add_foreign_key "pending_email_notifications", "users"
   add_foreign_key "push_subscriptions", "users"
   add_foreign_key "searches", "users"
   add_foreign_key "sessions", "users"

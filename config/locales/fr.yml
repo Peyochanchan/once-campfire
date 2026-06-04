@@ -178,14 +178,14 @@ fr:
     mailer:
       cta: "Ouvrir la conversation"
       unsubscribe_hint: "Vous pouvez désactiver les notifications email dans votre profil %{app_name}."
-      mention:
-        subject: "%{sender} vous a mentionné·e dans %{room}"
-        intro_html: "vous a mentionné·e dans %{room} :"
-        intro_text: "%{sender} vous a mentionné·e dans %{room} :"
-      activity:
-        subject: "Nouvelle activité dans %{room}"
-        intro_html: "Il y a de l'activité dans %{room} :"
-        intro_text: "Il y a de l'activité dans %{room} :"
+      bundle:
+        intro_dm_html: "Message direct"
+        intro_dm_text: "Message direct"
+        subject:
+          single: "%{sender} vous a envoyé un message dans %{room}"
+          single_dm: "%{sender} vous a envoyé un message direct"
+          one_room_multi: "%{count} nouveaux messages dans %{room}"
+          multi: "%{count} nouveaux messages dans %{room_count} salons"
 
   invites:
     share_title: "Partagez pour inviter d'autres personnes"

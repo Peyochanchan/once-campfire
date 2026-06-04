@@ -80,6 +80,6 @@ class Room < ApplicationRecord
     end
 
     def email_later(message)
-      Room::EmailNotificationJob.perform_later(id, message.id)
+      EmailNotification::DispatchJob.perform_later(message.id)
     end
 end
