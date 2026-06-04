@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  include Avatar, Bannable, Bot, Mentionable, Role, Transferable
+  include Avatar, Bannable, Bot, Mentionable, Presence, Role, Transferable
 
   RINGTONES = %w[roli bell tada incoming mario_coin sax rimshot horn drama dangerzone secret].freeze
 

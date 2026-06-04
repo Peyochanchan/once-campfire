@@ -1,0 +1,31 @@
+<% @ctx.rooms.each do |room_bundle| %>
+  <% room_label = room_bundle.room.name.presence || @ctx.app_name %>
+
+  <% if @ctx.rooms.size > 1 || room_bundle.messages.size > 1 %>
+    <p style="margin:1.2em 0 0.4em;font-weight:600;color:#222">
+      <%= room_bundle.room.is_a?(Rooms::Direct) ? t("message_notifications.mailer.bundle.intro_dm_html") : tag.span(room_label) %>
+    </p>
+  <% end %>
+
+  <% room_bundle.messages.each do |message| %>
+    <p style="margin:0.6em 0 0.2em;color:#444">
+      <strong><%= message.creator.name %></strong>
+      <% unless room_bundle.room.is_a?(Rooms::Direct) %>
+        <span style="color:#888">— <%= room_label %></span>
+      <% end %>
+    </p>
+    <blockquote style="border-left:3px solid #ccc;margin:0 0 0.6em 0;padding:0.4em 0.8em;color:#444">
+      <%= message.plain_text_body.to_s.truncate(MessageNotificationMailer::SNIPPET_LENGTH) %>
+    </blockquote>
+  <% end %>
+
+  <p>
+    <%= link_to t("message_notifications.mailer.cta"),
+                room_url(room_bundle.room),
+                style: "display:inline-block;background:#000;color:#fff;text-decoration:none;padding:0.5em 1em;border-radius:0.4em;font-size:0.9em" %>
+  </p>
+<% end %>
+
+<p style="font-size:0.85em;color:#888;margin-top:2em">
+  <%= t("message_notifications.mailer.unsubscribe_hint", app_name: @ctx.app_name) %>
+</p>

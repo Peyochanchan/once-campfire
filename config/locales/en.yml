@@ -178,14 +178,14 @@ en:
     mailer:
       cta: "Open conversation"
       unsubscribe_hint: "You can disable email notifications in your %{app_name} profile."
-      mention:
-        subject: "%{sender} mentioned you in %{room}"
-        intro_html: "mentioned you in %{room}:"
-        intro_text: "%{sender} mentioned you in %{room}:"
-      activity:
-        subject: "New activity in %{room}"
-        intro_html: "There's new activity in %{room}:"
-        intro_text: "There's new activity in %{room}:"
+      bundle:
+        intro_dm_html: "Direct message"
+        intro_dm_text: "Direct message"
+        subject:
+          single: "%{sender} sent you a message in %{room}"
+          single_dm: "%{sender} sent you a direct message"
+          one_room_multi: "%{count} new messages in %{room}"
+          multi: "%{count} new messages across %{room_count} rooms"
 
   invites:
     share_title: "Share to invite more people"
