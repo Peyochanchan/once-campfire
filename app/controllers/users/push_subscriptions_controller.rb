@@ -7,11 +7,14 @@ class Users::PushSubscriptionsController < ApplicationController
   def create
     if subscription = @push_subscriptions.find_by(push_subscription_params)
       subscription.touch
+      head :ok
+    elsif @push_subscriptions.create(push_subscription_params.merge(user_agent: request.user_agent)).persisted?
+      head :ok
     else
-      @push_subscriptions.create! push_subscription_params.merge(user_agent: request.user_agent)
+      # Validation failure (e.g. endpoint host not in push provider allowlist —
+      # see Push::Subscription) — 422 rather than 500.
+      head :unprocessable_entity
     end
-
-    head :ok
   end
 
   def destroy
